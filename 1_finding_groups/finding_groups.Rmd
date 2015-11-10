@@ -1,0 +1,230 @@
+---
+title: "Business Analytics 1 : Finding Groups Within the Data"
+author: "Ming-Yu Liu"
+output: 
+  html_document: 
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+## Background Information 
+
+This module will go over examples of how identifying groups within data allows business to improve efficiency. Finding groups within our data allows us to strike the right balance between similarities and differences. The reason behind this is we want to treat similar cases with similar appoaches to benefit from the economics of scale. On the other hand, treating different scenarios with different ways that are more suitable to the current situations will improve your actions' effectiveness. The following documentation will cover two examples of where this notion can be use in the business world. 
+
+> Note that this documentation assumes you're familiar with R and hierarchical clustering, thus technical details are not explained.
+
+## Example 1 : Supply Chain Management 
+
+Our concern as a supply chain manager is that we want to organize products' stock more efficiently. To be explicit, we don't really need to store lots of stocks for every single product as this increases inventory costs. On the other hand, we also wish to maintain the stock amount of each product at a suitable level, so that we will be able to deliver the product on time when demanded. Thus, the goal for this task is to identify groups of products' stocks that "behaves" the same and can be treated in a similar fashion.
+
+The common approach to solve this issue is to analyze the question along two dimensions, where you have the average daily sales of your stock keeping unit, or so called "SKU" on one axis and the "volatility" of each SKU's average daily sales.
+
+- **SKU** : Note that in the field of inventory SKU refers to a specific item stored to a specific "location". The key word here is "location". In a retail network, the same product, let's say TV can have multiple SKU. Examples of this is : 
+    - There are multiple warehouses where this TV can be stored. This is the most typical case where the same TV will have one SKU per warehouse. 
+    - Even items that are at the same warehouses can have multiple SKUs, because they are sold at different locations ( e.g. retail stores at City A, shoppinig malls at City B and so on ).
+    - Also a product may have many variants based on attributes such as size, color or conditioning. This will also lead to multiple SKUs for the same given product.
+
+- **volaility** : This can be measured by the [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation), which is simply the standard deviation of sales divided by the mean sales for each SKU.
+
+Let's read in the dataset to get a feel of what it looks like, before going further.
+
+```{r, message=FALSE}
+
+# environment setting
+library(dplyr)
+library(caret)
+library(ggplot2)
+library(reshape2)
+setwd("/Users/ethen/Business-Analytics/1_finding_groups")
+rm( list = ls() )
+
+data_sku <- read.csv("data/DATA_2.01_SKU.csv")
+head(data_sku)
+
+```
+
+There are `r nrow(data_sku)` rows and 2 variables within this dataset, namely :    
+- `ADS` average daily sales.  
+- `CV` coefficient of variations.
+
+As there is only two variables (columns), we can easily visualize it and look at their relationships.
+
+```{r}
+
+ggplot( data_sku, aes( CV, ADS ) ) + geom_point() + 
+labs( title = "SKU Example", y = "Average Daily Sales", x = "Coefficient of Variation" ) + 
+geom_hline( yintercept = 4, color = "blue" ) + 
+geom_vline( xintercept = .2, color = "blue" )
+
+```
+
+As you'll notice from the plot, there are three distinct groups, separated by the horizontal and vertical line on the graph. In practice, however, there're only a few situations where you can define how many distinct groups are there in the data through straightforward visualization. Because, often times, you'll have more than two variables that you may consider for your clustering. Therefore, we'll now use the more rigorous approach, the hierarchical clustering algorithm to group our datasets.
+
+One precaution, from the data (or from the visualization) you’ll notice that two variables are recorded with different units. Therefore when input variables differ by orders of magnitudes, performing some kind of normalization is often times required to make them comparable. Here we’ll apply the widely used z-score normalization using the built in `scale` function, where given a input variable you subtract every row element with its mean and then divide it by its standard deviation.
+
+```{r}
+
+# hierarchical clustering, with k (clustering number) = 3 
+d <- dist( scale(data_sku), method = "euclidean" )
+cluster <- hclust( d, method = "ward.D" )
+( data_sku$groups  <- as.factor( cutree( cluster, k = 3 ) ) )
+
+```
+
+Now that we have obtain the grouping of the data, let's visualize the grouping to see confirm that the algorithm's result matches our intuition.
+
+```{r}
+
+ggplot( data_sku, aes( CV, ADS, color = groups ) ) + geom_point() + 
+labs( title = "SKU Example", y = "Average Daily Sales", x = "Coefficient of Variation" )
+
+```
+
+After we've identify the grouping the next step is to transform these insights into actions, that is what should we do with the patterns we found. 
+
+- group 1 : SKUs with low sales and high variability. We'll call them "crickets" (giving groups names, so business audiences will be more likely to remember them), because not only are the sales for these products low, but can also jump unexpectedly. These stocks will be "made to order". 
+    - **Make to Order** : This strategy wait until an order comes in before starting the production process. Since the sales are small, in any case, it's not really efficient to prepare production too long in advance. So we want to reduce the risks by producing the goods only if the order is made by the end of the chain.
+     
+- group 2 : SKUs with high sales and low variability. We'll call them "horses", because these products are strong and reliable. These stocks will be "made to stock". 
+    - **Make to Stock** : This production strategy forecasts demand to determine how much stock should be produced. If demand for the product can be accurately forecasted, the MTS strategy can be an efficient choice. This will be reasonable for this case, because the sales for these products are expected to be high and the risk of the inaccurate forecast is low (coefficient of variation).
+     
+- group 3 : SKUs with high sales and high variability. We'll call them "white bulls", because despite of its possible high sales, it is difficult to control. These SKUs will be treated on a case by case basis. Things may be a bit difficult to anticipate, but their returns may be high.
+
+This draws an end to the first example.
+
+## Example 2 : Humance Resources
+
+For the next example, suppose you're an HR manager of a big consulting company, and that you're concerned by the high number of employees leaving the firm. In practice, you cannot follow-up with each one of them too often as that would be very time consuming, hence, this is also a case where you have to rely on an HR analytic solution to understand what are the most frequent situations explaining why an employee decides to leave and discover the actions we can take in order to retain them.
+
+Now let's say your company has collected a bunch of data from employees that have already left.
+
+```{r}
+
+data_hr <- read.csv("data/DATA_2.02_HR.csv")
+str(data_hr)
+
+```
+
+This dataset contains `r nrow(data_hr)` observations and 6 variables, each representing :
+
+- `S` The satisfaction level on a scale of 0 to 1.   
+- `LPE` Last project evaluation by a client on a scale of 0 to 1.   
+- `NP` Represents the number of projects worked on by employee in the last 12 month.  
+- `ANH` Average number of hours worked in the last 12 month for that employee.  
+- `TIC` The amount of time the emplyee spent in the company, measured in years.  
+- `Newborn` This variable will take the value 1 if the employee had a newborn within the last 12 month and 0 otherwise.  
+
+There're two lessons we can learn from this example.   
+
+1. This is the kind of data where we can't use visualization to determine the grouping number before applying the clustering algorithm like we did in the first example, because now we have the total of 6 variables to consider. 
+
+2. Before applying the clustering algorithm, we should determine which variables to include. If the dataset contains no missing values, as a data scientist, we're often used to doing this by looking at the correlations between the variables ( of course there're more complex ways to do this ). Then suppose the correlations between variables A and B are high, then we can choose drop one of them, because after obtaining the results we can simply use the variables we've retained to properly assume the ones we dropped. We can easily achieve this step by using the `findCorrelation` function from the caret package. Where, given a correlation matrix , this function will print out highly correlated attributes. 
+
+```{r}
+# scale the data (you don't really need to do this when comparing correlations)
+# this is used for latter plotting and applying clustering
+hr_scaled <- data.frame( scale(data_hr) )
+
+# find variables that have correlations higher than 0.8 and print out variable names
+findCorrelation( cor(hr_scaled), cutoff = 0.8, names = TRUE )
+
+```
+
+In this case, the function suggests that we remove the `NP` attribute as it correlates highly with the `LPE` attribute. But here, it might be a bad idea to use the correlation method to determine which variables to exclude as neither of them are not normally distributed ( the default method of the cor function that does the correlation calculation is Pearson correlation and this method is sensitive to non-normality in the variables ).
+
+```{r, message=FALSE}
+
+ggplot( melt( hr_scaled[ , 2:3 ] ), aes( value, fill = variable ) ) + 
+geom_histogram( alpha = .4, position = "identity" )
+
+```
+
+So next, we'll look at this feature selection approach from the business point of view. In this case, we should note that the `S` variable, level of satisfaction is actually a consequence of everything else. We cannot really act on it directly, it has to be seen as a consequence and not as the driver of managerial impact.
+
+Knowing this by intuition, we'll can remove this variable before conducting the clustering. This time we'll choose the clustering number to be 4, or you can call it segmentation number if you wish. This number is decided by plotting the dendogram of the clustering result. Not shown here in the report since it's a bit awful looking, which is a common problem of dendogram when it comes to bigger dataset. We'll also calculate the median of each variable for each of the four groups to discover patterns and count the proportion size of each group. Note that we will also be including the `S` variable for the aggregation.
+
+```{r}
+
+d <- dist( hr_scaled[ , -1 ], method = "euclidean" ) 
+cluster <- hclust( d, method = "ward.D" )
+# dendogram
+# plot(cluster)
+
+data_hr$groups <- cutree( cluster, k = 4 )
+
+# median aggregation 
+hr_agg <- aggregate( .~ groups, data = data_hr, FUN = median )
+
+# count the cluster proportion size 
+tl <- table(data_hr$groups)
+hr_agg$proportion <- tl / sum(tl)
+
+# order by proportion 
+mutate( hr_agg, proportion = tl / sum(tl) ) %>%
+arrange( desc(proportion) )
+
+```
+
+From the result of this table, you can see that :
+
+- group 1 : We can see from the low quantity of the four variables `LPE` last project evaluation by a client, `NP` number of projects, `ANH` average number of working hours and `TIC` total time spent in the company. That these are probably the "low performance" ones and they are still quite junior in the company, thus it may not be our top priority to try and retain them.
+
+- group 3 : This is the second row, don't get confused. Notice the consideraly high `LPE`, `NP`, `ANH`, `TIC` and a low satisfaction level `S` suggests that these people are the ones that are over-utilized. Simply that they are doing a good job, but are "burned out". Given this result, as a HR manager these kind of people should be your first priority. Next time you see that a high performing employee is working too much, you should be able to anticipate this situation and helped those employees to take a step back proactively.
+
+- group 2 : This group is a bit tricky. You'll notice that similar to group 3, where they have a high `LPE`, `NP`, `ANH`, `TIC` levels, from the high rating of the `S` variable, it seems that they're still quite satisfied with their work. Well, what can do to retain these "high-performing" employees that are happy but want to leave nonetheless. For these people we can assume that we're given them too little cash or the projects that were assigned to them are simply too easy. Then we can try to give them a raise, a promotion or more challenging projects.
+
+- group 4 : For this final group, this is assume to be a "miscellaneous" segment. As it doesn't have any obvious characteristic apart from the `Newborn` column indicating that they the employee had a newborn within the last 12 month and a straightforward way to retain these employees is to provide parental leave or on-site child care. But notice from the `proportion` column that since it's a relatively small group, given the limited resources we have, it's not really a priority either.
+
+When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales, therefore, the visualization after using the max-min normalization method may look a bit hacky, as with this normalization, there will be values of 0 ( A different kind of normalization is used here because the scale function produces negative numbers and that does not sound very intuitive for radar charts ).
+
+```{r, fig.height=8, fig.width=12  }
+
+Normalize <- function(x) ( x - min(x) ) / ( max(x) - min(x) ) 
+
+# exclude the proportion, groups and store the groups
+hr_agg_2 <- hr_agg[ , c( -1, -8 ) ]
+groups <- hr_agg$groups
+
+# transform to long format for plotting
+hr_agg_melt <- apply( hr_agg_2, 2, Normalize ) %>%
+			   data.frame() %>%
+			   mutate( groups = groups ) %>%
+               melt( id.vars = "groups" )
+
+# radar chart
+ggplot( hr_agg_melt, aes( x = variable  ) ) + 
+geom_bar( aes( y = value, fill = groups ), stat = "identity" ) + 
+coord_polar() + 
+facet_wrap( ~ groups ) +
+ggtitle( "HR" ) + 
+theme( legend.position = "none",  
+	   axis.text.y = element_blank(), 
+	   axis.text.x = element_text( color = "black" ), 
+	   axis.ticks  = element_blank(),
+	   axis.title  = element_blank() )
+
+
+```
+
+End of the second example. 
+
+## Takeaways
+
+1. There are different perspective (intuition, business sense, technical approaches) as to which variable should have or should not have been included in the dataset prior to running the clustering method. As clustering algorithms are so categorized under unsupervised algorithms, there're really no "correct" ouput, so choose your variables or features wisely ! Suppose that for some reason you think that it's nonsense to exclude the `S` variable : the satisfaction level, like we did in this documentation, you should add it back and run the clustering, though you'll obtain similar grouping results for this dataset, and when you realize that whether you include a variable or not does not affect the result, you should exclude it as this lessen the calculation loading for the algorithm and your computer.  
+
+2. After you obtain the results, giving visualizations and naming your segmentations in a self explanatory and meaningful way can make your results more convincing. We've heard like a billion times already that a picture is worth thousands of words. And more importantly, you should always ask yourself, given the results what are you going to do with it, how can this result help my business goals ? 
+
+3. Following up on the second point about interpreting the result. It may be the case that even if we've identify different groups, but they'll be treated similarly. Also there will be times when we can't transform every results into immediate actions, times where the events may be exogenous and can't be explained. If this group occurs with a high proportion, we may want to collect additional data to try to understand this specific case.
+
+4. For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria. If you're interested in a more technical way of choosing the suitable number and evaluate the stability of your clustering result, you can refer to another documentation [here](http://ethen8181.github.io/machine-learning/clustering/clustering.html).
+
+This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code to this documentation [here](https://github.com/ethen8181/Business-Analytics/blob/master/1_finding_groups/finding_groups.R).
+
+## R Session Information
+
+```{r}
+
+sessionInfo()
+
+```
