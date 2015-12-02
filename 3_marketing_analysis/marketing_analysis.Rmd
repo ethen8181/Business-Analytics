@@ -1,0 +1,23 @@
+---
+title: "Marketing Analysis"
+author: "Ming-Yu Liu"
+date: "November 30, 2015"
+output: 
+  html_document: 
+    highlight: haddock
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+## Background Information 
+
+The domain of marketing analysis is huge, topics can range from social network analysis, real time bidding, campaign optimization and so on. Though at the heart of the marketing lies some techniques that address fundamental questions that businesses all wish to be to able answer well.
+
+1. **Segmentation:** Allows businesses to identify who are my customers or so called target audiences? 
+2. **Scoring Models:** Targeting the right customers, that is which customers should I spend the most marketing budget on?
+3. **Customer Life Time Value:** What's the future value of my customers? That way the company will be able to concentrate the most on those that will be worth the most.
+
+
+
+

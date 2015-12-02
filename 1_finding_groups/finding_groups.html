@@ -10,6 +10,7 @@
 
 <meta name="author" content="Ming-Yu Liu" />
 
+<meta name="date" content="2015-11-11" />
 
 <title>Business Analytics 1 : Finding Groups Within the Data</title>
 
@@ -78,6 +79,7 @@ img {
 <div id="header">
 <h1 class="title">Business Analytics 1 : Finding Groups Within the Data</h1>
 <h4 class="author"><em>Ming-Yu Liu</em></h4>
+<h4 class="date"><em>November 11, 2015</em></h4>
 </div>
 
 <div id="TOC">
@@ -110,7 +112,7 @@ img {
 </ul></li>
 <li><strong>volaility</strong> : This can be measured by the <a href="https://en.wikipedia.org/wiki/Coefficient_of_variation">coefficient of variation</a>, which is simply the standard deviation of sales divided by the mean sales for each SKU.</li>
 </ul>
-<p>Let’s read in the dataset to get a feel of what it looks like, before going further.</p>
+<p>Let’s read in the dataset to get a feel of what it looks like, before going further. Oh, and the link to the datasets used in this documentation is located at the bottom of the report.</p>
 <pre class="r"><code># environment setting
 library(dplyr)
 library(caret)
@@ -161,7 +163,7 @@ labs( title = &quot;SKU Example&quot;, y = &quot;Average Daily Sales&quot;, x = 
 <ul>
 <li><strong>Make to Stock</strong> : This production strategy forecasts demand to determine how much stock should be produced. If demand for the product can be accurately forecasted, the MTS strategy can be an efficient choice. This will be reasonable for this case, because the sales for these products are expected to be high and the risk of the inaccurate forecast is low (coefficient of variation).</li>
 </ul></li>
-<li>group 3 : SKUs with high sales and high variability. We’ll call them “white bulls”, because despite of its possible high sales, it is difficult to control. These SKUs will be treated on a case by case basis. Things may be a bit difficult to anticipate, but their returns may be high.</li>
+<li>group 3 : SKUs with high sales and high variability. We’ll call them “wild bulls”, because despite of its possible high sales, it is difficult to control. These SKUs will be treated on a case by case basis. Things may be a bit difficult to anticipate, but their returns may be high.</li>
 </ul>
 <p>This draws an end to the first example.</p>
 </div>
@@ -239,7 +241,7 @@ arrange( desc(proportion) )</code></pre>
 <li><p>group 2 : This group is a bit tricky. You’ll notice that similar to group 3, where they have a high <code>LPE</code>, <code>NP</code>, <code>ANH</code>, <code>TIC</code> levels, from the high rating of the <code>S</code> variable, it seems that they’re still quite satisfied with their work. Well, what can do to retain these “high-performing” employees that are happy but want to leave nonetheless. For these people we can assume that we’re given them too little cash or the projects that were assigned to them are simply too easy. Then we can try to give them a raise, a promotion or more challenging projects.</p></li>
 <li><p>group 4 : For this final group, this is assume to be a “miscellaneous” segment. As it doesn’t have any obvious characteristic apart from the <code>Newborn</code> column indicating that they the employee had a newborn within the last 12 month and a straightforward way to retain these employees is to provide parental leave or on-site child care. But notice from the <code>proportion</code> column that since it’s a relatively small group, given the limited resources we have, it’s not really a priority either.</p></li>
 </ul>
-<p>When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales, therefore, the visualization after using the max-min normalization method may look a bit hacky, as with this normalization, there will be values of 0 ( A different kind of normalization is used here because the scale function produces negative numbers and that does not sound very intuitive for radar charts ).</p>
+<p>When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales. Therefore, the visualization after using the max-min normalization method on the recorded score may look a bit hacky ( the <code>scale</code> function produces negative numbers and that does not sound very intuitive for radar charts, thus a different kind of normalization is used here ). As with this normalization, there will be values of 0.</p>
 <pre class="r"><code>Normalize &lt;- function(x) ( x - min(x) ) / ( max(x) - min(x) ) 
 
 # exclude the proportion, groups and store the groups
@@ -274,7 +276,8 @@ theme( legend.position = &quot;none&quot;,
 <li><p>Following up on the second point about interpreting the result. It may be the case that even if we’ve identify different groups, but they’ll be treated similarly. Also there will be times when we can’t transform every results into immediate actions, times where the events may be exogenous and can’t be explained. If this group occurs with a high proportion, we may want to collect additional data to try to understand this specific case.</p></li>
 <li><p>For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria. If you’re interested in a more technical way of choosing the suitable number and evaluate the stability of your clustering result, you can refer to another documentation <a href="http://ethen8181.github.io/machine-learning/clustering/clustering.html">here</a>.</p></li>
 </ol>
-<p>This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code to this documentation <a href="https://github.com/ethen8181/Business-Analytics/blob/master/1_finding_groups/finding_groups.R">here</a>.</p>
+<p>This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code (finding_groups.R) and datasets (in the data folder) used in this documentation <a href="https://github.com/ethen8181/Business-Analytics/tree/master/1_finding_groups">here</a>.</p>
+<p>Any comments or suggestions is appreciated. That includes bugs or typos report. You can file these new issues <a href="https://github.com/ethen8181/Business-Analytics/issues">here</a>.</p>
 </div>
 <div id="r-session-information" class="section level2">
 <h2><span class="header-section-number">0.5</span> R Session Information</h2>
@@ -294,10 +297,10 @@ theme( legend.position = &quot;none&quot;,
 ## [5] dplyr_0.4.3    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.1         formatR_1.2.1       nloptr_1.0.4       
+##  [1] Rcpp_0.12.2         formatR_1.2.1       nloptr_1.0.4       
 ##  [4] plyr_1.8.3          iterators_1.0.7     tools_3.2.2        
 ##  [7] digest_0.6.8        lme4_1.1-9          evaluate_0.8       
-## [10] gtable_0.1.2        nlme_3.1-121        mgcv_1.8-7         
+## [10] gtable_0.1.2        nlme_3.1-121        mgcv_1.8-9         
 ## [13] Matrix_1.2-2        foreach_1.4.2       DBI_0.3.1          
 ## [16] yaml_2.1.13         parallel_3.2.2      SparseM_1.7        
 ## [19] brglm_0.5-9         proto_0.3-10        BradleyTerry2_1.0-6
@@ -308,7 +311,7 @@ theme( legend.position = &quot;none&quot;,
 ## [34] scales_0.3.0        codetools_0.2-14    htmltools_0.2.6    
 ## [37] MASS_7.3-43         splines_3.2.2       pbkrtest_0.4-2     
 ## [40] assertthat_0.1      colorspace_1.2-6    labeling_0.3       
-## [43] quantreg_5.19       stringi_0.5-5       lazyeval_0.1.10    
+## [43] quantreg_5.19       stringi_1.0-1       lazyeval_0.1.10    
 ## [46] munsell_0.4.2</code></pre>
 </div>
 

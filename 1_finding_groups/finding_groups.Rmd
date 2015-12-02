@@ -1,6 +1,7 @@
 ---
 title: "Business Analytics 1 : Finding Groups Within the Data"
 author: "Ming-Yu Liu"
+date: "November 11, 2015"
 output: 
   html_document: 
     number_sections: yes
@@ -27,7 +28,7 @@ The common approach to solve this issue is to analyze the question along two dim
 
 - **volaility** : This can be measured by the [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation), which is simply the standard deviation of sales divided by the mean sales for each SKU.
 
-Let's read in the dataset to get a feel of what it looks like, before going further.
+Let's read in the dataset to get a feel of what it looks like, before going further. Oh, and the link to the datasets used in this documentation is located at the bottom of the report.
 
 ```{r, message=FALSE}
 
@@ -89,7 +90,7 @@ After we've identify the grouping the next step is to transform these insights i
 - group 2 : SKUs with high sales and low variability. We'll call them "horses", because these products are strong and reliable. These stocks will be "made to stock". 
     - **Make to Stock** : This production strategy forecasts demand to determine how much stock should be produced. If demand for the product can be accurately forecasted, the MTS strategy can be an efficient choice. This will be reasonable for this case, because the sales for these products are expected to be high and the risk of the inaccurate forecast is low (coefficient of variation).
      
-- group 3 : SKUs with high sales and high variability. We'll call them "white bulls", because despite of its possible high sales, it is difficult to control. These SKUs will be treated on a case by case basis. Things may be a bit difficult to anticipate, but their returns may be high.
+- group 3 : SKUs with high sales and high variability. We'll call them "wild bulls", because despite of its possible high sales, it is difficult to control. These SKUs will be treated on a case by case basis. Things may be a bit difficult to anticipate, but their returns may be high.
 
 This draws an end to the first example.
 
@@ -176,7 +177,7 @@ From the result of this table, you can see that :
 
 - group 4 : For this final group, this is assume to be a "miscellaneous" segment. As it doesn't have any obvious characteristic apart from the `Newborn` column indicating that they the employee had a newborn within the last 12 month and a straightforward way to retain these employees is to provide parental leave or on-site child care. But notice from the `proportion` column that since it's a relatively small group, given the limited resources we have, it's not really a priority either.
 
-When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales, therefore, the visualization after using the max-min normalization method may look a bit hacky, as with this normalization, there will be values of 0 ( A different kind of normalization is used here because the scale function produces negative numbers and that does not sound very intuitive for radar charts ).
+When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales. Therefore, the visualization after using the max-min normalization method on the recorded score may look a bit hacky ( the `scale` function produces negative numbers and that does not sound very intuitive for radar charts, thus a different kind of normalization is used here ). As with this normalization, there will be values of 0.
 
 ```{r, fig.height=8, fig.width=12  }
 
@@ -219,7 +220,9 @@ End of the second example.
 
 4. For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria. If you're interested in a more technical way of choosing the suitable number and evaluate the stability of your clustering result, you can refer to another documentation [here](http://ethen8181.github.io/machine-learning/clustering/clustering.html).
 
-This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code to this documentation [here](https://github.com/ethen8181/Business-Analytics/blob/master/1_finding_groups/finding_groups.R).
+This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code (finding_groups.R) and datasets (in the data folder) used in this documentation [here](https://github.com/ethen8181/Business-Analytics/tree/master/1_finding_groups).
+
+Any comments or suggestions is appreciated. That includes bugs or typos report. You can file these new issues [here](https://github.com/ethen8181/Business-Analytics/issues). 
 
 ## R Session Information
 

@@ -9,7 +9,10 @@ library(reshape2)
 setwd("/Users/ethen/Business-Analytics/1_finding_groups/data")
 rm( list = ls() )
 
-# -- [example 1 : supply chain] -----------------------------------------------------
+# ----------------------------------------------------------
+#              example 1 : supply chain
+# ----------------------------------------------------------
+
 data_sku <- read.csv("DATA_2.01_SKU.csv")
 head(data_sku)
 
@@ -30,8 +33,9 @@ ggplot( data_sku, aes( CV, ADS, color = groups ) ) +
 geom_point() + 
 labs( title = "SKU Example", y = "Average Daily Sales", x = "Coefficient of Variation" )
 
-
-# -- [example 2 : HR]---------------------------------------------------------------
+# ----------------------------------------------------------
+#              example 2 : HR
+# ----------------------------------------------------------
 data_hr <- read.csv("DATA_2.02_HR.csv")
 str(data_hr)
 
@@ -73,6 +77,10 @@ hr_agg <- mutate( hr_agg, proportion = tl / sum(tl) ) %>%
 # -------------------------------------------------------------------------------------------------------
 # radar chart ??
 # http://stackoverflow.com/questions/29452431/how-to-plot-a-radar-chart-in-ggplot2-or-r
+# http://artax.karlin.mff.cuni.cz/r-help/library/fmsb/html/radarchart.html
+# http://stackoverflow.com/questions/24248161/plot-a-radar-chart-for-each-row-in-a-data-frame-with-r
+# rChart library
+# http://stackoverflow.com/questions/28486186/modify-existing-function-for-a-radar-plot-in-r
 
 Normalize <- function(x) ( x - min(x) ) / ( max(x) - min(x) ) 
 
@@ -101,14 +109,8 @@ theme( legend.position = "none",
 # ----------------------------------------------------------------------------------------------------------
 # testing code, not implemented
 
-# adding white borders
-variable <- unique(hr_agg_melt$variable)
-border_df <- data.frame( variable = rep( variable, each = 11 ) ) 
-border_df$border <- rep( seq( 0, 1, .1 ), length(variable) )
-geom_bar( data = border_df, aes( y = border ), stat = "identity", fill = NA, color = "white" ) +
-
-
 # correlation plot
 library(GGally)
 sample <- dput( data_hr[ 1:10, -c(5,6) ] )
 ggcorr( sample, nbreaks = 5 )
+
