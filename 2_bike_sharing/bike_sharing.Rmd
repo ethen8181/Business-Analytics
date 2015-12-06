@@ -153,7 +153,7 @@ ggtitle( "2011-2012 User's Daily Bike Demand" )
 
 ```
 
-The plot tells us that registered users' use bikes more often on weekdays, while non-registered users' behaviors are completely the opposite. Their demand increases over the weekend. 
+The plot tells us that registered users use bikes more often on weekdays, while non-registered users' behaviors are completely the opposite. Their demand increases over the weekend. 
 
 **3. Trend of bike demand over year: Is the market size of bike sharing increasing or decreasing?** 
 
@@ -218,13 +218,12 @@ variables <- c( "weather", "temp", "humidity", "windspeed",
 
 **Step 2 ~ 4:**
 
-As for the rest of the steps, we'll first print out the [`ExtractFeatures`][ExtractFeatures] function that does the feature engineering for our dataset and explain along the way.
+We'll combine the rest of the  feature engineering steps into one single  [`ExtractFeatures`][ExtractFeatures] function. Note that the actual test set does not include the `casual` and `registered` column. Hence, for this function, we also defined a data.type parameter so that we can use it for both training and test set.
 
 ```{r}
 
 ExtractFeatures <- function( data, data.type )
 {
-
 	# 2. convert holiday and workingday into one variable
 	#    indicating whether its a holiday, weekend and workday
 	data$type <- with( data, 
@@ -263,9 +262,12 @@ count <- data_test$count
 data_train <- ExtractFeatures( data = data_train, data.type = "train" )
 data_test  <- ExtractFeatures( data = data_test , data.type = "train" )
 
+# glimpse at the data
+data_train
+
 ```
 
-
+Now that we have preprocessed our dataset, we're ready to apply the machine learning algorithms.
 
 ## Model Training
 

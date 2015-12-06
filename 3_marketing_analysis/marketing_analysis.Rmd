@@ -18,6 +18,96 @@ The domain of marketing analysis is huge, topics can range from social network a
 2. **Scoring Models:** Targeting the right customers, that is which customers should I spend the most marketing budget on?
 3. **Customer Life Time Value:** What's the future value of my customers? That way the company will be able to concentrate the most on those that will be worth the most.
 
+## Segmentation
+
+Each company may have stored a large pool of data for each of their customers based on hundreds of indicators. Though rich in quantity, it is often hard to directly use it to obtain the insights needed. Thus, segmentation is implemented to transform your data into something that is clear and usable. 
+
+A more intuitive way when referring to the purpose of segmentation is: You can't treat every single one of your customers the same way, charge them the same price or communicate in the same benefits. But as that being said, you can't treat each and every customer individually as that will be way too costly. So a good segmentation is to find the right balance between simplifying it to make it usable and not simplifying it much so that it is still valuable.
+
+Knowing what segmentation does, we now have to choose the variables that are suitable to perform the segmentation on. While the suitable variables will still differ according to the goals that you what to accomplish, there are three variables that have proven are often times useful to predict customer profitability. Namely: 
+
+- **Recency:** Indicates when the customer made his/her last purchase. If a customer has lapsed and has not made a purchase for a long period of time he/she may have lost interest. Or worst, switch to your competition.
+- **Frequency:** Refers to the number of purchases made in the past. More could possibly means that the more likely additional purchases will occur in the future.
+- **Monetary Value:** The amount of money spent on average at each purchase occasion. Obviously, the more money a customer spent the more valuable he/she is to the company.
+
+Segmentation performed by these three varaibles are often times referred to as RFM segmentation.
+
+After saying that much, let's start looking at our dataset at hand, a selling customer purchase record for a retailer. Note that the original text file data does not contain a header. And the three columns represents customer id, purchase amount and date of purchase ( in year-month-day format ) respectively. 
+
+```{r, warning=FALSE, message=FALSE}
+
+# environment setting
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(lubridate)
+library(data.table)
+setwd("/Users/ethen/Business-Analytics/3_marketing_analysis")
+
+# load data, reset column names and convert to date type 
+data <- fread( "purchase.txt", sep = "\t", header = FALSE  )
+setnames( data, c( "customer_id", "purchase_amount", "purchase_date" ) )
+data[ , purchase_date := ymd(purchase_date) ]          
+data
+
+```
+
+Since recency value isn't built-in with the dataset we'll have to do it ourselves. We're going to compute the time difference between the `purchase_date` and the very last day (plus 1 day) recorded in the dataset. After obtaining the day difference we'll convert it back to numeric type.
+
+```{r}
+
+last <- max(data$purchase_date) + days(1)
+data[ , recency := difftime( last, purchase_date ) %>% as.numeric() ]
+summary(data)
+
+```
+
+Using a quick summary function on the dataset, we can see that it consists of customer purchase
+from January 2005 to the last day of 2015. The mean of the `purchase_year` tells that most purchases have been made during 2011 and the mean recency value is around 1632.
+
+Next, we'll compute the RFM value for each customer. Despite there's `r nrow(data)` rows in the dataset, there's actually only `r length( unique(data$customer_id) )` unique customers. Data.table allows you to compute all that in one concatenated command. After computing the value, histogram can be used to look at the value's distribution. 
+
+```{r, message=FALSE, fig.width=10}
+
+rfm1 <- data[ , .( recency 	 = min(recency),
+				   frequency  = .N, 
+				   avg_amount = mean(purchase_amount) ), by = customer_id ]
+
+# distibution
+grid.arrange( ggplot( rfm1, aes( avg_amount ) ) + geom_histogram(),
+			  ggplot( rfm1, aes( frequency )  ) + geom_histogram(), ncol = 2 )
+
+```
+
+`avg_amount`'s extremely skewed histogram tells us that most people spent very few for each purchase and probably requires some tuning. Because for example, someone who spends 15 dollars on average generates three times the revenue for the company compared with someone who only spends 5 dollars. But what about two customers who spent 310 and 320 dollars respectively? You'll notice the difference in purchase amounts for are 10 dollars for both occasions, meaningly that they will treated the same in distance computations if we do not do something about them. The same goes for `frequency`.
+
+Next, since our rfm variables are recorded in completely different units (days, dollars), to group customers into different segmentations, one thing we have to do is to transform our variables. Only by standardizing or normalizing the scale, will make them comparable. The complete transformation steps are listed in the following :
+
+1. `customer_id` Remove it and store it elsewhere for now as they're meaningless in terms of segmentation.
+2. `avg_amount` and `frequency` Take logarithm value to make them more normally distributed.
+3. Scale each column to make them comparable.
+
+```{r}
+
+# store the original one  
+rfm2 <- copy(rfm1)
+
+# 1. 
+customer_id <- rfm2$customer_id
+rfm2[ , customer_id := NULL ]
+
+# 2. 
+rfm2[ , `:=`( avg_amount = log(avg_amount),
+		   	  frequency  = log(frequency) ) ]
+
+# 3.
+rfm2[ , names(rfm2) := lapply( .SD, scale ) ]
+rfm2
+
+```
+
+
+
 
 
 

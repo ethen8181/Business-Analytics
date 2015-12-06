@@ -1,6 +1,6 @@
 # Business-Analytics
 
-Business Analytics / Data Science projects. Each folder’s work is independent of one another.
+#### Business Analytics / Data Science projects. Each folder’s work is independent of one another.
 
 **1_finding_groups : 2015.11.10** 
 

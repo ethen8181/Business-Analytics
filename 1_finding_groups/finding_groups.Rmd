@@ -9,11 +9,11 @@ output:
     toc: yes
 ---
 
+> This documentation assumes you're familiar with R and hierarchical clustering, thus technical details are not explained.
+
 ## Background Information 
 
-This module will go over examples of how identifying groups within data allows business to improve efficiency. Finding groups within our data allows us to strike the right balance between similarities and differences. The reason behind this is we want to treat similar cases with similar appoaches to benefit from the economics of scale. On the other hand, treating different scenarios with different ways that are more suitable to the current situations will improve your actions' effectiveness. The following documentation will cover two examples of where this notion can be use in the business world. 
-
-> Note that this documentation assumes you're familiar with R and hierarchical clustering, thus technical details are not explained.
+This documentation will go over two examples of how identifying groups within data allows business to improve efficiency. Finding groups within our data allows us to strike the right balance between similarities and differences. The reason behind this is we want to treat similar cases with similar appoaches to benefit from the economics of scale. On the other hand, treating different scenarios with different ways that are more suitable to the current situations will improve your actions' effectiveness. The following documentation will cover two examples of where this notion can be use in the business world. 
 
 ## Example 1 : Supply Chain Management 
 

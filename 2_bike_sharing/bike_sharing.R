@@ -1,4 +1,3 @@
-
 # kaggle bike sharing 
 # https://www.kaggle.com/c/bike-sharing-demand
 
@@ -111,7 +110,15 @@ scale_colour_discrete( limit = c( "registered", "casual" ) ) +
 ggtitle( "2011-2012 User's Daily Bike Demand" )
 
 
-# 3. trend of bike demand over year 
+# total bike demand 
+demand <- select( data, datetime, casual, registered ) %>%
+		  tbl_dt() %>%
+		  mutate( datetime = year(datetime) ) %>%
+	      gather( "user", "count", -1 ) %>%
+		  group_by( datetime ) %>%
+		  summarise( count = sum(count) )
+
+# 3. trend of bike demand over year for casual and registered users
 subdata3 <- select( data, datetime, casual, registered ) %>%
 			tbl_dt() %>%
 		    mutate( datetime = year(datetime) ) %>%
@@ -141,7 +148,7 @@ ggtitle( "2011-2012 Bike Demand of Users" )
 # ----------------------------------------------------------------------------
 # 						Feature Engineering
 # ----------------------------------------------------------------------------
-data[ , datetime := ymd_hms(datetime) ]
+# data[ , datetime := ymd_hms(datetime) ]
 # add a hour, weekday, year, month column 
 data[ , c( "hour", "weekday", "year", "month" ) := list( hour(datetime), 
 												   		 lubridate::wday(datetime),
@@ -209,7 +216,7 @@ data_train <- ExtractFeatures( data = data_train, data.type = "train" )
 data_test  <- ExtractFeatures( data = data_test , data.type = "train" )
 
 # 10-fold cross validation 
-control <- trainControl( method = "cv", number = 10 )
+control <- trainControl( method = "cv", number = 6 )
 
 # evaluation measure 
 RMSLE <- function( y, pred )
@@ -233,9 +240,35 @@ model_ctree2 <- train( formula_registerd, data   	= data_train,
 result_ctree1 <- predict( model_ctree1, newdata = data_test )
 result_ctree2 <- predict( model_ctree2, newdata = data_test )
 
-predict_count <- ( exp(result_ctree1) - 1 ) + ( exp(result_ctree2) - 1 )
-RMSLE( count, predict_count )
+prediction_ctree <- ( exp(result_ctree1) - 1 ) + ( exp(result_ctree2) - 1 )
+RMSLE( count, prediction_ctree )
 
+# gbm
+library(gbm)
+gbm_grid <- expand.grid( n.trees 	  	   = 1500,
+						 shrinkage    	   = .01,
+						 interaction.depth = 4,
+						 n.minobsinnode    = 10 )
+
+model_gbm1 <- train( formula_casual, data      = data_train, 
+									 trControl = control, 
+									 method    = "gbm",
+									 tuneGrid  = gbm_grid, 
+									 verbose   = FALSE )
+
+model_gbm2 <- train( formula_registerd, data      = data_train, 
+									 	trControl = control, 
+										method    = "gbm",
+										tuneGrid  = gbm_grid, 
+										verbose   = FALSE )
+
+result_gbm1 <- predict( model_gbm1, newdata = data_test )
+result_gbm2 <- predict( model_gbm2, newdata = data_test )
+
+prediction_gbm <- ( exp(result_gbm1) - 1 ) + ( exp(result_gbm2) - 1 )
+RMSLE( count, prediction_gbm )
+
+RMSLE( count, ( prediction_ctree + prediction_gbm ) / 2 )
 
 # -------------------------------------------------------------------------
 # predicting on the test set 
@@ -281,8 +314,10 @@ model_rf2 <- train( formula_registerd, data      = data_train,
 result_rf1 <- predict( model_rf1, newdata = data_test )
 result_rf2 <- predict( model_rf2, newdata = data_test )
 
-predict_count <- ( exp(result_rf1) - 1 ) + ( exp(result_rf2) - 1 )
-RMSLE( count, predict_count )
+prediction_rf <- ( exp(result_rf1) - 1 ) + ( exp(result_rf2) - 1 )
+RMSLE( count, prediction_rf )
+
+
 
 # https://github.com/DfAC/StrategicBusinessAnalytics/blob/master/ProjectSlide.Rmd
 

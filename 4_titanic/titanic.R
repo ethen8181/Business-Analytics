@@ -10,7 +10,7 @@ library(stringr)
 library(ggplot2)
 library(data.table)
 library(randomForest)
-setwd("/Users/ethen/Desktop")
+setwd("/Users/ethen/Business-Analytics/4_titanic")
 
 data <- fread( "train.csv", stringsAsFactors = FALSE )
 # @Parch : Number of Siblings/Spouses Aboard
@@ -47,6 +47,7 @@ labs( x = "variables", title = "Variables with Missing Values" )
 # remove the observations that have too large of a proportion 
 table( apply( data %>% select(col_numeric), 1, Missing ) )
 
+# Embark also has missing values ! 
 
 # 2. Extract the title info from the Name information and replace the old one  
 
@@ -92,7 +93,8 @@ ExtractFeatures <- function(data)
 	variable <- c( "Ticket", "Cabin" )
 	data <- data %>% 
 			select( -one_of(variable) ) %>%
-			mutate( Sex 	 = as.factor(Sex), 
+			mutate( Sex 	 = as.factor(Sex),
+					Name     = as.factor(Name),
 					Pclass   = as.factor(Pclass),
 					Embarked = as.factor(Embarked),
 					Survived = as.factor(Survived) )
@@ -110,7 +112,7 @@ ExtractFeatures <- function(data)
 	# combine the categorical data back 
 	data <- cbind( data_complete, data %>% select( -col_numeric ) )
 
-	return( data.table(data) )
+	return( data.table( data[ complete.cases(data), ] ) )
 }
 
 data <- ExtractFeatures(data)
@@ -122,13 +124,14 @@ data <- ExtractFeatures(data)
 # ------------------------------------------------------------------------
 
 # split into 80 / 20 percent and evaluate prediction accuracy on test set 
+set.seed(4321)
 train_index <- createDataPartition( data$Survived, p = .8, list = FALSE )
 data_train  <- data[ train_index, ]
 data_test   <- data[ -train_index, ]
 
 # define training control to be 10-fold cross validation
 # classProbs = TRUE 
-control <- trainControl( method = "cv", number = 10 )
+control <- trainControl( method = "cv", number = 6 )
 
 # initialize the method 
 methods <- c( "rpart", "glm", "ctree" )
@@ -148,15 +151,18 @@ TrainModel <- function( method )
 
 		# convert result to numeric (from factor)
 		result <- predict( model, newdata = data_test )	
-		result_list[[method]] <- data.table( as.numeric( levels(result) )[result] )
+		result_list[[method]] <- data.frame( as.numeric( levels(result) )[result] )
 		setnames( result_list[[method]], method )
 
 		# store the method and its accuracy 
-		accuracy_list[[method]] <- data.table( method   = method, 
-										       accuracy = confusionMatrix( data_test$Survived, result )$overall[["Accuracy"]] )
+		accuracy_list[[method]] <- data.table( 
+			
+			method   = method, 
+			accuracy = confusionMatrix( data_test$Survived, result )$overall[["Accuracy"]] 
+		)
 	}
 
-	result   <- bind_cols(result_list)
+	result   <- do.call( cbind, result_list )
 	accuracy <- rbindlist(accuracy_list)
 
 	return( list( result = result, accuracy = accuracy  ) )
@@ -168,6 +174,13 @@ train_model <- TrainModel(methods)
 # ensemble 
 # start from here 
 
+train_model$result[1,] %>% table()
+
+
+
+dt <- data.table(item=c(1,1,1,1,2,2,2,2), category=c(2,3,2,2,2,3,1,1))
+
+dt[, .SD[, .N, by = category][order(-N)][1], by = item]
 
 # https://github.com/mattdelhey/kaggle-titanic
 # http://trevorstephens.com/post/72916401642/titanic-getting-started-with-r
