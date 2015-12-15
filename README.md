@@ -2,7 +2,7 @@
 
 ### Repository Description:
 
-Personal work on Business Analytics / Data Science related projects. Each folder’s work is independent of one another. 
+Personal work on Business Analytics / Data Science related side projects. Each folder’s work is independent of one another. 
 
 The other repository [machine-learning](https://github.com/ethen8181/machine-learning) focuses more on one particular machine learning / data mining methods.
 
@@ -15,5 +15,7 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 - View documentation [here](http://ethen8181.github.io/Business-Analytics/1_finding_groups/finding_groups.html).
 
 **2_marketing_analysis :**  in progress
+
+- View report [here](http://ethen8181.github.io/Business-Analytics//Users/ethen/Business-Analytics/2_marketing_analysis/marketing_analysis.html).
 
 

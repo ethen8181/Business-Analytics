@@ -1,7 +1,7 @@
 ---
 title: "Marketing Analysis"
 author: "Ming-Yu Liu"
-date: "November 30, 2015"
+date: "December 20, 2015"
 output: 
   html_document: 
     highlight: haddock
@@ -37,6 +37,7 @@ After saying that much, let's start looking at our dataset at hand, a selling cu
 ```{r, warning=FALSE, message=FALSE}
 
 # environment setting
+library(grid)
 library(dplyr)
 library(ggplot2)
 library(gridExtra)
@@ -44,10 +45,12 @@ library(lubridate)
 library(data.table)
 setwd("/Users/ethen/Business-Analytics/2_marketing_analysis")
 
-# load data, reset column names and convert to date type 
+# load data, reset column names and convert to date type
+# also create a year column for later convenience
 data <- fread( "purchase.txt", sep = "\t", header = FALSE  )
 setnames( data, c( "customer_id", "purchase_amount", "purchase_date" ) )
-data[ , purchase_date := ymd(purchase_date) ]          
+data[ , purchase_date := ymd(purchase_date) ] 
+data[ , purchase_year := year(purchase_date) ]
 data
 
 ```
@@ -63,50 +66,163 @@ summary(data)
 ```
 
 Using a quick summary function on the dataset, we can see that it consists of customer purchase
-from January 2005 to the last day of 2015. The mean of the `purchase_year` tells that most purchases have been made during 2011 and the mean recency value is around 1632.
+from January 2005 to the last day of 2015. The mean of the `purchase_year` tells that most purchases have been made during 2011 and the average recency value is around 1632 days.
 
-Next, we'll compute the RFM value for each customer. Despite there's `r nrow(data)` rows in the dataset, there's actually only `r length( unique(data$customer_id) )` unique customers. Data.table allows you to compute all that in one concatenated command. After computing the value, histogram can be used to look at the value's distribution. 
+Next, we'll compute the RFM value for each customer. Despite that that are `r nrow(data)` rows in the dataset, there's actually only `r length( unique(data$customer_id) )` unique customers for this entire dataset. To be explicit, we'll compute:
+
+- `avg_amount` The average amount spent by every customer to represent monetary value. 
+- `first_purchase` and `recency` The first time the customer bought something and the last time (closest to today) they bought something.
+- `frequency` How often did each customer purchased at this retail store. 
+
+Data.table allows you to compute all that in one concatenated command. After computing the value, histogram can be used to look at the values' distribution. 
 
 ```{r, message=FALSE, fig.width=10}
 
-rfm1 <- data[ , .( recency 	  = min(recency),
-				   frequency  = .N, 
-				   avg_amount = mean(purchase_amount) ), by = customer_id ]
+rfm1 <- data[ , .( recency 	  	  = min(recency),
+				   first_purchase = max(recency),
+				   frequency  	  = .N, 
+				   avg_amount 	  = mean(purchase_amount) ), by = customer_id ]
 # distibution
 grid.arrange( ggplot( rfm1, aes( avg_amount ) ) + geom_histogram(),
-			  ggplot( rfm1, aes( frequency )  ) + geom_histogram(), ncol = 2 )
+			  ggplot( rfm1, aes( frequency )  ) + geom_histogram(), ncol = 2,
+			  top = textGrob( "Variable Distribution" ) )
 
 ```
 
-`avg_amount`'s extremely skewed histogram tells us that most people spent very few for each purchase and probably requires some tuning. Because for example, someone who spends 15 dollars on average generates three times the revenue for the company compared with someone who only spends 5 dollars. But what about two customers who spent 310 and 320 dollars respectively? You'll notice the difference in purchase amounts for are 10 dollars for both occasions, meaningly that they will treated the same in distance computations if we do not do something about them. The same goes for `frequency`.
+`avg_amount`'s extremely skewed histogram tells us that most people spent very few for each purchase and probably requires some tuning if we're to use them for building a predictive model later on. We can think about this in an intuitive way. Someone who spends 15 dollars on average generates three times the revenue for the company compared with someone who only spends 5 dollars. But what about two customers who spent 310 and 320 dollars respectively? You'll notice the difference in purchase amounts for these two groups are 10 dollars for both occasions, meaningly that they will treated the same in distance computations if we do not do something about them. The same goes for `frequency`.
 
-Next, since our rfm variables are recorded in completely different units (days, dollars), to group customers into different segmentations, one thing we have to do is to transform our variables. Only by standardizing or normalizing the scale, will make them comparable. The complete transformation steps are listed in the following :
+Moving on to computing our segmentation. To perform this, we'll be using a set of rules. Customer dataset is changing at a continous bases; old customer disappear, new customers are acquired. Thus, using a statistical (machine-learning) segmentation method ( e.g. clustering algorithms ) for this kind of situatation may not be so cost-effective, as you will probably have to update the segmentation the moment you've created it. Another reason that statistical segementation may not be applicable for this circumstances is that perhaps customer behaviors are seasonal. The best segmentation solution from a statistical viewpoint will most likely vary if you run your analysis at different time point, making them uncomparable. To put it all together, how can you target your actions on one of the segment if the very definition of that segment keeps on fluctuating over time? For this reason, we'll be performing our customer segmentation by a set of simple rules and these rules are fixed for some period of time, update it only after a few quarters of years depending on the needs of the business.
 
-1. `customer_id` Remove it and store it elsewhere for now as they're meaningless in terms of segmentation.
-2. `avg_amount` and `frequency` Take logarithm value to make them more normally distributed.
-3. Scale each column to make them comparable.
+The indicator of determining which customer should receive more attention is based on how much they spent and how likely are they going to buy from us in the future. One basic criteria of determining whether customer will buy from us in the future is **recency**. Someone who has made a purchase a few weeks is far more likely to buy from the company again ( compared to someone who has made their lasy purchase many years ago ).
+
+Hence we'll first divide our customers into four main groups based on **recency**. We define a customer to be `active` if they have bought from us within the last year. `warm` if they have made a purchase between 1 to 2 years ago. `cold` is a customer has made a purchase between 2 to 3 years ago. For those who haven't purchased anything for more than three years, we will label them as `inactive`. ( Of course, you should change these cutoff values for each segment depending on your needs ).
+
+After splitting our customers into four main segments, we'll also perform further segmenting on the `active` and `warm` segments. We'll take the customers from these segments and put the new ones, those with the history of making their first purchase within the same timespan into the segment of `new active` and the rest as `old active`. e.g. the active customer is defined as those who have made their last purchases within this year, if that customer made their first purchase within this year, a.k.a same timespan, then they would be classified as new. 
+
+Next, we'll take a step further and split these two sub-groups into four sub-sub-groups based on how many money they've spent on average. For this cutoff value we decided to use 100 based on the 90 percent quantile. Again, tune this parameters based on your needs. 
 
 ```{r}
 
-# store the original one  
-rfm2 <- copy(rfm1)
-
-# 1. 
-customer_id <- rfm2$customer_id
-rfm2[ , customer_id := NULL ]
-
-# 2. 
-rfm2[ , `:=`( avg_amount = log(avg_amount),
-		   	  frequency  = log(frequency) ) ]
-
-# 3.
-rfm2[ , names(rfm2) := lapply( .SD, scale ) ]
-rfm2
+quantile( rfm1$avg_amount, probs = seq( 0, 1, 0.1 ) )
 
 ```
 
+This converts our segmentation for the original `active` segment to four segments `new active low`, `new active high`, `old active low` and `old active high`. We'll also apply the exact same idea to the `warm` segment. Resulting in a total of 10 segments.
+
+Hopefully all that wordy description will become much more clear if you looked at the code.
+
+The function [`Segmentation`][Segmentation] for creating this segmentation is not printed to conserve space. It takes the rfm data and creates manual segmentation based on the recency criteria first that splits customer's into inactive, cold, warm and active based on the three recency cutoff value. Then further splits the warm and active segment into four sub-groups each based on the amount cutoff value and whether they have made their first purchase within the same timespan with respect to the "baseline". This will classify each of the two original segments further into new high, new low, old high and old low. Input parameters:
+
+- `data` rfm segmentation data, must have five columns exactly named as customer_id, recency, first_purchase, frequency and avg_amount. The order of the column doesn't matter.
+- `inactive` Customers whose recency are higher than this value will be classified as inactive customers. Note that the unit of recency is "days".
+- `cold` Same functionality as above, except it's the cutoff value for cold customers.
+- `warm` Same functionality as above, cutoff value for splitting the warm and active customers.
+- `amount` Cutoff value for splitting the warm and active customers further into high and low average purchased amount.
+- The function returns the original rfm data and adds a new segment column to it. It also sorts the order of the rows by customer id. 
+
+The next code chunk uses the function, prints out data and the proportional distribution of the segment column.
+
+```{r}
+
+# segmentation parameters 
+inactive <- 3 * 365
+cold 	 <- 2 * 365
+warm 	 <- 365 
+amount   <- 100
+
+source("/Users/ethen/Business-Analytics/2_marketing_analysis/code/marketing_functions.R")
+rfm1 <- Segmentation( data = rfm1, inactive = inactive, 
+					  cold = cold, warm = warm, amount = amount )
+rfm1
+
+# segment proportional distribution 
+round( table(rfm1$segment) / sum( table(rfm1$segment) ), 2 )
+
+```
+
+We can directly identify that around half of our customers are "inactive", meaning that they have not not purchased anything for at least three years after their last purchase. If we wish to identify the profile or characteristics of each segment, we can calculate the average number of each variable ( except for customer id of course ).
+
+```{r}
+
+rfm1[ , lapply( .SD, mean ), by = segment, .SDcols = -c("customer_id") ]
+
+```
+
+However, the most important usage of these segmentations is that you go back in time and check how many customers were in each customers a year or two years ago and see how things have evolved. By doing so, we'll be able to analyze trends such as are there increase in the number of high value customers? Or have you added more new customers than the year before, etc. Answers to these questions will evaluate the company's overall performance so far and see whether there's room for improvement.
+
+One caveat for doing this is that: The customers that appeared in your dataset today may not even existed a year or even a few weeks ago. Thus when we're using today's dataset to go back in time we have to make sure that we properly take care of those non-existent customers as we'll see later.
+
+The next chunck will obtain the rfm segmentation `rfm2`. This serves as our retrospective segmentation where we'll go back in time by *one year* and obtain the segmentation at that time using the dataset we have today. 
+
+```{r}
+
+# retrospective customer segmentation 
+rfm2 <- data[ recency > 365, 
+			  .( recency 	  	= min(recency) - 365,
+				 first_purchase = max(recency) - 365,
+				 frequency  	= .N, 
+				 avg_amount 	= mean(purchase_amount) ), by = customer_id ]
+
+rfm2 <- Segmentation( data = rfm2, inactive = inactive, 
+					  cold = cold, warm = warm, amount = amount )
+rfm2
+
+# segment proportional distribution 
+round( table(rfm2$segment) / sum( table(rfm2$segment) ), 2 )
+
+```
+
+Now that we've obtain `rfm1` the segmentation for today and `rfm2` the segmentation for a year ago, the primary question we want to answer is: which segment should we concentrate on or in other words, which customer segmentation will be most beneficial to the future success of the company and are the ones that we should be allocating more resources on? Let's dive into that in the next code chunk.
+
+1. `revenue1` Aggregate each customer's total purchased amount for the current year.
+2. `actual2` Merge the previous year's segment with this year's revenue, this is essentially examining how did our customers from last year performed this year. If a customer has not purchased anything for the current year then they will not show up in the revenue1 data ( resulting in NA values ) and we'll replace these values with 0.
+3. Compute `revenue_average`: the average revenue that you would expect from each segment's customer in the next time period ( in our example, next year ). `revenue_total`: expected total revenue generated by each segment.
+
+```{r, fig.width=10, fig.height=6}
+
+# 1.
+revenue1 <- data[ purchase_year == 2015, 
+				  .( revenue = sum(purchase_amount) ), by = customer_id ]
+# 2.
+revenue2 <- merge( rfm2, revenue1, by = "customer_id", all.x = TRUE )
+revenue2[ is.na(revenue), revenue := 0 ]
+
+# 3. average revenue
+revenue_average <- revenue2[ , .( avg_revenue = mean(revenue) ), by = segment ] %>%
+				   arrange( desc(avg_revenue) )
+
+# total revenue
+revenue_total <- revenue2[ , .( avg_revenue = sum(revenue) ), by = segment ] %>%
+				 arrange( desc(avg_revenue) )
+
+list( revenue_average, revenue_total )
+
+```
+
+From the printed result, we can infer interesting facts about our customer segment. For the `revenue_average` data.table, each "`r revenue_average$segment[1]`" customer is worth approximately `r round(revenue_average$avg_revenue[1])` to our company ( or you can say contribute that much do our company if the previous statement sounded a bit rude ... ). This is a lot higher than a "`r revenue_average$segment[ nrow(revenue_average) ]`" customer, which is at the bottom of the average revenue list. However, when we switched to the `revenue_total` data.table, it tells us that `r revenue_total$segment[1]` is the segment that generated the most revenue in total! If we looked back at our original `rfm2` segmentation ( scroll back up please ), we can also see that the customer size of this segment is around 20 percent and the second highest segment `r revenue_total$segment[1]` represents only about 3 percent of our entire customer. This is a good example where small segments in terms of number of customers that generates a huge share of revenues. And it's directly of telling us that customers should not be treated equally as there are just some that contributes more to the overall revenue.
+
+## Customer Life Time Value
+
+Let's envisage the following scenario. You're company lauched a new customer acquistion campaign including hard-discounts, online-keywords, e-mail campaigns etc. In the end, it only turned out to be a minor success. Sure, the company has in fact acquired new customers and generated new sales, but the sales generated does not even cover the cost of the campaign. The supervisor in charge of the campaign , however, argued that the newly acquired customers will remain loyal to the company and generate additional sales in the future. In a sense this campaign is said to be an investment for the future. Is this true? or is it just another excuse for the campaign's bad performance? 
+
+This problem scenario is the whole point of measuring **Customer Life Time Value** (CLTV), to prove or disprove whether acquiring these new customers is a good investment. 
 
 
+**Takeaways:**
+
+1. Use statistical segmentation when the segment you wish to obtain is a "oneshot" thing or use it as a exploratory tool when you're not famaliar with the overall objective.
+
+You can find all the source code [here](https://github.com/ethen8181/Business-Analytics/tree/master/2_marketing_analysis/code). marketing_analysis.R contains the documentation's general scripts and marketing_functions.R contains the functions that were sourced in and used with this documentation.
+
+If you happened to have any comments, feedbacks of any sort, Feel free to file them [here](https://github.com/ethen8181/Business-Analytics/issues)!
 
 
+## R Session Information
 
+```{r}
+
+sessionInfo()
+
+```
+
+[Segmentation]: https://github.com/ethen8181/Business-Analytics/tree/master/2_marketing_analysis/code/marketing_functions.R
