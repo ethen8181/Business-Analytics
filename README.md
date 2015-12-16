@@ -14,8 +14,8 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 - View documentation [here](http://ethen8181.github.io/Business-Analytics/1_finding_groups/finding_groups.html).
 
-**2_marketing_analysis :**  in progress
+**2_marketing_analysis :**  on hold
 
-- View report [here](http://ethen8181.github.io/Business-Analytics//Users/ethen/Business-Analytics/2_marketing_analysis/marketing_analysis.html).
+- View report [here](http://ethen8181.github.io/Business-Analytics/2_marketing_analysis/marketing_analysis.html).
 
 
