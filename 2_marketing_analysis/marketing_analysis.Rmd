@@ -208,6 +208,8 @@ This problem scenario is the whole point of measuring **Customer Life Time Value
 
 1. Use statistical segmentation when the segment you wish to obtain is a "oneshot" thing or use it as a exploratory tool when you're not famaliar with the overall objective.
 
+**Sources:**
+
 You can find all the source code [here](https://github.com/ethen8181/Business-Analytics/tree/master/2_marketing_analysis/code). marketing_analysis.R contains the documentation's general scripts and marketing_functions.R contains the functions that were sourced in and used with this documentation.
 
 If you happened to have any comments, feedbacks of any sort, Feel free to file them [here](https://github.com/ethen8181/Business-Analytics/issues)!

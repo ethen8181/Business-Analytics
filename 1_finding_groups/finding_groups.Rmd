@@ -210,7 +210,7 @@ theme( legend.position = "none",
 
 End of the second example. 
 
-## Takeaways
+**Takeaways:**
 
 1. There are different perspective (intuition, business sense, technical approaches) as to which variable should have or should not have been included in the dataset prior to running the clustering method. As clustering algorithms are so categorized under unsupervised algorithms, there're really no "correct" ouput, so choose your variables or features wisely ! Suppose that for some reason you think that it's nonsense to exclude the `S` variable : the satisfaction level, like we did in this documentation, you should add it back and run the clustering, though you'll obtain similar grouping results for this dataset, and when you realize that whether you include a variable or not does not affect the result, you should exclude it as this lessen the calculation loading for the algorithm and your computer.  
 
@@ -219,6 +219,8 @@ End of the second example.
 3. Following up on the second point about interpreting the result. It may be the case that even if we've identify different groups, but they'll be treated similarly. Also there will be times when we can't transform every results into immediate actions, times where the events may be exogenous and can't be explained. If this group occurs with a high proportion, we may want to collect additional data to try to understand this specific case.
 
 4. For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria. If you're interested in a more technical way of choosing the suitable number and evaluate the stability of your clustering result, you can refer to another documentation [here](http://ethen8181.github.io/machine-learning/clustering/clustering.html).
+
+**Sources:**
 
 This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code (finding_groups.R) and datasets (in the data folder) used in this documentation [here](https://github.com/ethen8181/Business-Analytics/tree/master/1_finding_groups).
 
