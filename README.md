@@ -2,9 +2,9 @@
 
 ### Repository Description:
 
-Personal work on Business Analytics / Data Science related approaches. Each folder’s work is independent of one another. Note the number index in front of each folder does not indicate the ordering the folder, meaning that you 2 does not come after 1, it’s just an index number for personal tracking of folder’s timing.
+Personal work on Business Analytics / Data Science related approaches. Each folder’s work is independent of one another. This means that the number index in front of each folder does not indicate the ordering of the folder, meaning that you do not need to go through 1_ before reading 2_ and go on. The number index is just used for personal tracking of folders’ relative timing.
 
-The other repository [machine-learning](https://github.com/ethen8181/machine-learning) focuses more on one particular machine learning / data mining methods.
+The other repository [machine-learning](https://github.com/ethen8181/machine-learning) focuses more on machine learning / data mining methods.
 
 ### Project Listings:
 
