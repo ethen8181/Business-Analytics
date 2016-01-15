@@ -20,7 +20,7 @@ Conducting customer segmentations using RFM ( Recency, Frequency, Monetary Value
 
 - View report [here](http://ethen8181.github.io/Business-Analytics/2_marketing_analysis/marketing_analysis.html).
 
-**3_AB_test :**
+**3_AB_test : 2016.1.15** ( TODO : add actual case study )
 
 A / B testing using frequentist statistics. Process of determining the suitable sample size and interpretation of the result.
 

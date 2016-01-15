@@ -1,7 +1,7 @@
 ---
-title: "A / B test"
+title: "Online A / B test"
 author: "Ming-Yu Liu"
-date: "January 11, 2016"
+date: "January 15, 2016"
 output: 
   html_document: 
     highlight: pygments
@@ -10,7 +10,7 @@ output:
     toc: yes
 ---
 
-## Overview
+# Overview
 
 A / B testing is a general methodology used online to when you want to test out a new feature. What you're doing is you're going show one set of features, the control set ( your existing feature ) to one user group and another set, your experiment set ( your new feature ) to another user group and test how did these users respond differently so that you can determine which set of your feature is better.
 
@@ -20,12 +20,13 @@ Despite its useful functionality, there are still places where A / B testing isn
 2. A / B testing can't tell you if you're missing something. Meaning it can tell you if A performs better B or vice versa, but it can't tell you that if you use C, then it will actually perform better than the former two.
 3. Tesing out products that people rarely buy. e.g. cars, apartments. It might be too long before the user actually decides to take actions after seeing the information and you might be unaware of the actual motivation.
 
-## Examples
+# Quick Example
 
 When launching a A / B test you need to ask yourself : 
 
-1. What is your baseline for comparison. It's essentially saying that you need to have clear control and metrics.
-2. How much time you need in order to actually have your user adapt to the new experience.
+1. What is your hypothesis and what's the baseline for comparison. 
+2. What's the confidence level that you wish to have in your result ( This will also affect the number of samples ). 
+2. How many samples and time do you need in order to actually have your user adapt to the new experience.
 
 So now, suppose you're running an educational platform and your hypothesis is : Will changing the "Start Now" button from orange to pink increase how many students explore the platform's courses. So in this case the metric that's use to evaluate the change's performance is the click through probability ( Unique visitors who click the button / Unique visitors to page ). Note that it is often times impractical to use metrices such as total number of students that completed the course as it often takes weeks or months before a student can do that.
 
@@ -33,8 +34,6 @@ Next we will jot down the hypothesis that we wish to test out, in our case the o
 
 **The null hypothesis, H0: ** The experimental and control groups have the same probability of completing a checkout ( clicking the button ). Or equivalent to saying that the differences of the two groups' probability is 0.   
 **The alternative hypothesis, H1: ** The two groups have different probability of completing a checkout.
-
-## Designing the Test
 
 Now that we've defined our hypothesis, the first question that comes into mind is how many tests do we need to run, or in a sense how long should the test last in order for us to make our decisions. To do that we can use a power analysis for two independent samples, which can be calculated using the `power.prop.test` function. Before doing that there are some basic parameters that we should be aware of : 
 
@@ -76,7 +75,7 @@ How these parameters affect the sample size you need :
 - `power` The higher the value means that that you wish to increase the confidence that you have in the result. Thus it means that you need a larger sample size.
 - `sig_level` The smaller the value means that you wish to increase the confidence that you have in the result. Thus it means that you need a larger sample size.
 
-## Analyze the Result
+# Analyze Quick Example's Result
 
 Suppose you have run the test and you've obtain the total number of sample sizes and the total number of successes for both groups. Given these variables we can use it to calculate whether the proportional change was due to variation or not. To do so, we'll calculate the confidence interval for the difference, which can be done by calculating the difference plus and minus the z score times the standard deviation. Math Formula :
 $$p_{experiment} - p_{control} \pm Z \sqrt{ p_{pooled}( 1-p_{pooled} )( \frac{1}{n_{experiment}} + \frac{1}{n_{control}} ) }$$ 
@@ -112,7 +111,8 @@ ABTest <- function( count_control = count_control,
 	p <- ( count_control + count_experiment ) / ( sizes_experiment + sizes_control )
 	std_error <- sqrt( p * ( 1 - p ) * ( 1 / sizes_control + 1 / sizes_experiment ) )
 
-	# 95 percent confidence interval's z score = 1.96
+	# 95 percent confidence interval's z score = 1.96, equivalent to 
+	# qnorm( 0.975 )
 	difference <- p_experiment - p_control
 	confidence <- difference + c( -1, 1 ) * 1.96 * std_error
 
@@ -169,25 +169,26 @@ labs( title = "Different Scenarios of Confidence Interval",
 
 For the last three scenario, scenario 4 - 6: If your confidence interval includes your practical significance boundary, would you be sure that the change should not be launched? After all, it's reasonably likely that there was an effect you care about. In these cases, you should run an additional test with greater power if you have the time. But sometimes, you'll have to make a decision even though there's an uncertainty about how real your result is.
 
-## Characterizing a Proper Metric 
+# Characterizing a Proper Metric 
 
-After seeing an simple A / B test example, we'll take a step back and see how do come up with a well-defined metric.
+After walking through a simple A / B test example, we'll take a step back and see how to come up with a well-defined metric.
 
-**Step1: Generate a high level metrices** 
+## Generate a high level metrices
 
-A non-exhaustive list of techniques that might be able to help you come up with high level metrices that you might want to test out in your experiment.
+For generating a high level metric, a good place to start is to think about the overall business objective. Below are a non-exhaustive list of techniques that might be able to help you come up with high level metrices that you might want to test out in your experiment.
 
-1. External Sources : For these types of data, do not *match* them with internal data that you might already have at hand. Instead, look at a time series of both your
+1. **External Sources :** For these types of data, do not *match* them with internal data that you might already have at hand. Instead, look at a time series of both your
 internally computed metric and the externally available one and see if the trends and seasonal variability line up.
-2. Gathering your own data : 
-    - User Experience Group.
-    - Focus Group.
-    - Retrospective Analysis.
-    - Survey.
+2. **Gathering your own data :**
+    - **User Experience Group :** With user experience group, you go really deep with a few users. It can take form of observing users doing tasks or you ask users to self-document their behaviors. After collecting the feedback it's usually a good idea to follow it up with a retrospective analysis. Meaning that if you observe something in a UER study, you could then go looking for that pattern in your data logs to see if that observation bears out and is worth creating a metric about.
+    - **Focus Group :** This is basically where you recruit a bunch of users or potential users and bring them together for a group discussion or you can ask them questions. Though you run the risk of the answers get dominated by "loud voices".
+    - **Survey :** The main advantage of surveys is that you can typically reach thousands of users. The disadvantages are that the data is self-reported and users don’t always give full or truthful answers.
+    
+    Qualitative methods such as User Experience Group and Focus Group are much better suited for answering questions about why or how to fix a problem. Whereas quantitative methods like Surveys do a much better job answering how many and how much types of questions. Having such numbers from the survey helps prioritize resources and allows you to focus on the biggest issues at hand. 
+    
+## Turning it into a well-defined metrices 
 
-**Step2: Turning it into a well-defined metrices** 
-
-Recall that in the examples above, we've chosen the high-level metric click-through probability. And this is defined by the unique number of people how click the button versus the number of users who visited the home page.
+Recall that in the examples above, we've chosen the high-level metric click-through probability, which is defined by the unique number of people how click the button versus the number of users who visited the page that the button was located.
 
 But to actually use implement the definition, we'll also have to address some other questions. Such as : If the same user visits the page once and comes back a week or two later, do we still only want to count that once? Usually, it is preferred that we count these separately, thus we'll also need to specify a time period.
 
@@ -195,26 +196,116 @@ So given that users are usually recorded by cookies online. One version of the f
 
 Another way of implementing this is to calculate : For each minute the number of pageviews ( assign each pageview with an id ) with a click divided by the number of pageviews.
 
-**Step3: Segmenting and filtering your traffic**
+## Segmenting and filtering your traffic
 
 Creating segments and filtering out data can be useful for evaluating metric definitions, because, well, you can look at how the different definitions vary by segment.
 
-For example, you're looking at your metric of total active cookie users over time. And you see a spike in one of the timelines. After confirming that this is not caused by seasonal variation, we can look at different segment of our visitors to see if one of the segment is causing the spike. 
+For example, you're looking at your metric of total active users over time and you see a spike in one of the timelines. After confirming that this is not caused by seasonal variation, we can look at different segment of our visitors to see if one of the segment is causing the spike. Suppose we have chosen segment to be geographic, it might just happen that we've identify a large proportion of the traffic is generated by a specific region and it might be best for us to dig deeper and understand why. 
 
+To develop an understanding about your data and system, we can plot different metrices together, such as the rate ( calculated by the number of clicks divided by number of pageviews ) and probability by different segments to determine the differences in the output.
 
+## Summarizing Metric
 
-Suppose we have chosen segment to be platforms ( mobile and desktop ). Plot the rate and probability by platforms to determine 
+Apart from click-through probability, there're four other common summarizations that might be useful.
 
-## Others
+1. **sums and counts** : e.g. how many users visited the homepage.
+2. **distributional metric** : e.g. quantiles. Mean age of users who completed the course ( though keed in mind that mean is sensitivity to outliers ).
+3. **probabilities and rates** : Recall the subtle differences between the definition of probabilities and rates here. Probability means that given a time interval, whether a person clicked on the button or not ( takes the number of 0 / 1 ) divided by the total number users that interacted with the page but did not click the button during that period of time. As for rate, it refers to calculating the total number of clicks divided by the total number of pageviews.
+4. **ratios.** e.g. the probability that a user clicks on a revenue generating click divided by any other click.
 
-Some principles to consider when designing A / B test :
+## Measuring Sensitivity and Robustness
 
-1. Risk : What risk is the participant undertaking? The main threshold is whether the risk exceeds that of “minimal risk”. e.g. people's health.
-2. Benefits : What benefits might result from the study?
-3. Alternatives : What other choices do people have? In a sense are the people coerced to participate since they lack other alternatives to choose from.
-4. Data Sensitivity : What level of confidentiality can participants expect? Studies without personal data like names or simply data that can't be match to an individual are generally fine. Though a terms of service or a privacy policy is necessary, as it contains a clear statement of what data are you going to collect and how you use it.
+It's the idea that you want to choose a metric that picks up the changes that you care about but robust against the changes that you don't care about, meaning that it doesn't move a lot when nothing interesting happens. It's an important thing to keep in mind when choosing the distributional metric as your summary metric.
 
+e.g. When testing out things like video latency, you plot different summary metric of comparable video's latency, such as the mean, 90 percentile. In theory there shouldn't be that much of a difference between these videos, if there is, then it means that the summary metric isn't robust enough. And suppose you increase the video quality across these comparable videos and the mean does not change at all, then this probably indicates that choosing the mean as the summary metric isn't sensitive enough.
 
+# Designing an Experiment
+
+Suppose you have chosen the suitable metrics to be used for the test, now it's time to apply that and work through the decisions you need to make when you're actually designing an experiment. This can be boiled down to three main part.
+
+1. Define what you mean as a "subject" in your experiment and control. In other words, what are the units in the population that you're going to be running the test on and comparing? 
+2. Choose the "populations". e.g. Everyone or only subjects in the U.S. ? You need to be sure that you're computing the metrices on equivalent populations ( This holds true for subject ).
+3. Determine the size of the experiment. This will also affect the duration of the experiment.
+
+## Define the Subject
+
+What you need to do is to decide how to assign events to either the control or the experiment. You can randomly assign every event, but if you have a user-visible change then this might not be a good idea. Since what will happen is : The user will see the change when they first visit the page and after reloading the page, the user will not see the change (leading to confusion). So for when conducting user-visible change, you want to assign people as oppose to events.
+
+The next question is how do we define a user? There're three commonly used categories, namely user id, anonymous id (cookie) and event.
+
+1. **user id :** e.g. Log in user names. Choosing this as the proxy for your user means that all the events that corresponds to the same user id are either in the control or experiment group, regardless of whether that user is switching between a mobile phone or desktop. This also means that if the user has not log in then he / she will neither be assgined to a control or experiment group.
+
+2. **anonymous id (cookie) :** The cookie is specific for a browser and device, thus if the user switches from Chrome to Firefox, they'll be assigned to a different cookie. Also note that users can clear the cookie, in which case the next time they visit the website they'll get assigned to a new cookie even if they're still using the same browser and device. For experiments that will be crossing the sign-in border, using cookie is preferred. e.g. Suppose you're changing the layout of the page or locations of the sign in bar then you should use a cookie.
+
+3. **event :** Should only be used when you're testing a non-user-visible change. e.g. page load time.
+
+## Define the Population
+
+If you think you can identify which population of your users will be affected by your experiment, you might want to target your experiment to that traffic ( e.g. changing features specific to one language's users ) so that the rest of the population won't dilute the effect. 
+
+Next, depending on the problem you're looking at, you might want to use a **cohort** instead of a population. A cohort makes much more sense than looking at the entire population when testing out learning effects, examining user retention or anything else that requires the users to be established for some reason. 
+
+A quick note on **cohort**. The gist of cohort analysis is basically putting your customers into buckets so you can track their behaviours over a period of time. The term cohort stands for a group of customers grouped by the timeline ( can be week, month ) where they first made a purchase ( can be a different action that's valuable to the business ). In a cohort, you can have roughly the same parameters in your two user group, which makes them more comparable.  
+
+For example, you're an educational platform has an existing course that's already up and running. Some of the students have completed the course, some of them are midway through and there're students who have not yet started. If you want to change the structure of of one of the lessons to see if it improves the completion rate of the entire course and they started the experiment at time X. For students who have started before the experiment initiated they may have already finished the lesson already leading to the fact that they may not even see the change. So taking the whole population of students and running the experiment on them isn't what you want. Instead, you want to segment out the cohort, the group of customers, that started the lesson are the experiment was launched and split that into an experiment and control group.
+
+## Size and Duration 
+
+You can size your experiment based on your significance level, power and minimum detectable change like we've mentioned in the example. But you can also decrease the size of your experiment by targeting experiment to specific traffic. Because you're only looking at a subset of your traffic, you might need a bigger change before it to matters to the business ( Recall that the smaller the change you wish to detect, the larger the sample size you’ll need ). On other note although this might not reduce the time frame of the experiment, but this allows other experiments to be run on the same time. 
+
+After determining the size of the experiment it's time to translate that into a set of practical decisions including : 
+
+1. When do I want to run the experiment.
+2. What fraction of the traffic are you going to send through the experiment. This will be closely tied to the duration of the experiment. There're some reasons that you might not want to run the experiment on all of your traffic to get the result faster. 
+    - The first consideration might be you're just uncertained of how your users will react to the new feature, so you might want to test it out a bit before you get users blogging about it. To same notion applies to riskier cases, such as you're completely switching your backend system, if it doesn't work well, then the site might go down. 
+    - Another consideration is that you may want to run the test a bit longer to make sure that the experiment captures the different user behaviour of weekdays, weekends.
+    - The final one is that you may be running multiple tests at the same time and if you wish to make them directly comparable ( different level or attributes of the same feature ), then the easiest way is to run them at the same time. So if there's a holiday during the timespan that you're running the experiment, then all of the experiments should be equally affected.  
+    
+# Analyzing Results
+
+## Sanity Checks 
+
+Before jumping into analyze the result, we should check that the population size metric and any other metric that you don't expect to change shouldn't change while you're running the experiment, or in a sense that they're invariant and shouldn't differ between the experiment and control group.
+
+Checking invariants example :
+
+For instance, after running your experiment for a week, you've discovered that the total number of users assigned to the control group is 64454 and the total number of users assigned to the experiment group 61818. How would you figure out whether the difference is within expectation given that each user is randomly assigned to the control or experiment group with a probability of 0.5 ? 
+
+This is equivalent to saying out of a total 126272 ( 64454 + 61818 ) users, is it surprising to see if 64454 users are assigned to the control group, which is essentially a binomial distribution. Knowing this information, we can construct a confidence interval to test if the number lies within the confidence interval. The confidence interval can be calculated by the mean plus and minus the z-score times the standard error. 
+
+$$ mean \pm Z \sqrt{ np(1-p) } $$
+
+Where the mean is expected number of users in the control / experiment group, which is simply the total number of the two groups times p (0.5). And the standard error of a binomial distribution is $\sqrt{ np(1-p) }$.
+
+```{r}
+
+group1 <- 64454
+group2 <- 61818
+SanityCheck <- function( group1, group2 )
+{
+	n <- group1 + group2
+	confidence <- n * 0.5 + c( -1, 1 ) * 1.96 * sqrt( n * 0.5 * 0.5 ) 
+	return( confidence )
+}
+( sanity <- SanityCheck( group1, group2 ) ) 
+
+```
+
+The result shows that 64454 does not lie within the range of the computed confidence interval and therefore it indicates that cookies may not be split equally. 
+
+When this kind of situation happens it's usually best to go back to the day by day data to get a better idea of what could be going wrong. One good thing is to check whether any particular day stands out, or it is just an overall pattern. If it is an overall pattern, then it is suggested that we should check if something went wrong with the experiment setup before proceeding on to analyzing the result.  
+
+## Analyzing the Result
+
+One thing to keep in mind is that the goal of analyzing the result is not only about looking for statistical significance , but also about making a business decision about whether your experiment has favorably impacted your metric. So if you have an experiment that statistically improves the experience for thirty percent of the users but is neutral for everyone else, do you want to launch it as is, or do you want to try and make it better?
+
+**Some other takeaways: **
+
+A / B testing is an iterative process, some common mistakes that you want to avoid is :
+
+1. Falling into the trap of “We already tried that”. A hypothesis can be implemented in so many different ways. If you just do one headline test and say "we tried that," you’re really selling yourself short.
+2. Not testing continually or not retesting after months or years. Just because you tested a variation in the past doesn’t necessarily mean that those results are going to be valid a year or two from now.
+3. Optimizing for the top of the funnel, rather than the product. Understanding what the customers want so that you can make the product better. Ultimately, you can’t simply test your headlines and get people to like your product more.
 
 **Sources: **
 
@@ -222,12 +313,14 @@ Source [code](https://github.com/ethen8181/Business-Analytics/blob/master/3_AB_t
 
 Bugs or comments can be filed [here](https://github.com/ethen8181/Business-Analytics/issues).
 
-## Reference 
+# Reference 
 
 1. Determining the sample size for A / B test : https://signalvnoise.com/posts/3004-ab-testing-tech-note-determining-sample-size
 2. Z-score distribution table : http://www.utdallas.edu/dept/abp/zscoretable.pdf
+3. Additional techniques to generating metrices : https://storage.googleapis.com/supplemental_media/udacityu/3954679115/additional_techniques.pdf
+4. Pitfalls of A / B test : http://www.forbes.com/sites/sujanpatel/2015/10/29/how-to-do-ab-testing-right-and-avoid-the-most-common-mistakes-marketers-make/#2715e4857a0b54f535a44349
 
-## R Session Information 
+# R Session Information 
 
 ```{r}
 

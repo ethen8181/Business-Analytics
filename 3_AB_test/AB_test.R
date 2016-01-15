@@ -48,7 +48,8 @@ ABTest <- function( count_control = count_control,
 	p <- ( count_control + count_experiment ) / ( sizes_experiment + sizes_control )
 	std_error <- sqrt( p * ( 1 - p ) * ( 1 / sizes_control + 1 / sizes_experiment ) )
 
-	# 95 percent confidence interval's z score = 1.96
+	# 95 percent confidence interval's z score = 1.96, equivalent to 
+	# qnorm( 0.975 )
 	difference <- p_experiment - p_control
 	confidence <- difference + c( -1, 1 ) * 1.96 * std_error
 
@@ -62,15 +63,17 @@ confidence <- ABTest( count_control = count_control,
 					  count_experiment = count_experiment, 
 					  sizes_experiment = sizes_experiment )
 
+# ------------------------------------------------------------------
+# different scenarios
 
 # fixed artifical plot
 # using delta = 0.02 as the minimum detectable boundary 
 library(ggplot2)
 
 scenario <- as.character(2:6)
-lower <- c( -0.008, 0.01, -0.025, -0.005, 0.015   )
-mean  <- c( 0.01, 0.015, 0.005, 0.025, 0.025 )
-upper <- c( 0.018, 0.018, 0.03, 0.04, 0.03 )
+lower <- c( -0.008, 0.011, -0.025, -0.005, 0.015 )
+mean  <- c( 0.005, 0.014, 0.005, 0.025, 0.025 )
+upper <- c( 0.018, 0.017, 0.035, 0.055, 0.035 )
 
 examples <- data.frame( scenario, lower, mean, upper )
 examples <- rbind( cbind( scenario = "1", confidence ), examples )
@@ -87,6 +90,38 @@ labs( title = "Different Scenarios of Confidence Interval",
 	  x = "confidence interval" ) 
 
 
+# ------------------------------------------------------------------
+#				Variance   
+# ------------------------------------------------------------------
+
+# mean 
+# might have to use a power.t.test to calculate the sample size needed 
+visit <- c( 87029, 113407, 84843, 104994, 99327, 92052, 60684 )
+mean(visit) + c( -1, 1 ) * 1.96 * sd(visit) / sqrt( length(visit) )
+
+
+group1 <- 64454
+group2 <- 61818
+SanityCheck <- function( group1, group2 )
+{
+	n <- group1 + group2
+	confidence <- n * 0.5 + c( -1, 1 ) * 1.96 * sqrt( n * 0.5 * 0.5 ) 
+	return( confidence )
+}
+( sanity <- SanityCheck( group1, group2 ) )
+
+
+
+
+
+# ----------------------------------------------------------------------------
+
+# rule of thumb
+# http://www.exp-platform.com/Documents/2014%20experimentersRulesOfThumb.pdf
+
+
+
+# -----------------------------------------------------------------------------
 
 
 # python a-b testing, bayesian 
