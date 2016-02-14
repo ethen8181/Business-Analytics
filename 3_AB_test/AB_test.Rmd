@@ -37,8 +37,8 @@ Next we will jot down the hypothesis that we wish to test out, in our case the o
 
 Now that we've defined our hypothesis, the first question that comes into mind is how many tests do we need to run, or in a sense how long should the test last in order for us to make our decisions. To do that we can use a power analysis for two independent samples, which can be calculated using the `power.prop.test` function. Before doing that there are some basic parameters that we should be aware of : 
 
-1. **Significance Level: ** Denoted by $\alpha$, this threshold governs the chance of false positive. A significance level of 0.05 means that there's a 5 percent chance of false positive.
-2. **Statistical power: ** This stands for $1 - \beta$ ( or so called sensitivity ), where $\beta$ represents the probability that you'll get a false negative. So a statistical power of 0.8 means that if there's is in fact a change, there's 80 percent that we'll detect it, which is equivalent to saying that there will be a 20 percent false negative.
+1. **Significance Level:** Denoted by $\alpha$, this threshold governs the chance of false positive. A significance level of 0.05 means that there's a 5 percent chance of false positive.
+2. **Statistical power:** This stands for $1 - \beta$ ( or so called sensitivity ), where $\beta$ represents the probability that you'll get a false negative. So a statistical power of 0.8 means that if there's is in fact a change, there's 80 percent chance that we'll detect it, which is equivalent to saying that there will be a 20 percent false negative.
 
 The effect of picking a significance level of 0.05 and power of 0.8 means that we are 4 times more likely to obtain a false negative than a false positive. For A / B testing, we’re generally more concerned about getting a false positive : Making a change that doesn’t actually improve things than we are about not making a change at all, which is why we accept a greater likelihood of a false negative. The rule of thumb for $\alpha$ and $1 - \beta$ is 0.5 and 0.8 respectively.
 
