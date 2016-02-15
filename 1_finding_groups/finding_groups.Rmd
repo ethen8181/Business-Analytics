@@ -9,7 +9,7 @@ output:
     toc: yes
 ---
 
-> This documentation assumes you're familiar with R and hierarchical clustering, thus technical details are not explained.
+> This documentation assumes you're familiar with hierarchical clustering.
 
 ## Background Information 
 
@@ -26,7 +26,7 @@ The common approach to solve this issue is to analyze the question along two dim
     - Even items that are at the same warehouses can have multiple SKUs, because they are sold at different locations ( e.g. retail stores at City A, shoppinig malls at City B and so on ).
     - Also a product may have many variants based on attributes such as size, color or conditioning. This will also lead to multiple SKUs for the same given product.
 
-- **volaility** : This can be measured by the [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation), which is simply the standard deviation of sales divided by the mean sales for each SKU.
+- **volatility** : This can be measured by the [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation), which is simply the standard deviation of sales divided by the mean sales for each SKU.
 
 Let's read in the dataset to get a feel of what it looks like, before going further. Oh, and the link to the datasets used in this documentation is located at the bottom of the report.
 
@@ -179,7 +179,7 @@ From the result of this table, you can see that :
 
 When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales. Therefore, the visualization after using the max-min normalization method on the recorded score may look a bit hacky ( the `scale` function produces negative numbers and that does not sound very intuitive for radar charts, thus a different kind of normalization is used here ). As with this normalization, there will be values of 0.
 
-```{r, fig.height=8, fig.width=12  }
+```{r, fig.height=8, fig.width=12 }
 
 Normalize <- function(x) ( x - min(x) ) / ( max(x) - min(x) ) 
 
@@ -212,9 +212,9 @@ End of the second example.
 
 **Takeaways:**
 
-1. There are different perspective (intuition, business sense, technical approaches) as to which variable should have or should not have been included in the dataset prior to running the clustering method. As clustering algorithms are so categorized under unsupervised algorithms, there're really no "correct" ouput, so choose your variables or features wisely ! Suppose that for some reason you think that it's nonsense to exclude the `S` variable : the satisfaction level, like we did in this documentation, you should add it back and run the clustering, though you'll obtain similar grouping results for this dataset, and when you realize that whether you include a variable or not does not affect the result, you should exclude it as this lessen the calculation loading for the algorithm and your computer.  
+1. There are different perspective (intuition, business sense, technical approaches) as to which variable should have or should not have been included in the dataset prior to running the clustering method. As clustering algorithms are categorized under unsupervised algorithms, meaning that there is no way of measuring whether the ouput is "correct". Thus you should choose your input variables (features) wisely! Speaking of this, suppose that for some reason you think that it's nonsense to exclude the `S` variable : the satisfaction level, like we did in this documentation. You should add it back and run the clustering, though you'll obtain similar grouping results for this dataset, and when you realize that whether you included a variable or not does not affect the result, you should exclude it as this lessen the calculation loading for the algorithm and your computer.  
 
-2. After you obtain the results, giving visualizations and naming your segmentations in a self explanatory and meaningful way can make your results more convincing. We've heard like a billion times already that a picture is worth thousands of words. And more importantly, you should always ask yourself, given the results what are you going to do with it, how can this result help my business goals ? 
+2. After you obtain the results, giving visualizations and naming your segmentations in a self explanatory and meaningful way can make your results more convincing. We've heard like a billion times already that a picture is worth thousands of words. And more importantly, you should always ask yourself, given the results what are you going to do with it, how can this result help my business goals? 
 
 3. Following up on the second point about interpreting the result. It may be the case that even if we've identify different groups, but they'll be treated similarly. Also there will be times when we can't transform every results into immediate actions, times where the events may be exogenous and can't be explained. If this group occurs with a high proportion, we may want to collect additional data to try to understand this specific case.
 
