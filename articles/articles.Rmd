@@ -1,0 +1,12 @@
+---
+title: "Articles"
+author: "Ming-Yu Liu"
+output: html_document
+---
+
+- We need companies to start innovating instead of imitating success stories. [[Hustle](http://thehustle.co/snapchat-vs-spacex-battle-of-the-imitators-and-innovators)]
+- My 4+ Years At Uber Taught Me These Key Lessons. 1. May the supply be with you ; 2. Don't listen, show them. [[Linkedin](https://www.linkedin.com/pulse/three-things-i-learned-during-4-years-uber-michael-pao)]
+- Cohort analysis. [[Youtube](https://www.youtube.com/watch?v=NyhVdGmnh0I)]
+- How to set goals: OKRs. [[Youtube](https://www.youtube.com/watch?v=mJB83EZtAjc)]
+- Meetings that don’t suck. [[Youtube](https://www.youtube.com/watch?v=rU8nv38E0Qk)]
+- Ted Talk : How to use data to make a hit TV show. [[Ted](http://www.ted.com/talks/sebastian_wernicke_how_to_use_data_to_make_a_hit_tv_show?utm_campaign=social&utm_medium=referral&utm_source=facebook.com&utm_content=talk&utm_term=technology)]
