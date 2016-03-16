@@ -1,0 +1,132 @@
+---
+title: "Collection of ggplot2 Plots"
+date: "`r Sys.Date()`"
+author: "Ming-Yu Liu"
+output:
+  rmdformats::readthedown:
+    highlight: haddock
+---
+
+# Avoiding Pie Charts
+
+Date: 2016.3.16
+
+The purpose of a pie chart is to show the relationship of parts out of a whole. With that being said they can still be really bad at the one thing they're ostensibly designed to do. Consider the following pie chart from the [Wall Street Journal](http://www.wsj.com/articles/what-data-scientists-do-all-day-at-work-1457921541) article on What Data Scientists Do All Day at Work.
+
+<img src = "/Users/ethen/Business-Analytics/ggplot2/avoid_pie_charts/data_scientist.png" width = "400" height = "800" >
+
+The problem with the plot is that, our original goal was to compare and contrast these six tasks. But at a glance, do you have any idea whether more time is spent on "Presenting Analysis" or "Data Cleaning"? Thus, if the intent was to primarily allow comparison of hours in-task, leaving some ability to compare the same time category across tasks then bar plots are probably the way to go.
+
+Prepares the data `d`, which contains three columns. 
+
+- `Task` Different categories of task.
+- `Hours` Amounts of time spent.
+- `Percentage` Percentage of people that selected this answer.
+
+```{r, message=FALSE, warning=FALSE}
+
+library(scales)
+library(ggplot2)
+library(ggthemes)
+library(data.table)
+setwd("/Users/ethen/Business-Analytics/ggplot2/avoid_pie_charts")
+d <- fread("pie.txt")
+d <- melt( d, id.vars = "Task", 
+		   variable.name = "Hours", value.name = "Percentage" )
+head(d)
+
+```
+
+## Plots
+
+**Alternative 1: Bar Plot**
+
+Rotates the x axis's text and label the exact percentages as text right on the graph, which can be useful when you want to pick out a specific number to emphasize on it.
+
+```{r, fig.height=7}
+
+p1 <- ggplot( d, aes( x = Hours, y = Percentage ) ) + 
+	  geom_bar( stat = "identity" ) + 
+	  facet_wrap( ~ Task ) + 
+	  xlab("Hours spent per week") + 
+	  geom_text( aes( label = paste0( Percentage, "%" ), y = Percentage ),
+			     vjust = 1.4, size = 3, color = "white" )
+p1 + theme_bw() + 
+theme( axis.text.x = element_text( angle = 90,  hjust = 1 ) )
+
+```
+
+**Alternative 2: Bar Plot**
+
+Using the `theme_tufte` from the `ggthemes` package. The theme will drop all the borders, grids, and axis lines to maximize the data / ink ratio.
+
+```{r, fig.height=7}
+
+p1 + theme_tufte()
+
+```
+
+**Alternative 3: Stacked Bar Plot**
+
+```{r}
+
+ggplot( d, aes( x = Task, y = Percentage, fill = Hours ) ) + 
+geom_bar( stat = "identity", position = "stack" ) +
+coord_flip() +
+scale_fill_brewer( palette = "YlGnBu" ) +
+theme_minimal() + theme( legend.position = "bottom" )
+
+```
+
+**Alternative 4: Refined Version of Bar Plot**
+
+Some notes on ggplot2's grammar.
+
+- geom_bar's `size` controls the bar's border size.
+- `expand` is a numeric vector of length two giving multiplicative and additive expansion constants. These constants ensure that the data is placed some distance away from the axes.
+- `strip .background / .text` controls the title section for each facet.
+- `panel.grid .minor / .major`  controls the grid lines in the plot.
+- `panel.margin` contols the margin between facets.
+- `as_labeller` the function that changes the strip's label without doesn't changing the underlying data. All you have to do is create a named character vector with the new label mapping to the original label name and call the function and pass it in to `facet_grid`'s `labeller` argument.
+
+The amount of time spent on various tasks by surveyed non-managers in data-science positions. ( could be added to the plot as subtitles ). Although this isn’t actually going to tell us which tasks data scientists spend the most time on: we should do some kind of weighted measure to estimate the mean. 
+
+```{r, fig.height=7}
+
+# refined x label and strip label
+x_labels <- c( "<1 hr/\nweek", "1-4 hrs/\nweek", "1-3 hrs/\nday", "4+ hrs/\nday" )
+label_names <- c( "Basic exploratory data analysis" = "Basic Exploratory\nData Analysis", 
+				  "Data cleaning" = "Data\nCleaning", 
+				  "Machine learning/statistics" = "Machine Learning,\nStatistics", 
+				  "Creating visualizations" = "Creating\nVisualizations", 
+				  "Presenting analysis" = "Presenting\nAnalysis", 
+				  "Extract/transform/load" = "Extract,\nTransform, Load" )
+
+ggplot( d, aes( x = Hours, y = Percentage / 100, fill = Hours ) ) +
+geom_bar( stat = "identity", width = 0.75, color = "#2b2b2b", size = 0.05 ) + 
+scale_y_continuous( labels = percent, limits = c( 0, 0.5 ) ) + 
+scale_x_discrete( expand = c( 0, 1 ), labels = x_labels ) + 
+scale_fill_manual( values = c( "#a6cdd9", "#d2e4ee", "#b7b079", "#efc750" ) ) +
+facet_wrap( ~ Task, labeller = as_labeller(label_names) ) + 
+labs( x = NULL, y = NULL, title = "Where Does the Time Go?" ) +
+theme( strip.text = element_text( size = 12, color = "white", hjust = 0.5 ),
+	   strip.background = element_rect( fill = "#858585", color = NA ),	   
+	   panel.background = element_rect( fill = "#efefef", color = NA ),
+	   panel.grid.major.x = element_blank(),
+	   panel.grid.minor.x = element_blank(),
+	   panel.grid.minor.y = element_blank(),
+	   panel.grid.major.y = element_line( color = "#b2b2b2" ),
+	   panel.margin.x = unit( 1, "cm" ),
+	   panel.margin.y = unit( 0.5, "cm" ),
+	   legend.position = "none" ) 
+
+```
+
+## Reference 
+
+1. Worst Chart In The World: http://www.businessinsider.com/pie-charts-are-the-worst-2013-6
+2. How to replace a pie chart: http://varianceexplained.org/r/improving-pie-chart/
+3. Take the Pies out of Pi Day: http://rud.is/b/2016/03/14/spinning-cycles-in-box-4-to-take-the-pies-out-of-pi-day/
+
+
+# Next Chart

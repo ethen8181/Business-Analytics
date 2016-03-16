@@ -106,29 +106,18 @@ SanityCheck <- function( group1, group2 )
 {
 	n <- group1 + group2
 	confidence <- n * 0.5 + c( -1, 1 ) * 1.96 * sqrt( n * 0.5 * 0.5 ) 
-	return( confidence )
+	return(confidence)
 }
 ( sanity <- SanityCheck( group1, group2 ) )
 
 
-
-
-
 # ----------------------------------------------------------------------------
-
 # rule of thumb
 # http://www.exp-platform.com/Documents/2014%20experimentersRulesOfThumb.pdf
 
 
-
 # -----------------------------------------------------------------------------
-
-
 # python a-b testing, bayesian 
 # http://blog.dominodatalab.com/ab-testing-with-hierarchical-models-in-python/
-# https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers
 # https://econsultancy.com/blog/65755-using-data-science-with-a-b-tests-bayesian-analysis/
-
-
-
 

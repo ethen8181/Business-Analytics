@@ -389,7 +389,7 @@ SanityCheck &lt;-<span class="st"> </span>function( group1, group2 )
 {
     n &lt;-<span class="st"> </span>group1 +<span class="st"> </span>group2
     confidence &lt;-<span class="st"> </span>n *<span class="st"> </span><span class="fl">0.5</span> +<span class="st"> </span><span class="kw">c</span>( -<span class="dv">1</span>, <span class="dv">1</span> ) *<span class="st"> </span><span class="fl">1.96</span> *<span class="st"> </span><span class="kw">sqrt</span>( n *<span class="st"> </span><span class="fl">0.5</span> *<span class="st"> </span><span class="fl">0.5</span> ) 
-    <span class="kw">return</span>( confidence )
+    <span class="kw">return</span>(confidence)
 }
 ( sanity &lt;-<span class="st"> </span><span class="kw">SanityCheck</span>( group1, group2 ) ) </code></pre></div>
 <pre><code>## [1] 62787.76 63484.24</code></pre>
@@ -418,6 +418,7 @@ SanityCheck &lt;-<span class="st"> </span>function( group1, group2 )
 <li>Z-score distribution table : <a href="http://www.utdallas.edu/dept/abp/zscoretable.pdf" class="uri">http://www.utdallas.edu/dept/abp/zscoretable.pdf</a></li>
 <li>Additional techniques to generating metrices : <a href="https://storage.googleapis.com/supplemental_media/udacityu/3954679115/additional_techniques.pdf" class="uri">https://storage.googleapis.com/supplemental_media/udacityu/3954679115/additional_techniques.pdf</a></li>
 <li>Pitfalls of A / B test : <a href="http://www.forbes.com/sites/sujanpatel/2015/10/29/how-to-do-ab-testing-right-and-avoid-the-most-common-mistakes-marketers-make/#2715e4857a0b54f535a44349" class="uri">http://www.forbes.com/sites/sujanpatel/2015/10/29/how-to-do-ab-testing-right-and-avoid-the-most-common-mistakes-marketers-make/#2715e4857a0b54f535a44349</a></li>
+<li>KissMetric Infographic on A / B testing : <a href="https://blog.kissmetrics.com/creating-effective-conversion-optimization-process/?utm_source=tofu-email&amp;utm_medium=email" class="uri">https://blog.kissmetrics.com/creating-effective-conversion-optimization-process/?utm_source=tofu-email&amp;utm_medium=email</a></li>
 </ol>
 </div>
 <div id="r-session-information" class="section level1">

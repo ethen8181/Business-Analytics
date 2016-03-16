@@ -34,7 +34,7 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/1_finding_groups/finding_groups.html)]
 
 
-## Kept For Personal Reference
+## Articles
 
 Useful articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
 

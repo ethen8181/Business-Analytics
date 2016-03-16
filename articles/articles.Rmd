@@ -1,9 +1,15 @@
 ---
 title: "Articles"
 author: "Ming-Yu Liu"
-output: html_document
+output: 
+  html_document: 
+    highlight: haddock
 ---
 
+- Wanted in College Graduates: Tolerance for Ambiguity. [[Linkedin Pulse](https://www.linkedin.com/pulse/wanted-college-graduates-tolerance-ambiguity-jeff-selingo)]
+- Know the Difference between Customer Service and Customer Experience. [[Harvard Business Review](https://hbr.org/sponsored/2016/03/know-the-difference-between-customer-service-and-customer-experience?utm_source=twitter&utm_medium=social&utm_campaign=harvardbiz)]
+- Two articles about saying no to p-values. [[R-bloggers](http://www.r-bloggers.com/after-150-years-the-asa-says-no-to-p-values/)][[R-bloggers](http://www.r-bloggers.com/its-not-the-p-values-fault-reflections-on-the-recent-asa-statement-relevant-r-resources/)]
+- The 9 Best Marketing And Sales Analytics You Should Know About.[[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/the-9-best-marketing-and-sales-analytics-you-should-know-about)]
 - We need companies to start innovating instead of imitating success stories. [[Hustle](http://thehustle.co/snapchat-vs-spacex-battle-of-the-imitators-and-innovators)]
 - My 4+ Years At Uber Taught Me These Key Lessons. 1. May the supply be with you ; 2. Don't listen, show them. [[Linkedin](https://www.linkedin.com/pulse/three-things-i-learned-during-4-years-uber-michael-pao)]
 - Cohort analysis. [[Youtube](https://www.youtube.com/watch?v=NyhVdGmnh0I)]
