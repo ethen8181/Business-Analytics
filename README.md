@@ -36,6 +36,6 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## References
 
-- Visualization articles (ggplot2). [[R markdown](/Users/ethen/Business-Analytics/visualization/visualization.html)]
+- Visualization articles. [[R markdown](http://ethen8181.github.io/Business-Analytics/visualization/visualization.html)]
 - Useful articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
 

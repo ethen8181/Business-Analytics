@@ -124,7 +124,7 @@ theme( strip.text = element_text( size = 12, color = "white", hjust = 0.5 ),
 
 ```
 
-**Sources:** source code can be obtained [here](https://github.com/ethen8181/Business-Analytics/blob/master/ggplot2/avoid_pie_charts/pie.R).
+**Sources:** source code can be obtained [here](https://github.com/ethen8181/Business-Analytics/blob/master/visualization/avoid_pie_charts/pie.R).
 
 ## Reference 
 
