@@ -32,7 +32,6 @@ theme_minimal() + theme( legend.position = "bottom" )
 
  
 # refined version of bar plot
-
 # 1. geom_bar's size controls the bar's border size
 # 2. expand:
 # A numeric vector of length two giving multiplicative and 
@@ -69,10 +68,4 @@ theme( strip.text = element_text( size = 12, color = "white", hjust = 0.5 ),
 	   panel.margin.x = unit( 1, "cm" ),
 	   panel.margin.y = unit( 0.5, "cm" ),
 	   legend.position = "none" ) 
-
-
- 
-dat <- gather(dat, amount, value, -Task)
-dat$value <- dat$value / 100
-dat$amount <- factor(amount_trans[dat$amount], levels=amount_trans)
  

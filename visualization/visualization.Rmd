@@ -1,5 +1,5 @@
 ---
-title: "Collection of ggplot2 Plots"
+title: "Collection of Visualization"
 date: "`r Sys.Date()`"
 author: "Ming-Yu Liu"
 output:
@@ -7,13 +7,15 @@ output:
     highlight: haddock
 ---
 
+Articles related to producing informative visualization.
+
 # Avoiding Pie Charts
 
 Date: 2016.3.16
 
 The purpose of a pie chart is to show the relationship of parts out of a whole. With that being said they can still be really bad at the one thing they're ostensibly designed to do. Consider the following pie chart from the [Wall Street Journal](http://www.wsj.com/articles/what-data-scientists-do-all-day-at-work-1457921541) article on What Data Scientists Do All Day at Work.
 
-<img src = "/Users/ethen/Business-Analytics/ggplot2/avoid_pie_charts/data_scientist.png" width = "400" height = "800" >
+<img src = "/Users/ethen/Business-Analytics/visualization/avoid_pie_charts/data_scientist.png" width = "400" height = "800" >
 
 The problem with the plot is that, our original goal was to compare and contrast these six tasks. But at a glance, do you have any idea whether more time is spent on "Presenting Analysis" or "Data Cleaning"? Thus, if the intent was to primarily allow comparison of hours in-task, leaving some ability to compare the same time category across tasks then bar plots are probably the way to go.
 
@@ -29,7 +31,7 @@ library(scales)
 library(ggplot2)
 library(ggthemes)
 library(data.table)
-setwd("/Users/ethen/Business-Analytics/ggplot2/avoid_pie_charts")
+setwd("/Users/ethen/Business-Analytics/visualization/avoid_pie_charts")
 d <- fread("pie.txt")
 d <- melt( d, id.vars = "Task", 
 		   variable.name = "Hours", value.name = "Percentage" )
@@ -121,6 +123,8 @@ theme( strip.text = element_text( size = 12, color = "white", hjust = 0.5 ),
 	   legend.position = "none" ) 
 
 ```
+
+**Sources:** source code can be obtained [here](https://github.com/ethen8181/Business-Analytics/blob/master/ggplot2/avoid_pie_charts/pie.R).
 
 ## Reference 
 
