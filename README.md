@@ -2,14 +2,13 @@
 
 ## Overall Description
 
-This is one of the continuously updated repositories that documents personal data science journey. Currently, contents are organized into different repositories based on the following table's description.
+This is one of the continuously updated repositories that documents personal data science journey. Currently, contents are organized into three different repositories based on the following table's description.
 
 | Repository | Documentation Focus |
 | ---------- | ----------- |
-| [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning in R. |
-| [programming](https://github.com/ethen8181/programming) | Machine learning in python. |
+| [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning in R / python. |
 | [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All the other data analytic related stuffs that are not solely about machine-learning. |
-| [database](https://github.com/ethen8181/database) | Database (MySQL). | 
+| [programming](https://github.com/ethen8181/programming) | Walking through books / online courses. |
 
 ## Documentation Listings
 
@@ -34,7 +33,7 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/1_finding_groups/finding_groups.html)]
 
 
-## References
+## Articles
 
 - Visualization articles. [[R markdown](http://ethen8181.github.io/Business-Analytics/visualization/visualization.html)]
 - Useful articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
