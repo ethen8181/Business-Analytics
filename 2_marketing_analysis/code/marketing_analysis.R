@@ -151,7 +151,6 @@ revenue_predicted[ is.na(revenue), revenue := 0 ]
 revenue_summary <- revenue_predicted[ , .( avg_revenue 	 = mean(revenue),
 								  		   total_revenue = sum(revenue) ), by = segment ] %>%
 				   arrange( desc(total_revenue), desc( avg_revenue) )
-
 revenue_summary
 
 # ----------------------------------------------------------------------------

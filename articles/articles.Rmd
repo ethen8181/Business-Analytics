@@ -4,15 +4,29 @@ author: "Ming-Yu Liu"
 output: 
   html_document: 
     highlight: haddock
+    toc: yes
 ---
 
+# Interviews and Careers
+
+- Land any job you want. [[blog](http://landanyjobyouwant.com/)]
+- The career advice no one tells you. [[Quartz](http://qz.com/640112/the-career-advice-no-one-tells-you/)]
 - Wanted in College Graduates: Tolerance for Ambiguity. [[Linkedin Pulse](https://www.linkedin.com/pulse/wanted-college-graduates-tolerance-ambiguity-jeff-selingo)]
+- How to set goals: OKRs. [[Youtube](https://www.youtube.com/watch?v=mJB83EZtAjc)]
+- Meetings that don’t suck. [[Youtube](https://www.youtube.com/watch?v=rU8nv38E0Qk)]
+
+# Analytics
+
+- Principles of good data analytics. [[blog](http://www.gregreda.com/2014/03/23/principles-of-good-data-analysis/)] 
+- Why I Ditched My Fitbit and What This Means for Analytics. [[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/why-i-ditched-my-fitbit-and-what-this-means-for-analytics)]
 - Know the Difference between Customer Service and Customer Experience. [[Harvard Business Review](https://hbr.org/sponsored/2016/03/know-the-difference-between-customer-service-and-customer-experience?utm_source=twitter&utm_medium=social&utm_campaign=harvardbiz)]
 - Two articles about saying no to p-values. [[R-bloggers](http://www.r-bloggers.com/after-150-years-the-asa-says-no-to-p-values/)][[R-bloggers](http://www.r-bloggers.com/its-not-the-p-values-fault-reflections-on-the-recent-asa-statement-relevant-r-resources/)]
 - The 9 Best Marketing And Sales Analytics You Should Know About.[[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/the-9-best-marketing-and-sales-analytics-you-should-know-about)]
+- Cohort analysis. [[Youtube](https://www.youtube.com/watch?v=NyhVdGmnh0I)]
+- Ted Talk : How to use data to make a hit TV show. [[Ted](http://www.ted.com/talks/sebastian_wernicke_how_to_use_data_to_make_a_hit_tv_show?utm_campaign=social&utm_medium=referral&utm_source=facebook.com&utm_content=talk&utm_term=technology)]
+
+# Business
+
+- Facebook is the new Excel. [[blog](http://alexmuir.com/facebook-is-the-new-excel)]
 - We need companies to start innovating instead of imitating success stories. [[Hustle](http://thehustle.co/snapchat-vs-spacex-battle-of-the-imitators-and-innovators)]
 - My 4+ Years At Uber Taught Me These Key Lessons. 1. May the supply be with you ; 2. Don't listen, show them. [[Linkedin](https://www.linkedin.com/pulse/three-things-i-learned-during-4-years-uber-michael-pao)]
-- Cohort analysis. [[Youtube](https://www.youtube.com/watch?v=NyhVdGmnh0I)]
-- How to set goals: OKRs. [[Youtube](https://www.youtube.com/watch?v=mJB83EZtAjc)]
-- Meetings that don’t suck. [[Youtube](https://www.youtube.com/watch?v=rU8nv38E0Qk)]
-- Ted Talk : How to use data to make a hit TV show. [[Ted](http://www.ted.com/talks/sebastian_wernicke_how_to_use_data_to_make_a_hit_tv_show?utm_campaign=social&utm_medium=referral&utm_source=facebook.com&utm_content=talk&utm_term=technology)]
