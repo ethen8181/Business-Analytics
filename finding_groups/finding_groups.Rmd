@@ -1,12 +1,10 @@
 ---
-title: "Business Analytics 1 : Finding Groups Within the Data"
+title: "Business Analytics - Finding Groups Within the Data"
 author: "Ming-Yu Liu"
-date: "November 11, 2015"
-output: 
-  html_document: 
-    number_sections: yes
-    theme: united
-    toc: yes
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: pygments
 ---
 
 > This documentation assumes you're familiar with hierarchical clustering.
@@ -28,19 +26,22 @@ The common approach to solve this issue is to analyze the question along two dim
 
 - **volatility** : This can be measured by the [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation), which is simply the standard deviation of sales divided by the mean sales for each SKU.
 
-Let's read in the dataset to get a feel of what it looks like, before going further. Oh, and the link to the datasets used in this documentation is located at the bottom of the report.
+Let's read in the dataset to get a feel of what it looks like, before going further. Oh, and the link to the datasets used in this documentation is located at the bottom of the documentation.
 
-```{r, message=FALSE}
-
-# environment setting
-library(dplyr)
+```{r, message=FALSE, warning=FALSE}
 library(caret)
+library(scales)
+library(ggradar)
 library(ggplot2)
-library(reshape2)
-setwd("/Users/ethen/Business-Analytics/1_finding_groups")
+library(data.table)
+
+setwd("/Users/ethen/Business-Analytics/finding_groups")
 rm( list = ls() )
 
-data_sku <- read.csv("data/DATA_2.01_SKU.csv")
+# ----------------------------------------------------------
+#              example 1 : supply chain
+# ----------------------------------------------------------
+data_sku <- fread("data/DATA_2.01_SKU.csv")
 head(data_sku)
 
 ```
@@ -53,10 +54,11 @@ As there is only two variables (columns), we can easily visualize it and look at
 
 ```{r}
 
-ggplot( data_sku, aes( CV, ADS ) ) + geom_point() + 
-labs( title = "SKU Example", y = "Average Daily Sales", x = "Coefficient of Variation" ) + 
+ggplot( data_sku, aes( CV, ADS ) ) + geom_point() +  
 geom_hline( yintercept = 4, color = "blue" ) + 
-geom_vline( xintercept = .2, color = "blue" )
+geom_vline( xintercept = .2, color = "blue" ) + 
+labs( x = "Coefficient of Variation", y = "Average Daily Sales", 
+	  title = "SKU Example" )
 
 ```
 
@@ -69,7 +71,8 @@ One precaution, from the data (or from the visualization) you’ll notice that t
 # hierarchical clustering, with k (clustering number) = 3 
 d <- dist( scale(data_sku), method = "euclidean" )
 cluster <- hclust( d, method = "ward.D" )
-( data_sku$groups  <- as.factor( cutree( cluster, k = 3 ) ) )
+data_sku[ ,  groups := as.factor( cutree( cluster, k = 3 ) ) ]
+head(data_sku)
 
 ```
 
@@ -78,7 +81,8 @@ Now that we have obtain the grouping of the data, let's visualize the grouping t
 ```{r}
 
 ggplot( data_sku, aes( CV, ADS, color = groups ) ) + geom_point() + 
-labs( title = "SKU Example", y = "Average Daily Sales", x = "Coefficient of Variation" )
+labs( x = "Coefficient of Variation", y = "Average Daily Sales", 
+	  title = "SKU Example" )
 
 ```
 
@@ -102,8 +106,8 @@ Now let's say your company has collected a bunch of data from employees that hav
 
 ```{r}
 
-data_hr <- read.csv("data/DATA_2.02_HR.csv")
-str(data_hr)
+data_hr <- fread("data/DATA_2.02_HR.csv")
+head(data_hr)
 
 ```
 
@@ -125,18 +129,20 @@ There're two lessons we can learn from this example.
 ```{r}
 # scale the data (you don't really need to do this when comparing correlations)
 # this is used for latter plotting and applying clustering
-hr_scaled <- data.frame( scale(data_hr) )
+scaled <- scale(data_hr)
+data_hr_scaled <- data.table(scaled)
 
 # find variables that have correlations higher than 0.8 and print out variable names
-findCorrelation( cor(hr_scaled), cutoff = 0.8, names = TRUE )
+findCorrelation( cor(data_hr_scaled), cutoff = 0.8, names = TRUE )
 
 ```
 
 In this case, the function suggests that we remove the `NP` attribute as it correlates highly with the `LPE` attribute. But here, it might be a bad idea to use the correlation method to determine which variables to exclude as neither of them are not normally distributed ( the default method of the cor function that does the correlation calculation is Pearson correlation and this method is sensitive to non-normality in the variables ).
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
-ggplot( melt( hr_scaled[ , 2:3 ] ), aes( value, fill = variable ) ) + 
+ggplot( melt( data_hr_scaled[ , c( "LPE", "NP" ), with = FALSE ] ), 
+		aes( value, fill = variable ) ) + 
 geom_histogram( alpha = .4, position = "identity" )
 
 ```
@@ -147,23 +153,18 @@ Knowing this by intuition, we'll can remove this variable before conducting the 
 
 ```{r}
 
-d <- dist( hr_scaled[ , -1 ], method = "euclidean" ) 
+# clustering 
+d <- dist( data_hr_scaled[ , -1, with = FALSE ], method = "euclidean" ) 
 cluster <- hclust( d, method = "ward.D" )
-# dendogram
-# plot(cluster)
-
-data_hr$groups <- cutree( cluster, k = 4 )
+# plot(cluster) # dendogram
+data_hr_scaled[ ,  groups := as.factor( cutree( cluster, k = 4 ) ) ]
 
 # median aggregation 
-hr_agg <- aggregate( .~ groups, data = data_hr, FUN = median )
+hr_agg <- data_hr_scaled[ , lapply( .SD, median ), by = groups ]
 
-# count the cluster proportion size 
-tl <- table(data_hr$groups)
-hr_agg$proportion <- tl / sum(tl)
-
-# order by proportion 
-mutate( hr_agg, proportion = tl / sum(tl) ) %>%
-arrange( desc(proportion) )
+# order by cluster's proportion size
+t <- table(data_hr_scaled$groups)
+hr_agg[ , proportion := t / sum(t) ][ order(-proportion) ]
 
 ```
 
@@ -177,40 +178,27 @@ From the result of this table, you can see that :
 
 - group 4 : For this final group, this is assume to be a "miscellaneous" segment. As it doesn't have any obvious characteristic apart from the `Newborn` column indicating that they the employee had a newborn within the last 12 month and a straightforward way to retain these employees is to provide parental leave or on-site child care. But notice from the `proportion` column that since it's a relatively small group, given the limited resources we have, it's not really a priority either.
 
-When presenting the upper result table, one visualization you can use is the radar chart. However since the current version of the ggplot2 library still does not support actual radar chart with a simple function call (as least not to my knowledge) and each variable of the data is recorded with different scales. Therefore, the visualization after using the max-min normalization method on the recorded score may look a bit hacky ( the `scale` function produces negative numbers and that does not sound very intuitive for radar charts, thus a different kind of normalization is used here ). As with this normalization, there will be values of 0.
+When presenting the upper result table, one visualization you can use is the radar chart. 
+
+- To use the `ggradar` function you will need some extra fonts for it to work, see instructions [here](https://github.com/ricardo-bion/ggradar) to get it. Currently, it does not support facetting and the first column has to be the group (future work).
+- Each variable of the data is recorded with different scales. And normalizing them via the `scale` function produces negative numbers and that does not sound very intuitive for radar charts, thus a different kind of normalization is used here, namely the max-min normalization. With this method, you minus each column by its min value and divide it by the difference between the maximum and minimum value `( x - min(x) ) / ( max(x) - min(x) )`. Though the recorded score may look a bit odd as with this normalization, there will be values of 0.
 
 ```{r, fig.height=8, fig.width=12 }
 
-Normalize <- function(x) ( x - min(x) ) / ( max(x) - min(x) ) 
+hr_agg2 <- hr_agg[ , -c( "groups", "proportion" ), with = FALSE ]
+hr_agg2 <- hr_agg2[ , lapply( .SD, rescale ) ]
+hr_agg2[ , groups := as.factor( paste0( "group", 1:nrow(hr_agg2) ) ) ]
+name <- colnames(hr_agg2)
+setcolorder( hr_agg2, c( "groups", name[ name != "groups" ] ) )
 
-# exclude the proportion, groups and store the groups
-hr_agg_2 <- hr_agg[ , c( -1, -8 ) ]
-groups <- hr_agg$groups
-
-# transform to long format for plotting
-hr_agg_melt <- apply( hr_agg_2, 2, Normalize ) %>%
-			   data.frame() %>%
-			   mutate( groups = groups ) %>%
-               melt( id.vars = "groups" )
-
-# radar chart
-ggplot( hr_agg_melt, aes( x = variable  ) ) + 
-geom_bar( aes( y = value, fill = groups ), stat = "identity" ) + 
-coord_polar() + 
-facet_wrap( ~ groups ) +
-ggtitle( "HR" ) + 
-theme( legend.position = "none",  
-	   axis.text.y = element_blank(), 
-	   axis.text.x = element_text( color = "black" ), 
-	   axis.ticks  = element_blank(),
-	   axis.title  = element_blank() )
-
+# radar plot
+ggradar(hr_agg2)
 
 ```
 
 End of the second example. 
 
-**Takeaways:**
+## Takeaways
 
 1. There are different perspective (intuition, business sense, technical approaches) as to which variable should have or should not have been included in the dataset prior to running the clustering method. As clustering algorithms are categorized under unsupervised algorithms, meaning that there is no way of measuring whether the ouput is "correct". Thus you should choose your input variables (features) wisely! Speaking of this, suppose that for some reason you think that it's nonsense to exclude the `S` variable : the satisfaction level, like we did in this documentation. You should add it back and run the clustering, though you'll obtain similar grouping results for this dataset, and when you realize that whether you included a variable or not does not affect the result, you should exclude it as this lessen the calculation loading for the algorithm and your computer.  
 
@@ -222,7 +210,7 @@ End of the second example.
 
 **Sources:**
 
-This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code (finding_groups.R) and datasets (in the data folder) used in this documentation [here](https://github.com/ethen8181/Business-Analytics/tree/master/1_finding_groups).
+This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code (finding_groups.R) and datasets (in the data folder) used in this documentation [here](https://github.com/ethen8181/Business-Analytics/tree/master/finding_groups).
 
 Any comments or suggestions is appreciated. That includes bugs or typos report. You can file these new issues [here](https://github.com/ethen8181/Business-Analytics/issues). 
 

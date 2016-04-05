@@ -14,10 +14,10 @@ This is one of the continuously updated repositories that documents personal dat
 
 Each folder is independent of one another. This implies that the number index in front of each folder does not indicate the ordering of the folder. Or intuitively, it means that you do not need to go through 1_ before reading 2_ and so on. The number index is just used for personal tracking of each folder’s relative timing.
 
-**4_cohort_analysis : 2016.4.1**
+**cohort_analysis : 2016.4.1**
 
 - Visualize user retention cohort analysis with *seaborn's* heatmap.
-- View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/4_cohort_analysis/cohort_analysis.ipynb)]
+- View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
 
 **3_AB_test : 2016.1.15** ( TODO : add actual case study )
 
@@ -31,11 +31,11 @@ Conducting customer segmentations using RFM ( Recency, Frequency, Monetary Value
 
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/2_marketing_analysis/marketing_analysis.html)]
 
-**1_finding_groups : 2015.11.10** 
+**finding_groups : 2015.11.10** 
 
 Examples of how finding similar patterns using hierarchical clustering algorithms can be applied to the supply chain’s and human resource’s business field.
 
-- View [[R markdown](http://ethen8181.github.io/Business-Analytics/1_finding_groups/finding_groups.html)]
+- View [[R markdown](http://ethen8181.github.io/Business-Analytics/finding_groups/finding_groups.html)]
 
 
 ## Statistics
