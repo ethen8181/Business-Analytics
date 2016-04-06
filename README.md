@@ -35,6 +35,7 @@ Conducting customer segmentations using RFM ( Recency, Frequency, Monetary Value
 
 Examples of how finding similar patterns using hierarchical clustering algorithms can be applied to the supply chain’s and human resource’s business field.
 
+- Radar chart with the *ggplot2* library.
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/finding_groups/finding_groups.html)]
 
 

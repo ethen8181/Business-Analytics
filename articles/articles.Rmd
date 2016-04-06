@@ -30,3 +30,7 @@ output:
 - Facebook is the new Excel. [[blog](http://alexmuir.com/facebook-is-the-new-excel)]
 - We need companies to start innovating instead of imitating success stories. [[Hustle](http://thehustle.co/snapchat-vs-spacex-battle-of-the-imitators-and-innovators)]
 - My 4+ Years At Uber Taught Me These Key Lessons. 1. May the supply be with you ; 2. Don't listen, show them. [[Linkedin](https://www.linkedin.com/pulse/three-things-i-learned-during-4-years-uber-michael-pao)]
+
+# Learn Data Science
+
+- The MBA Data Science Toolkit: 8 resources to go from the spreadsheet to the command line. [[Medium](https://medium.com/@dmca/the-mba-data-science-toolkit-8-resources-to-go-from-the-spreadsheet-to-the-command-line-cbb59ea82144#.pjph91n3m)]
