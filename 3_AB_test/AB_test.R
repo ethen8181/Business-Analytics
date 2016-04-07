@@ -115,9 +115,6 @@ SanityCheck <- function( group1, group2 )
 # rule of thumb
 # http://www.exp-platform.com/Documents/2014%20experimentersRulesOfThumb.pdf
 
-
-# -----------------------------------------------------------------------------
-# python a-b testing, bayesian 
-# http://blog.dominodatalab.com/ab-testing-with-hierarchical-models-in-python/
-# https://econsultancy.com/blog/65755-using-data-science-with-a-b-tests-bayesian-analysis/
+# determining sample size required
+# https://signalvnoise.com/posts/3004-ab-testing-tech-note-determining-sample-size
 
