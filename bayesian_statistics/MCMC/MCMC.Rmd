@@ -1,0 +1,219 @@
+---
+title: "Markov Chain Monte Carlo"
+date: "`r Sys.Date()`"
+author: "Ming-Yu Liu"
+output:
+  rmdformats::readthedown:
+    highlight: pygments
+---
+
+# Learn About a Probability Distribution
+
+Probability distributions are super-useful because they can define a range of possibilities we expect to observe if our models are true (if you're a frequentist) or the range of plausible values for our parameters (if you're a Bayesian).
+
+Some probability distributions, like the Normal distribution and the Poisson distribution, are relatively straightforward to work with mathematically and we have lots of handy tools for working with them by hand and on the computer.
+
+Other probability distributions over parameters in a complicated model are harder to work with. In this case we need more general tools. **Monte Carlo** methods work by taking samples from a distribution that's hard to study analytically, and then studying the samples instead.
+
+## Example
+
+Here's an ugly function that we could treat as a probability distribution. Note that, in addition to being wiggly, we don't actually know how to scale the y-axis so that the distribution sums to 1.
+
+```{r, message=FALSE, warning=FALSE}
+
+library(ggplot2)
+library(ggthemes)
+
+f <- function(x){
+	( sin(.2 * x^3) + sin(x^2) / 5 + 2.5 + sin(10 * x) / 2 ) * dnorm( x, mean = 1 )
+}
+
+# boundary for the x axis
+x_max <- 6
+x_min <- -6
+
+x <- seq( x_min, x_max, length.out = 500 )
+y <- f(x)
+data <- data.frame( x = x, y = y )
+
+ggplot( data, aes( x, y ) ) + geom_line() + 
+geom_ribbon( aes( ymin = 0, ymax = y ), alpha = 0.2 )
+
+```
+
+Even if you knew the equation that generated that thing, and you remembered everything you learned in calculus and statistics, you probably couldn't find its mean or its quantiles very easily. But if you had 10,000 samples from the distribution, you could estimate the distribution's mean instantly by taking the sample mean.
+
+## Simple Monte Carlo: Rejection Sampling
+
+To start off, let's look at a basic method called **rejection sampling**, the way it works the that we draw a box that completely surrounds our function. Then, we pick a point at random from our box. If it falls under our the area under the curve of the function, we say we accept this point and return it in the sample. If it falls above, we reject it and repeat the drawing process. We'll continue to do this again and again until you get the number of samples that you want. Let’s look at an example outcome of these drawings.
+
+```{r, warning=FALSE, message=FALSE}
+
+# throw N darts (uniformly distributed x-y pairs) at the plot above
+N <- 10000
+ceiling <- 1.5
+xs <- runif( N, min = x_min, max = x_max )
+ys <- runif( N, min = 0, max = ceiling )
+
+# accept any samples that are below the function curve
+accepted_samples <- xs[ ys <= f(xs) ]
+
+ggplot( data.frame( x = accepted_samples ) ) + 
+geom_histogram( aes( x = x, y = ..density.. ) ) + 
+geom_line( data = data, aes( x, y ) )
+
+# study the samples however you want
+# mean(accepted_samples)
+# quantile(accepted_samples, probs = seq(0, 1, length = 4 ) )
+
+```
+
+Intuitively, it should be clear that this works: wherever the curve is tallest, there's a higher probability that the darts will be retained.
+
+That worked pretty well, but it was kind of inefficient, we ended up throwing away almost 90% of our sampling effort. Denoted in the following plot.
+
+```{r}
+
+# accepted and unaccepted points
+df <- data.frame( xs = xs, ys = ys, accept = ys <= f(xs) )
+
+# plot the accepted and unaccepted point
+ggplot( df, aes( xs, ys ) ) + 
+geom_point( aes( color = accept ), size = 0.5 ) + 
+geom_line( data = data, aes( x, y ) )
+
+```
+
+Of course, this is a toy example. It turns out that you may end up throwing away exponentially more attempts per successful sample as the number of dimensions in your data goes up. So hardly anyone uses rejection sampling without a good reason -- that's where the Markov chains come in.
+
+## Markov Chain Monte Carlo (MCMC)
+
+Most of our discarded samples came from the tails of the distribution, where the acceptance probability is basically zero. We could increase the number of samples we keep by spending more time in the middle of the distribution, where the acceptance probabilities are much higher. But if all we did was concentrate our dart-throwing efforts there, then we'd end up with heavily biased samples. Meaning we won't find any probability mass in areas where we don't look. Also, even if we could correct for that issue, we won't always know where to concentrate our efforts. So we'll usually need something more automatic.
+
+That's where the Markov chains come in. MCMC has exactly the same goal as our rejection sampler, but it has more sophisticated ways of deciding where to sample, which can be expressed at a high level as follows: 
+
+1. Start at current position.
+2. Propose moving to a new position (investigate a point near the current position).
+3. Accept/Reject the new position based on the position's adherence to the data and prior distributions (ask if the point likely came from the mountain).
+4. If you accept: Move to the new position. Return to Step 1. Else: Do not move to new position. Return to Step 1.
+5. After a large number of iterations, return all accepted positions.
+
+If the current position of the MCMC algorithm is in an area of extremely low probability, which is often the case when the algorithm begins (typically at a random location in the space), the algorithm will move in positions that are likely not from the posterior but better than everything else nearby.
+
+This way we move in the general direction towards the regions where the posterior distributions exist, and collect samples sparingly on the journey. Once we reach the posterior distribution, we can easily collect samples as they likely all belong to the posterior distribution. Notice that only the current position matters (new positions are investigated only near the current position). We can describe this property as memorylessness, i.e. the algorithm does not care how it arrived at its current position, only that it is there.
+
+Using this algorithm, we can get a decent number of samples in a reasonable amount of time. Two things to note: 
+
+- Inference using the first few thousand points is a bad idea, as they are unrelated to the final distribution we are interested in, or in other words, the first few moves of the algorithm are not reflective of the posterior. Thus is it a good idea to discard those samples before using the samples for inference. We call this period before converge the **burn-in** period.
+- The algorithm can be seen as a random "walk" around the space, thus the current position will exhibit some correlation with previous positions. This is both good and bad. We will always have correlation between current positions and the previous positions, but too much of it means we are not exploring the space well. The correlation can be solved, or at least reduced, by only returning to the user every nth sample. We call this **thinning**.
+
+With all of that being said, let's see what happens if we try this out on a simpler distribution in 2D.
+
+```{r}
+
+lik <- function( x, y ){
+	dnorm(x - 3) * dnorm(y - x + 2)
+}
+
+grid_values <- seq( x_min, x_max, length = 500 )
+grid <- expand.grid( x = grid_values, y = grid_values )
+z <- lik( grid$x, grid$y )
+
+# prior probability plot
+plot <- ggplot( data = grid, aes( x = x, y = y ) ) + 
+		geom_raster( aes( fill = z ) ) + 
+		scale_fill_gradient2() + coord_equal() +
+		theme_tufte()
+plot
+
+```
+
+When we setup a Bayesian inference problem with N unknowns, we are implicitly creating an N dimensional space for the **prior distributions** to exist in. Associated with the space is an additional dimension, which we can describe as the surface, or curve, that sits on top of the space, that reflects the **prior probability** of a particular point. The plots above visualize this. The more blue the color, the more **prior probability** is assigned to that location. Conversely, areas with whiter color represent that our priors assign very low probability to that location.
+
+Let's take a random walk along X and Y, collecting samples in proportion to their probability. This is just like the rejection sampler, but we'll tend to throw our darts in the neighborhood of our last accepted proposal, and the acceptance rule is a bit more complicated.
+
+The walk starts at some arbitrary point, specified by the user. Then the walk progresses by proposing a move to a new position in the parameter space and then deciding whether or not to accept the proposed move. The proposed move's distribution can take on many different forms, here, we'll consider the generic case in which the proposal distribution is a normal distribution, centered at the current position.
+
+Having generated a proposed new position, the algorithm then decides whether or not to accept the proposal. The algorithm will accept the new proposal with probability:
+
+$$p_{accept} = min \left( \frac{ p( \theta_{proposed} ) }{ p( \theta_{current} ) }, 1 \right)$$
+
+Where $p(θ)$, simply represents the target distribution.
+
+The next code chunck defines the `MCMC` function that draws sample points from the distribution, we'll also visualizes the path by drawing the trace of the sampling points.
+
+```{r}
+
+MCMC <- function( iter, burnin = 0, thin = 1 )
+{
+	# the list of the first argument for dimnames is to specify the row names,
+	# sampling starts at a random point, here 0, 0 
+	samples <- matrix( NA, nrow = iter, ncol = 2, 
+					  dimnames = list( NULL, c( "x", "y" ) ) )
+	samples[ 1, ] <- c( 0, 0 )
+
+	for(i in 2:iter){
+
+		sample <- samples[ i - 1, ]
+		
+		for(j in 1:thin){
+			
+			# propose a new sample point			
+			proposal <- sample + rnorm( n = 2, mean = 0, sd = 1 )
+
+			# compare its likelihood with the current position
+			lik_old <- lik( sample["x"], sample["y"] )
+			lik_new <- lik( proposal["x"], proposal["y"] )
+			ratios  <- lik_new / lik_old
+
+			# flip a coin and accept the 
+			# new proposal with probability min( ratio, 1 ),
+			# if you don't accept the proposal,
+			# then just keep what you had in the last step,
+			# meaning nothing changed.
+			# note that 1 is evaluated as TRUE
+			if( rbinom( 1, size = 1, prob = min( ratios, 1 ) ) )
+				sample <- proposal
+		}
+		samples[ i, ] <- sample
+	}
+
+	return( data.frame( samples[ (burnin + 1):iter, ] )	)
+}
+
+TracePlot <- function( plot, samples ){
+	plot + 
+	geom_path( data = samples, aes( x, y ), color = "orange" ) + 
+	geom_point( data = samples, aes( x, y ), size = 1 )
+}
+
+```
+
+
+
+```{r}
+
+# plot that shows the first few sampling points are not good ones
+samples <- MCMC(iter = 50)
+TracePlot( plot, samples )
+
+# plot with burnin, discard the bad sampling points in the beginning
+samples <- MCMC( iter = 250, burnin = 125 )
+TracePlot( plot, samples )
+
+# use thin to avoid correlation and 
+# explore more of the sample space
+samples <- MCMC( iter = 250, burnin = 125, thin = 2 )
+TracePlot( plot, samples )
+
+```
+
+**End Note:**
+
+The MCMC method is very useful, the intuition for the algorithm is that we can approximate the **posterior distribution** by generating a large sample of representative values and the larger the sample, the more accurate is our approximation.
+
+## Reference
+
+1. [The First Stop in Monte Carlo (Methods): Rejection Sampling](http://thexbar.me/2014/11/07/reject-sample/)
+2. [mcmc tutorial](https://github.com/davharris/mcmc-tutorial)
+3. [Probabilistic Programming and Bayesian Methods for Hackers Chapter 3](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter3_MCMC/Chapter3.ipynb)
