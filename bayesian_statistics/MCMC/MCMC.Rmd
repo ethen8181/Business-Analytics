@@ -1,5 +1,5 @@
 ---
-title: "Markov Chain Monte Carlo"
+title: "Markov Chain Monte Carlo (MCMC)"
 date: "`r Sys.Date()`"
 author: "Ming-Yu Liu"
 output:
@@ -155,7 +155,6 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 	for(i in 2:iter){
 
 		sample <- samples[ i - 1, ]
-		
 		for(j in 1:thin){
 			
 			# propose a new sample point			
@@ -177,7 +176,6 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 		}
 		samples[ i, ] <- sample
 	}
-
 	return( data.frame( samples[ (burnin + 1):iter, ] )	)
 }
 
@@ -211,6 +209,10 @@ TracePlot( plot, samples )
 **End Note:**
 
 The MCMC method is very useful, the intuition for the algorithm is that we can approximate the **posterior distribution** by generating a large sample of representative values and the larger the sample, the more accurate is our approximation.
+
+**Sources:**
+
+Code to the documentation can be found [here](https://github.com/ethen8181/Business-Analytics/blob/master/bayesian_statistics/MCMC/MCMC.R).
 
 ## Reference
 

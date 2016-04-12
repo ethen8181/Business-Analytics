@@ -43,7 +43,8 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 **Bayesian Statistics**
 
-- Beta Distribution. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/bayesian_statistics.html)]
+- Beta Distribution. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/bayes/bayes.html)]
+- Markov Chain Monte Carlo (MCMC). [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/MCMC/MCMC.html)]
 
 
 ## Articles

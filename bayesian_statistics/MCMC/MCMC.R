@@ -81,8 +81,7 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 
 	for(i in 2:iter){
 
-		sample <- samples[ i - 1, ]
-		
+		sample <- samples[ i - 1, ]	
 		for(j in 1:thin){
 			
 			# propose a new sample point			
@@ -104,7 +103,6 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 		}
 		samples[ i, ] <- sample
 	}
-
 	return( data.frame( samples[ (burnin + 1):iter, ] )	)
 }
 
