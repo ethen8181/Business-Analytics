@@ -41,10 +41,15 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
-**Bayesian Statistics**
+**Bayesian Statistics : 2016.4.14**
 
-- Beta Distribution. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/bayes/bayes.html)]
+For starters with bayesian statistics, articles should be read in listed order.
+
+- Bayes theorem basic concept. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/bayes/bayes.ipynb)]
+- Illustrating beta distribution, empirical bayes estimation, credible interval and false discovery rate. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/bayes/bayes.html)]
 - Markov Chain Monte Carlo (MCMC). [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/MCMC/MCMC.html)]
+- Bayesian AB testing, beta heirarchical model with `pymc`. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/ab_test/bayesian_ab_test.ipynb)]
+- AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/ab_test/ab_test_caveats.ipynb)]
 
 
 ## Articles

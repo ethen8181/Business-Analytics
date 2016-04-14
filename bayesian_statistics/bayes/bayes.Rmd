@@ -7,6 +7,15 @@ output:
     highlight: pygments
 ---
 
+> Documentation reimplemented from [this series of posts](http://varianceexplained.org/r/bayesian_fdr_baseball/), with one major difference. The original posts uses the `dplyr` package when manipulating with data, whereas this one uses `data.table`. Code accompanying the documentation can be found [here](https://github.com/ethen8181/Business-Analytics/blob/master/bayesian_statistics/bayes/bayes.R).
+
+Which of these two proportions is higher: 4 out of 10, or 300 out of 1000? This sounds like a silly question. Obviously $4/10=.4$, which is greater than $300/1000=.3$!
+
+But suppose you were a baseball recruiter, trying to decide which of two potential players is a better batter based on how many hits they get. One has achieved 4 hits in 10 chances, the other 300 hits in 1000 chances. While the first player has a higher proportion of hits, it's not a lot of evidence: a typical player tends to achieve a hit around 27% of the time, and this player's $4/10$ could be due to luck. The second player, on the other hand, has a lot of evidence that he's an above-average batter.
+
+A lot of data takes the form of these success/total counts, where you want to estimate a "proportion of success" for each instance. When you work with pairs of successes/totals like this, you tend to get tripped up by the uncertainty in low counts. $1/2$ does not mean the same thing as $50/100$; nor does $0/1$ mean the same thing as $0/1000$. One approach is to filter out all cases that don't meet some minimum, but this isn't always an option: you're throwing away useful information. One approach to help make your estimate more accurate and practical is to use the **beta distribution** to represent your prior expectations, and update them based on new evidences.
+
+
 # Beta Distribution
 
 The **beta distribution** can be understood as representing a probability distribution of probabilities. That is, it represents all the possible values of a probability when we don’t know what that probability is. Let's consider the following example: 
@@ -29,25 +38,36 @@ We expect that the player's season-long batting average will be most likely arou
 ```{r, message=FALSE, warning=FALSE}
 
 library(ggplot2)
-library(dplyr)
+library(data.table)
 
-# synthesized data
+# set float numbers to print only three digits after the decimal point
+options( digits = 3 )
+
+
+# simulated data,
+# generate a sequence of numbers for each combination of a and b
+# to plot the probability density function.
 # "\u03B1" unicode for the greek letter alpha
-sim <- data.frame( a = c( 81, 82, 81 + 100 ),
-				   b = c( 219, 219, 219 + 200 ) ) %>%
-	   group_by( a, b ) %>%
-	   do( data_frame( x = seq( 0, 1, by = .001 ), y = dbeta( x, .$a, .$b ) ) ) %>%
-	   mutate( Parameters = paste0( "\u03B1 = ", a, ", \u03B2 = ", b ) ) %>%
-	   ungroup() %>%
-	   mutate( Parameters = factor( Parameters, levels = unique(Parameters) ) )
+sim <- data.table( a = c( 81, 82, 81 + 100 ),
+				   b = c( 219, 219, 219 + 200 ) )
+sim <- sim[ , .( x = seq( 0, 1, by = 0.002 ) ), by = .( a, b ) ]
+
+sim[ , `:=`( y = dbeta( x, a, b ),
+			 parameters = paste0( "\u03B1 = ", a, ", \u03B2 = ", b ) ) ]
+sim[ , parameters := factor( parameters, levels = unique(parameters) ) ]
+sim
+
+```
+
+```{r, message=FALSE, warning=FALSE}
 
 # plot of the distribution
 PlotBeta <- function(sim)
 {
-	ggplot( sim, aes( x, y, color = Parameters ) ) + geom_line() +
+	ggplot( sim, aes( x, y, color = parameters ) ) + geom_line() +
 	xlim( 0, .5 ) + ylab("Density of beta") + theme_bw()
 }
-PlotBeta( sim = filter( sim, a == 81 ) )
+PlotBeta( sim = sim[ a == 81, ] )
 
 ```
 
@@ -59,16 +79,16 @@ $$beta(\alpha_0 + hits, \beta_0 + misses)$$
 
 Where $\alpha_0$ and $\beta_0$ are the parameters we started with, that is 81 and 219. Thus, in this case, $\alpha$ has increased by 1 (his one hit), while $\beta$ has not increased at all (no misses yet). That means our new distribution is $\beta(81+1, 219)$. Let's compare that to the original:
 
-```{r, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
 # update 1 hit of 1 bat
-PlotBeta( sim = filter( sim, a == 81 | a == 82 ) )
+PlotBeta( sim = sim[ a %in% c( 81, 82 ), ] )
 
 ```
 
 Notice that it has barely changed at all, that's because one extra hit doesn't really mean anything yet. However, the more the player hits over the course of the season, the more the curve will shift to accommodate the new evidence, and the furthermore more it will narrow based on the fact that we have more proof. Let's say halfway through the season he has been up to bat 300 times, hitting 100 out of those times. The new distribution would be $\beta(81 + 100, 219 + 200)$:
 
-```{r, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
 # update 100 hit of 300 bat
 PlotBeta( sim = sim )
@@ -79,13 +99,525 @@ Notice the curve is now both thinner and shifted to the right (higher batting av
 
 One of the most interesting outputs of this formula is the expected value of the resulting **beta distribution**, which is basically your new estimate. Recall that the expected value of the **beta distribution** is $\frac{\alpha}{\alpha+\beta}$. Thus, after 100 hits of 300 real at-bats, the expected value of the new **beta distribution** is $\frac{82+100}{82+100+219+200}=.303$. Notice that it is lower than the naive estimate of $\frac{100}{100+200}=.333$, but higher than the estimate you started the season with ($\frac{81}{81+219}=.270$). Thus you can think of this formula is equivalent to adding a "head start" to the number of hits and non-hits of a player. You're saying "start him off in the season with 81 hits and 219 non hits on his record".
 
-## Takeaways
+## Section Takeaways
 
 - **Beta distribution** is only defined for values of x in the interval [0,1] and it is best for representing a probabilistic distribution of probabilities. Cases where we don’t know what a probability is in advance, but we have some reasonable guesses.
 - A quick side note on the parameters for the **beta distribution**. As $\alpha$ gets bigger, the bulk of the distribution moves rightward over higher values of x, but as $\beta$ gets bigger, the bulk of the distribution moves leftward over lower values of x. And as $\alpha$ and $\beta$ get bigger together, the **beta distribution** gets narrower.
 
+# Empirical Bayes Estimation
 
-## Reference
+After introducing the **beta distribution**, we'll next see how it can be used in context with a very useful statistical method for estimating a large number of proportions, called **empirical Bayes estimation**.
+
+In the last section, we made some vague guesses about the distribution of batting averages across history. Here we'll apply **empirical Bayes estimation** to a real baseball dataset from the `Lahman` package, with the goal of improving our estimate of each player's batting average.
+
+## Working with Batting Averages
+
+In the dataset, we first filtered out pitchers (generally the weakest batters, who should be analyzed separately) using anti joins. We then summarized each player across multiple years to get their career Hits (H) and At Bats (AB), and batting average (H/AB). Finally, we added the player's first and last names to the dataset, so we could work with them rather than an identifier.
+
+```{r}
+
+# load the Batting and Pitching data from the Lahman package
+# the Master is used to get further details e.g. corresponding 
+# player name for the player id column in the Batting and Pitching data
+library(Lahman)
+data(Master)
+data(Batting)
+data(Pitching)
+
+master   <- data.table( Master  , key = "playerID" )
+pitching <- data.table( Pitching, key = "playerID" )
+batting  <- data.table( Batting , key = "playerID" )
+
+# ! stands for not join,
+# return all rows from x, where there're no matching values in y
+career <- batting[ AB > 0, ][!pitching]
+career <- career[ , .( H = sum(H), AB = sum(AB) ), by = playerID ]
+career[ , average := H / AB ]
+
+# map the player name to player id
+master <- master[ , .( playerID, nameFirst, nameLast ) ]
+career <- master[ , name := paste( nameFirst, nameLast ) ][career]
+career[ , `:=`( nameFirst = NULL, nameLast = NULL ) ]
+career
+
+```
+
+Let's list out the best batters in history. Well, here are the ones with the highest batting average:
+
+```{r}
+
+career[ head( order(-average) ), ]
+
+```
+
+Err, that's not really what we were looking for. These aren't the best batters, they're just the batters who went up once or twice and got lucky. How about the worst batters?
+
+```{r}
+
+career[ head( order(average) ), ]
+
+```
+
+Also not what we were looking for. That "average" is a really crummy estimate, they've just batted less than 10 times. Let's make a better one.
+
+## Estimate a Prior
+
+Let's look at the distribution of batting averages across players. For the sake of estimating the prior distribution, we'll filtered out all players that have fewer than 500 at-bats, since we'll get a better estimate from the less noisy cases.
+
+```{r}
+
+career_filtered <- career[ AB > 500, ]
+ggplot( career_filtered, aes(average) ) +
+geom_histogram( binwidth = .005 ) 
+
+```
+
+The first step of **empirical Bayes estimation** is to estimate a beta prior using this data. Estimating priors from the data you’re currently analyzing is not the typical Bayesian approach- usually you decide on your priors ahead of time. There’s a lot of debate and discussion about when and where it’s appropriate to use empirical Bayesian methods, but it basically comes down to how many observations we have: if we have a lot, we can get a good estimate that doesn’t depend much on any one individual. Empirical Bayes is an approximation to more exact Bayesian methods- and with the amount of data we have, it’s a very good approximation.
+
+So we know we want to fit the following model:
+
+$$X \sim \mbox{Beta}(\alpha_0,\beta_0)$$
+
+We just need to pick the $\alpha_0$ and $\beta_0$, which we call "hyper-parameters" of our model. There are many methods in R for fitting a probability distribution to data and you don't even have to use maximum likelihood if you have the [mean and variance](http://stats.stackexchange.com/questions/12232/calculating-the-parameters-of-a-beta-distribution-using-the-mean-and-variance) of the distribution. But here we'll use the `fitdistr` function from `MASS`.
+
+```{r}
+
+# fit beta distribution, you can specify any
+# starting parameter for shape1 and shape2 (alpha and beta),
+# the outputted warning does not matter
+m <- MASS::fitdistr( career_filtered$average, densfun = dbeta,
+					 start = list( shape1 = 70, shape2 = 200 ) )
+
+alpha0 <- m$estimate[1]
+beta0  <- m$estimate[2]
+
+```
+
+This comes up with $\alpha_0 = `r alpha0`$ and $\beta_0 = `r beta0`$. How well does this fit the data?
+
+```{r}
+
+ggplot(career_filtered) +
+geom_histogram( aes( x = average, y = ..density.. ), binwidth = .005 ) +
+xlab("Batting average") + 
+stat_function( fun = function(x) dbeta( x, alpha0, beta0 ), 
+			   color = "red", size = 1 )
+
+```
+
+Not bad!
+
+## Using the Prior
+
+Now when we look at any individual to estimate their batting average, we'll start with our overall prior, and update based on the individual evidence. This is as simple as adding $\alpha_0$ to the number of hits, and $\alpha_0 + \beta_0$ to the total number of at-bats.
+
+For example, consider our hypothetical batter from the introduction that went up 1000 times, and got 300 hits. We would estimate his batting average as:
+
+$$\frac{\alpha_0 + 300}{\alpha_0 + \beta_0 + 1000} = \frac{`r round(alpha0, 1)`+ 300}{`r round(alpha0, 1)` + `r round(beta0, 1)` + 1000}= `r (300 + alpha0) / (1000 + alpha0 + beta0)`$$
+
+How about the batter who went up only 10 times, and got 4 hits. We would estimate his batting average as:
+
+$$\frac{\alpha_0 + 4}{\alpha_0 + \beta_0 + 10} = \frac{`r round(alpha0, 1)` + 4}{`r round(alpha0, 1)` + `r round(beta0, 1)` + 10} = `r (4 + alpha0) / (10 + alpha0 + beta0)`$$
+
+Thus, even though $\frac{4}{10} > \frac{300}{1000}$, we would guess that the $\frac{300}{1000}$ batter is better than the $\frac{4}{10}$ batter!
+
+Performing this calculation for all the batters is simple enough:
+
+```{r}
+
+career[ , estimate := ( alpha0 + H ) / ( alpha0 + beta0 + AB ) ]
+
+```
+
+Now we can ask: who are the best and worst batters by this improved estimate?
+
+```{r}
+
+career[ head( order(-estimate) ), ]
+career[ head( order(estimate) ), ]
+
+```
+
+Notice that in each of these cases, **empirical Bayes estimates** didn’t simply pick the players who had 1 or 2 at-bats. It found players who batted well, or poorly, across a long career. What a load off our minds~ we can start using these **empirical Bayes estimates** in downstream analyses and algorithms, and not worry that we’re accidentally letting cases like 0/1 or 1/1 ruin everything.
+
+Let's see how **empirical Bayes estimates** changed all of the batting average estimates overall:
+
+```{r}
+
+ggplot( career, aes( average, estimate, color = AB ) ) + geom_point() + 
+geom_hline( yintercept = alpha0 / ( alpha0 + beta0 ), color = "red", lty = 2 ) + 
+labs( x = "Batting average", y = "Empirical Bayes batting average" ) +
+geom_abline( intercept = 0, slope = 1, color = "red" ) + 
+scale_color_gradient( trans = "log", breaks = 10^(1:4) )
+
+```
+
+The horizontal dashed red line marks $y = \frac{\alpha_0}{\alpha_0 + \beta_0} = `r sprintf("%.3f", alpha0 / (alpha0 + beta0))`$ - that's what we would guess someone's batting average was if we had no evidence at all. Notice that points above that line tend to move down towards it, while points below it move up.
+
+The diagonal red line marks $x=y$. Points that lie close to it are the ones that didn't get shrunk at al. Notice that they're the ones with the highest number of at-bats (the brightest blue): they have enough evidence that we're willing to believe the naive batting average estimate.
+
+This is why this process is sometimes called shrinkage: we've moved all our estimates towards the average. How much it moves these estimates depends on how much evidence we have: if we have very little evidence (4 hits out of 10) we move it a lot, if we have a lot of evidence (300 hits out of 1000) we move it only a little.
+
+## Section Takeaways
+
+Recall that there were two major steps in **empirical Bayes estimation**:
+
+1. Estimate the overall distribution of your data.
+2. Use that distribution as your prior for *updating* each average.
+
+Step 1 can be done once, "offline" - analyze all your data and come up with some estimates of your overall distribution. Step 2 is done for each new observation you’re considering, you can even apply thins to estimate the success of a post or an ad.
+
+And because we’re using the beta and the binomial, consider how easy that second step is. All we did was add one number to the successes, and add another number to the total. You can build that into your production system with a single line of code that takes nanoseconds to run.
+
+```
+# We hired a Data Scientist to analyze our Big Data
+# and all we got was this lousy line of code.
+
+float estimate = (successes + 78.7) / (total + 303.5);
+```
+
+# Understanding Credible Intervals
+
+Recall in the last section, we walked through the method of **empirical Bayes estimation**, a way to calculate useful proportions out of many pairs of success/total counts (e.g. 0/1, 3/10, 235/1000). we used the example of estimating baseball batting averages based on $x$ hits in $n$ opportunities. If we run into a player with 0 hits in 2 chances, or 1 hit in 1 chance, we know we can't trust it, and this method uses information from the overall distribution to improve our guess.
+
+**Empirical Bayes estimation** gives us a single value for each player that can be reliably used as an estimate, but sometimes you want to know more than just our "best guess". Instead you wish to know how much uncertainty is present in our point estimate. We normally would use a binomial proportion confidence interval ( like a margin of error in a political poll, for more info about the calculation, refer to [here](http://onlinestatbook.com/2/estimation/proportion_ci.html) and [here](http://www.sigmazone.com/binomial_confidence_interval.htm) ), but this does not bring in information from our whole dataset. For example, the confidence interval for someone who hits 1 time out of 3 chances is:
+
+```{r}
+
+binom.test( x = 1, n = 3 )$conf.int
+
+```
+
+We can indeed be quite confident that that interval contains the true batting average... but from our knowledge of batting averages, we could have drawn a much tighter interval than that! There's no way that the player's real batting average is .1 or .9: it probably lies in the .2-.3 region that most other players' do.
+
+```{r}
+
+career
+
+```
+
+The end result of the last section gave us a *point estimate* for each proportion (the `estimate` column) and these new values tend to be pushed towards the overall mean (giving this the name "shrinkage"):
+
+This shrunken value is generally more useful than the raw estimate (the `average` column): we can use it to sort our data, or feed it into another analysis, without worrying too much about the noise introduced by low counts. But there's still uncertainty in the empirical Bayes estimate, and the uncertainty is very different for different players. We may want an interval of possible batting averages: one that will be wide for players we know very little about, and narrow for players with more information. Luckily, the Bayesian approach has a method to handle this.
+
+## Posterior distribution
+
+Consider that what we're really doing with **empirical Bayes estimation** is computing two new values, $\alpha_1$ and $\beta_1$, for each player. These are the posterior shape parameters for each distribution, after the prior (estimated on the whole dataset) has been updated.
+
+```{r}
+
+# alpha0 and beta0 is calculated in the last section
+career[ , `:=`( alpha1 = alpha0 + H, beta1 = beta0 + AB - H ) ]
+career
+
+```
+
+Using this information, we can visualize this posterior distribution for each player. Here, we'll just pick a few players from the 1998 Yankee lineup to illustrate the idea.
+
+```{r}
+
+# filter sample
+yankee_1998 <- c( "brosisc01", "jeterde01", "knoblch01", "martiti02", 
+				  "posadjo01", "strawda01", "willibe02" )
+career_yankee_1998 <- career[ playerID %in% yankee_1998, ]
+
+# create the x axis for the beta distribution's probability density function
+expand <- career_yankee_1998[ , .( x = seq( .18, .33, .0005 ) ), by = playerID ]
+yankee_beta <- career_yankee_1998[expand]
+yankee_beta[ , density := dbeta( x, alpha1, beta1 ) ]
+
+# visualize posterior beta
+ggplot( yankee_beta, aes( x, density, color = name ) ) + geom_line() +
+stat_function( fun = function(x) dbeta( x, alpha0, beta0 ),
+			   lty = 2, color = "black" )
+
+```
+
+The prior is shown as a dashed curve. All the other curves is our probability distribution of what the player’s batting average could be, after updating based on that player’s performance. That’s what we’re really estimating with this method: those posterior beta distributions.
+
+## Credible Intervals
+
+These density curves are nice, but can be hard to interpret visually, especially as the number of players increases, and it can't be summarized into a table or text. We'd instead prefer to create a credible interval, which says that some percentage (e.g. 95%) of the posterior distribution lies within an particular region. Here's Derek Jeter's credible interval:
+
+```{r}
+
+# visualize the credible interval for one player
+jeter <- yankee_beta[ name == "Derek Jeter", ]
+
+# calculate the cumulative probability and
+# extract the ones that lies between the 95 percent credible interval
+p <- 0.95
+ci_low  <- ( 1 - p ) / 2
+ci_high <- p + ci_low
+
+jeter_pred <- jeter[ , cumulative := pbeta( x, alpha1, beta1 ) 
+				  ][ cumulative > ci_low & cumulative < ci_high ]
+
+# obtain the x coordinate of the 95 percent credible interval's 
+# endpoint to visualize the error bar
+jeter_low  <- qbeta( ci_low , jeter$alpha1[1], jeter$beta1[1] )
+jeter_high <- qbeta( ci_high, jeter$alpha1[1], jeter$beta1[1] )
+
+# credible interval plot
+ggplot( jeter, aes( x, density ) ) + geom_line( color = "blue" ) +
+xlim( .18, .34 ) + 
+geom_ribbon( data = jeter_pred, aes( ymin = 0, ymax = density ),
+			 alpha = .25, fill = "red" ) +
+stat_function( fun = function(x) dbeta( x, alpha0, beta0 ),
+			   lty = 2, color = "black" ) +
+geom_errorbarh( aes( xmin = jeter_low, xmax = jeter_high, y = 0 ), 
+				height = 3.5, color = "red" )
+```
+
+We can compute the edges of the interval quite easily for the rest of the players.
+
+```{r}
+# all the player's credible interval
+career_yankee_1998[ , `:=`( low  = qbeta( ci_low , alpha1, beta1 ),
+							high = qbeta( ci_high, alpha1, beta1 ) ) ]
+
+col_names <- colnames(career_yankee_1998)
+show <- col_names[ !col_names %in% c( "alpha1", "beta1", "estimate" ) ]
+
+# use kable from knitr for a more nicely formatted printed table
+knitr::kable( career_yankee_1998[ , show, with = FALSE ] )
+
+```
+
+And we can also view the intervals in a plot like this:
+
+```{r}
+
+ggplot( career_yankee_1998, aes( average, reorder( name, average ) ) ) +
+geom_point() +
+geom_errorbarh( aes( xmin = low, xmax = high ), height = 0.8 ) +
+geom_vline( xintercept = alpha0 / (alpha0 + beta0 ), color = "red", lty = 2 ) +
+xlab("Estimated batting average (95% interval)") +
+ylab("Player")
+
+```
+
+The vertical dashed red line is $\frac{\alpha_0}{\alpha_0 + \beta_0}$: the mean batting average across history (based on our beta fit). The earlier plot showing each posterior beta distribution communicated more information, but this is far more readable (depending on your purpose).
+
+## Credible Intervals versus Confidence Intervals
+
+Extract with the [wikipedia's](https://en.wikipedia.org/wiki/Credible_interval) definition on credible intervals. Credible intervals are analogous to confidence intervals in frequentist statistics, although they differ on a philosophical basis; Bayesian intervals treat their bounds as fixed and the estimated parameter as a random variable, whereas frequentist confidence intervals treat their bounds as random variables and the parameter as a fixed value. For a more detailed explanation, refer to this great [StackExchange post](http://stats.stackexchange.com/questions/2272/whats-the-difference-between-a-confidence-interval-and-a-credible-interval).
+
+But there’s also a very practical difference, in that credible intervals take prior information into account. If I take 20 random players and construct both confidence intervals (specifically a binomial proportion confidence interval) and posterior credible intervals for each, it could look something like this:
+
+```{r, message=FALSE, warning=FALSE}
+
+library(broom) # for tidying binom.test's output
+library(ggthemes)
+
+career[ , `:=`( low  = qbeta( ci_low , alpha1, beta1 ),
+				high = qbeta( ci_high, alpha1, beta1 ) ) ]
+
+# draw random 20 players
+set.seed(2015)
+some <- career[ sample.int( nrow(career), 20 ), ]
+some[ , name := paste0( name, " (", H, "/", AB, ")" ) ]
+
+# credible interval
+bayesian <- some[ , .( name, AB, estimate, low, high ) ]
+bayesian[ , method := "Credible" ]
+
+# confidence interval
+frequentist <- some[ , broom::tidy( binom.test( H, AB ) ), 
+					   by = .( playerID, name, AB ) ]
+frequentist <- frequentist[ , .( name, AB, estimate, 
+								 low = conf.low, high = conf.high ) ]
+frequentist[ , method := "Confidence"]
+
+combined <- rbind( bayesian, frequentist )
+ggplot( combined, aes( estimate, reorder( name, -AB ), color = method ) ) +
+geom_point() +
+geom_errorbarh( aes( xmin = low, xmax = high ) ) +
+geom_vline( xintercept = alpha0 / (alpha0 + beta0), color = "red", lty = 2 ) +
+labs( x = "Estimated batting average", y = "Player", color = "" ) +
+scale_color_tableau()
+
+```
+
+These are sorted in order of how many times a player went up to bat (thus, how much information we have about them). Notice that once there’s enough information, the **credible intervals** and **confidence intervals** are nearly identical. But for the 0/3 and 0/6 cases, the credible interval is much narrower. This is because **empirical Bayes estimate** brings in our knowledge from the full data, just as it did for the point estimate.
+
+
+# Bayesian False Discovery Rates
+
+We now have a **credible interval** for each player, including the lower and upper bounds for their batting average. But sometimes, rather than estimating a value or an interval, we’re looking to answer a yes or no question about each hypothesis, and thus classify them into two groups. For example, suppose we were constructing a Hall of Fame, where we wanted to include all players that have a batting average (chance of getting a hit) greater than .300 (note that this is just for illustration purpose, in real world, there are a lot of other, better metrics to judge a player by). We want to include as many players as we can, but we need to be sure that each belongs.
+
+The problem of hypothesis testing appears whenever we’re trying to identify candidates for future study. In this section we'll use the posterior distributions we’ve created to apply a Bayesian approach to a method usually associated with frequentist statistics, namely **false discovery rate control**.
+
+## Posterior Error Probabilities
+
+Consider the legendary player Hank Aaron. 
+
+```{r}
+
+( hank_aaron <- career[ name == "Hank Aaron", ] )
+
+```
+
+
+We can see from the table that his career batting average is `r sprintf("%.4f", hank_aaron$average)`, but if we were to use this number to determine whether he should be permitted in our >.300 Hall of Fame, we're basing our decisions on his "true probability" of hitting.  
+
+On the other hand, when Aaron's batting average is shrunken by the **empirical Bayes estimate**, we get an estimate of `r sprintf("%.4f", hank_aaron$estimate)`. We thus suspect that his true probability of hitting is higher than .300, but we're not necessarily certain because of the **credible interval**. Let's take a look at his posterior beta distribution:
+
+```{r}
+
+# hall of fame threshold
+threshold <- .3
+
+# posterior beta
+# merge the original data.table with the generated sequence ones,
+hank_aaron <- hank_aaron[ hank_aaron[ , .( x = seq( .27, .33, .0004 ) ), by = playerID ] ]
+hank_aaron[ , density := dbeta( x, alpha1, beta1 ) ]
+
+ggplot( hank_aaron, aes( x, density ) ) + geom_line() +
+geom_ribbon( aes( ymin = 0, ymax = density * ( x < threshold ) ),
+				  alpha = .1, fill = "red" ) +
+geom_vline( color = "red", lty = 2, xintercept = threshold )
+
+```
+
+We can see that there is a nonzero probability (shaded area) that his true probability of hitting is less than .3. We can calulate this with the cumulative distribution function (CDF) of the beta distribution, which in R is computed by the `pbeta` function:
+
+```{r}
+
+# posterior error probability (PEP)
+pbeta( threshold, hank_aaron$alpha1[1], hank_aaron$beta1[1] )
+
+```
+
+This probability that he doesn't belong in the Hall of Fame is called the **Posterior Error Probability**, or PEP. We could easily have calculated the probability Aaron does belong, which we would call the Posterior Inclusion Probability, or PIP. (Note that $\mbox{PIP} = 1-\mbox{PEP}$) The reason we chose to measure the PEP rather than the PIP will become clear in the next section.
+
+It's equally straightforward to calculate the PEP for every player, just like we calculated the **credible intervals** for each player in the last section.
+
+```{r}
+
+# PEP for every player
+career[ , PEP := pbeta( threshold, alpha1, beta1 ) ]
+
+```
+
+What does the distribution of the PEP look like across players?
+
+```{r}
+
+# histogram of PEP
+ggplot( career, aes(PEP) ) + geom_histogram( binwidth = .02 ) +
+xlab("Posterior Error Probability (PEP)") + xlim( 0, 1 )
+
+```
+
+Unsurprisingly, for most players, it’s almost certain that they don’t belong in the hall of fame: we know that their batting averages are way below .300. If they were included, it is almost certain that they would be an error. In the middle are the borderline players: the ones where we’re not sure. And down there close to 0 are the rare but proud players who we’re (almost) certain belong in the hall of fame.
+
+The PEP is closely related to the estimated batting average:
+
+```{r}
+
+# PEP and estimate batting average
+ggplot( career, aes( estimate, PEP, color = AB ) ) + geom_point( size = 1 ) +
+xlab("(Shrunken) batting average estimate") +
+ylab("Posterior Error Probability (PEP)") +
+geom_vline( color = "red", lty = 2, xintercept = threshold ) +
+scale_colour_gradient( trans = "log", breaks = 10^(1:5) )
+
+```
+
+Notice that crossover point: to have a PEP less than 50%, you need to have a shrunken batting average greater than .3. That's because the shrunken estimate is the center of our posterior beta distribution (the "over/under" point). If a player's shrunken estimate is above .3, it's more likely than not that their true average is as well. And the players we're not sure about (PEP $\approx$ .5) have batting averages very close to .300.
+
+Notice also the relationship between the number of at-bats (the amount of evidence) and the PEP. If a player's shrunken batting average is .28, but he hasn't batted (low AB) many times, it is still possible his true batting average is above .3, because his **credible interval** is wide. However, if the player with .28 has a high AB (light blue), the **credible interval** becomes thinner, we become confident that his batting average's true probability is under .3, and the PEP goes up to 1.
+
+## False Discovery Rate
+
+Now we want to set some threshold for inclusion in our Hall of Fame. This criterion is up to us: what kind of goal do we want to set? There are many options and here's a propose one: let's try to include as many players as possible, while ensuring that no more than 5% of the Hall of Fame was mistakenly included. Put another way, we want to ensure that if you're in the Hall of Fame, the probability you belong there is at least 95%.
+
+This criterion is called **false discovery rate (FDR) control**. It's particularly relevant in scientific studies, where we might want to come up with a set of candidates (e.g. genes, countries, individuals) for future study. There's nothing special about 5%: if we wanted to be more strict, we could choose the same policy, but change our desired FDR to 1% or .1%. Similarly, if we wanted a broader set of candidates to study, we could set an FDR of 10% or 20%.
+
+Let's start with the easy cases. Who are the players with the lowest posterior error probability?
+
+```{r}
+
+# ranking PEP
+career <- career[ order(PEP), ]
+by_PEP <- career[ , rank := 1:nrow(career) 
+			   ][ , .( rank, name, H, AB, estimate, PEP ) ]
+
+head( by_PEP, 10 )
+
+```
+
+These players are a no-brainer for our Hall of Fame: there’s basically no risk in including them. But suppose we instead tried to include the top 100. What do the 90th-100th players look like?
+
+```{r}
+
+by_PEP[ 90:100, ]
+
+```
+
+OK, so these players are borderline. We would guess that their career batting average is greater than .300, but we aren't as certain.
+
+So let's say we chose to take the top 100 players for our Hall of Fame (thus, cut it off at `r by_PEP$name[100]`). What would we predict the false discovery rate to be? That is, what fraction of these 100 players would be falsely included? Well, we know the PEP of each of these 100 players, which is the probability that that individual player is a false positive, we can simply add up these probabilities to get the expected value (the average) of the total number of false positives.
+
+```{r}
+
+# top 100 players false positive rate
+top_players <- career[ 1:100, ]
+sum(top_players$PEP)
+
+```
+
+This means that of these 100 players, we expect that about `r sum(top_players$PEP)` of them are false discoveries. Now, we don’t know which four or five players we are mistaken about! (If we did, we could just kick them out of the hall). But we can make predictions about the players in aggregate. Here, we can see that taking the top 100 players would get pretty close to our goal of FDR = 5%.
+
+Note that we’re calculating the FDR as `r sum(top_players$PEP)` / `r nrow(top_players)` (number of players). Thus, we’re really computing the mean PEP: the average Posterior Error Probability.
+
+```{r}
+
+mean(top_players$PEP)
+
+```
+
+We can experiment with many thresholds to get our desired **false discovery rate**, but it’s even easier just to compute them all at once, by computing the cumulative mean of all the (sorted) posterior error probabilities.
+
+## Q-values
+
+Notice that the name of the **false discovery rate**'s cumulative mean is **qvalue**. The q-value is convenient because we can say "to control the FDR at X%, collect only hypotheses where $q < X$".
+
+```{r}
+
+# PEP's cumulative mean for meeting the false discovery rate
+career[ , qvalue := cumsum(PEP) / 1:nrow(career) ]
+
+# number of hall of famers for 5% false discovery rate
+hall_of_fame <- career[ qvalue < .05, ]
+
+```
+
+This ends up with `r nrow(hall_of_fame)` players in the Hall of Fame. If we wanted to be more careful about letting players in, we'd simply set a stricter (smaller) q-value threshold.
+
+It’s also useful to look at how many players would be included at various thresholds:
+
+```{r}
+
+# numbers of players included at various q-value cutoff
+ggplot( career[ qvalue < .25, ], aes( qvalue, rank ) ) + geom_line() +
+labs( x = "q-value cutoff", y = "Number of players included" )
+
+```
+
+This shows that you could include 200 players in the Hall of Fame, but at that point you’d expect that about 25% of them would be incorrectly included. On the other side, you could create a hall of fame with just 50 players and be very confident that all of them have a batting probability of .300.
+
+It's worth emphasizing the difference between measuring an individual's **posterior error probability** and the **q-value**, which is the **false discovery rate** of a group including that player. Hank Aaron has a PEP of `r pbeta( threshold, hank_aaron$alpha1[1], hank_aaron$beta1[1] )`, but he can be included in the Hall of Fame while keeping the FDR below 5%. If this is surprising, imagine that you were instead trying to keep the average height above 6'0". You would start by including all players taller than 6'0", but could also include some players who were 5'10" or 5'11" while preserving your average. Similarly, we simply need to keep the average PEP of the players below 5%.
+
+## Takeaways
+
+During this modeling process, we’ve made an enormous simplification by assuming that all batting averages are drawn from a single distribution. In reality, we’d expect that it depends on some known factors. For instance, the distribution of batting averages has changed over time. Ideally, we’d want to estimate a different Beta prior for each decade. Similarly, we could estimate separate priors for each team, a separate prior for pitchers, and so on. One useful approach to this is the Bayesian hierarchical modeling, which is another story.
+
+# Reference
 
 1. [Understanding the beta distribution](http://varianceexplained.org/statistics/beta_distribution_and_baseball/)
+2. [Understanding empirical Bayes estimation](http://varianceexplained.org/r/empirical_bayes_baseball/)
+3. [Understanding Credible Intervals](http://varianceexplained.org/r/credible_intervals_baseball/)
+4. [Understanding the Bayesian Approach to False Discovery Rates](http://varianceexplained.org/r/bayesian_fdr_baseball/)
 
