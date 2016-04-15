@@ -621,3 +621,11 @@ During this modeling process, we’ve made an enormous simplification by assumin
 3. [Understanding Credible Intervals](http://varianceexplained.org/r/credible_intervals_baseball/)
 4. [Understanding the Bayesian Approach to False Discovery Rates](http://varianceexplained.org/r/bayesian_fdr_baseball/)
 
+# R Session Information 
+
+```{r}
+
+sessionInfo()
+
+```
+

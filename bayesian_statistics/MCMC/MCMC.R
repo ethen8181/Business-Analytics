@@ -126,3 +126,13 @@ samples <- MCMC( iter = 250, burnin = 125, thin = 2 )
 TracePlot( plot, samples )
 
 
+# - [Gibbs sampling with for uninitiated](http://www.umiacs.umd.edu/~resnik/pubs/gibbs.pdf)
+
+# mcmc for dummies
+# http://twiecki.github.io/blog/2015/11/10/mcmc-sampling/
+# http://www.people.fas.harvard.edu/~plam/teaching/methods/mcmc/mcmc_print.pdf
+# http://stats.stackexchange.com/questions/165/how-would-you-explain-markov-chain-monte-carlo-mcmc-to-a-layperson
+
+
+
+

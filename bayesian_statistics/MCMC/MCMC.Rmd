@@ -7,6 +7,8 @@ output:
     highlight: pygments
 ---
 
+> To follow along, code to the documentation can be found [here](https://github.com/ethen8181/Business-Analytics/blob/master/bayesian_statistics/MCMC/MCMC.R).
+
 # Learn About a Probability Distribution
 
 Probability distributions are super-useful because they can define a range of possibilities we expect to observe if our models are true (if you're a frequentist) or the range of plausible values for our parameters (if you're a Bayesian).
@@ -210,12 +212,17 @@ TracePlot( plot, samples )
 
 The MCMC method is very useful, the intuition for the algorithm is that we can approximate the **posterior distribution** by generating a large sample of representative values and the larger the sample, the more accurate is our approximation.
 
-**Sources:**
-
-Code to the documentation can be found [here](https://github.com/ethen8181/Business-Analytics/blob/master/bayesian_statistics/MCMC/MCMC.R).
 
 ## Reference
 
 1. [The First Stop in Monte Carlo (Methods): Rejection Sampling](http://thexbar.me/2014/11/07/reject-sample/)
 2. [mcmc tutorial](https://github.com/davharris/mcmc-tutorial)
 3. [Probabilistic Programming and Bayesian Methods for Hackers Chapter 3](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter3_MCMC/Chapter3.ipynb)
+
+## R Session Information 
+
+```{r}
+
+sessionInfo()
+
+```
