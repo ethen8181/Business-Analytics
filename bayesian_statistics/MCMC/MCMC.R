@@ -71,12 +71,13 @@ plot <- ggplot( data = grid, aes( x = x, y = y ) ) +
 plot
 
 
+# Metropolis-Hastings algorithm (will elaborate on this later)
 MCMC <- function( iter, burnin = 0, thin = 1 )
 {
 	# the list of the first argument for dimnames is to specify the row names,
 	# sampling starts at a random point, here 0, 0 
 	samples <- matrix( NA, nrow = iter, ncol = 2, 
-					  dimnames = list( NULL, c( "x", "y" ) ) )
+					   dimnames = list( NULL, c( "x", "y" ) ) )
 	samples[ 1, ] <- c( 0, 0 )
 
 	for(i in 2:iter){
@@ -84,7 +85,7 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 		sample <- samples[ i - 1, ]	
 		for(j in 1:thin){
 			
-			# propose a new sample point			
+			# propose a new sample point (will elaborate on this later)				
 			proposal <- sample + rnorm( n = 2, mean = 0, sd = 1 )
 
 			# compare its likelihood with the current position
@@ -126,7 +127,16 @@ samples <- MCMC( iter = 250, burnin = 125, thin = 2 )
 TracePlot( plot, samples )
 
 
-# - [Gibbs sampling with for uninitiated](http://www.umiacs.umd.edu/~resnik/pubs/gibbs.pdf)
+# for downloading jags
+# http://mcmc-jags.sourceforge.net/
+# install.packages( c( "rjags", "runjags" ) )
+# install.packages("runjags")
+
+
+
+
+# Gibbs sampling with for uninitiated (paper), with latent dirichlet allocation
+# http://www.umiacs.umd.edu/~resnik/pubs/gibbs.pdf
 
 # mcmc for dummies
 # http://twiecki.github.io/blog/2015/11/10/mcmc-sampling/

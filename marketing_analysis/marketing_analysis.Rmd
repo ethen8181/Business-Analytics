@@ -1,16 +1,11 @@
 ---
 title: "Marketing Analysis"
 author: "Ming-Yu Liu"
-date: "December 20, 2015"
-output: 
-  html_document: 
-    highlight: haddock
-    number_sections: yes
-    theme: united
-    toc: yes
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: pygments
 ---
-
-## Background Information 
 
 The domain of marketing analysis is huge, topics can range from social network analysis, real time bidding, campaign optimization and so on. Though at the heart of the marketing lies some techniques that address fundamental questions that businesses all wish to be to able answer well.
 
@@ -18,7 +13,8 @@ The domain of marketing analysis is huge, topics can range from social network a
 2. **Scoring Models:** Targeting the right customers, that is which customers should I spend the most marketing budget on?
 3. **Customer Life Time Value:** What's the future value of my customers? That way the company will be able to concentrate the most on those that will be worth the most.
 
-## Segmentation
+
+# Segmentation
 
 Each company may have stored a large pool of data for each of their customers based on hundreds of indicators. Though rich in quantity, it is often hard to directly use it to obtain the insights needed. Thus, segmentation is implemented to transform your data into something that is clear and usable. 
 
@@ -43,7 +39,7 @@ library(ggplot2)
 library(gridExtra)
 library(lubridate)
 library(data.table)
-setwd("/Users/ethen/Business-Analytics/2_marketing_analysis")
+setwd("/Users/ethen/Business-Analytics/marketing_analysis")
 
 # load data, reset column names and convert to date type
 # also create a year column for later convenience
@@ -130,7 +126,7 @@ cold 	 <- 2 * 365
 warm 	 <- 365 
 amount   <- 100
 
-source("/Users/ethen/Business-Analytics/2_marketing_analysis/code/marketing_functions.R")
+source("/Users/ethen/Business-Analytics/marketing_analysis/code/marketing_functions.R")
 rfm1 <- Segmentation( data = rfm1, inactive = inactive, 
 					  cold = cold, warm = warm, amount = amount )
 rfm1
@@ -197,25 +193,25 @@ revenue_summary
 
 From the printed result, we can infer interesting facts about our customer segment. The average revenue column of the `revenue_summary` data.table tells us that each "`r revenue_summary$segment[2]`" customer is worth approximately `r round(revenue_summary$avg_revenue[2])` to our company ( or you can say contribute that much do our company if the previous statement sounded a bit rude ... ). This is a lot higher than a "`r revenue_summary$segment[ revenue_summary$segment == "inactive" ]`" customer. However, when we switched to the total revenue column, it tells us that `r revenue_summary$segment[1]` is the segment that generated the most revenue in total! If we looked back at our original `rfm2` segmentation ( scroll back up please ), we can also see that the customer size of this segment is around 20 percent and the second highest segment `r revenue_summary$segment[2]` represents only about 3 percent of our entire customer. This is a good example where small segments in terms of number of customers that generates a huge share of revenues. And it's directly of telling us that customers should not be treated equally as there are just some that contributes more to the overall revenue.
 
-## Customer Life Time Value
+**Section Takeaways:** Use statistical segmentation when the segment you wish to obtain is a "oneshot" thing or use it as a exploratory tool when you're not famaliar with the overall objective.
+
+# Customer Life Time Value
 
 Let's envisage the following scenario. You're company lauched a new customer acquistion campaign including hard-discounts, online-keywords, e-mail campaigns etc. In the end, it only turned out to be a minor success. Sure, the company has in fact acquired new customers and generated new sales, but the sales generated does not even cover the cost of the campaign. The supervisor in charge of the campaign , however, argued that the newly acquired customers will remain loyal to the company and generate additional sales in the future. In a sense this campaign is said to be an investment for the future. Is this true? or is it just another excuse for the campaign's bad performance? 
 
 This problem scenario is the whole point of measuring **Customer Life Time Value** (CLTV), to prove or disprove whether acquiring these new customers is a good investment. 
 
 
-**Takeaways:**
 
-1. Use statistical segmentation when the segment you wish to obtain is a "oneshot" thing or use it as a exploratory tool when you're not famaliar with the overall objective.
 
 **Sources:**
 
-You can find all the source code [here](https://github.com/ethen8181/Business-Analytics/tree/master/2_marketing_analysis/code). marketing_analysis.R contains the documentation's general scripts and marketing_functions.R contains the functions that were sourced in and used with this documentation.
+You can find all the source code [here](https://github.com/ethen8181/Business-Analytics/tree/master/marketing_analysis/code). marketing_analysis.R contains the documentation's general scripts and marketing_functions.R contains the functions that were sourced in and used with this documentation.
 
 If you happened to have any comments, feedbacks of any sort, Feel free to file them [here](https://github.com/ethen8181/Business-Analytics/issues)!
 
 
-## R Session Information
+# R Session Information
 
 ```{r}
 

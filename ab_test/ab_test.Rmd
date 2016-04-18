@@ -309,7 +309,7 @@ A / B testing is an iterative process, some common mistakes that you want to avo
 
 **Sources: **
 
-Source [code](https://github.com/ethen8181/Business-Analytics/blob/master/3_AB_test/AB_test.R) to the documentation.
+Source [code](https://github.com/ethen8181/Business-Analytics/blob/master/ab_test/ab_test.R) to the documentation.
 
 Bugs or comments can be filed [here](https://github.com/ethen8181/Business-Analytics/issues).
 

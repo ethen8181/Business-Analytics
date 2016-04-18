@@ -13,9 +13,11 @@ output:
 
 Probability distributions are super-useful because they can define a range of possibilities we expect to observe if our models are true (if you're a frequentist) or the range of plausible values for our parameters (if you're a Bayesian).
 
-Some probability distributions, like the Normal distribution and the Poisson distribution, are relatively straightforward to work with mathematically and we have lots of handy tools for working with them by hand and on the computer.
+Some probability distributions, like the Normal distribution and the Poisson distribution, are relatively straightforward to work with mathematically and we have lots of handy tools for working with them by hand and on the computer. Other probability distributions over parameters in a complicated model are harder to work with. In this case we need more general tools.
 
-Other probability distributions over parameters in a complicated model are harder to work with. In this case we need more general tools. **Monte Carlo** methods work by taking samples from a distribution that's hard to study analytically, and then studying the samples instead.
+*Markov Chain Monte Carlo (MCMC)* is a class of methods in which we can simulate draws (taking samples) that are slightly dependent and are approximately from a (posterior) distribution. We then take those draws and calculate quantities of interest for the (posterior) distribution. In Bayesian statistics, there are generally two MCMC algorithms that we use: the **Gibbs Sampler** and the **Metropolis-Hastings algorithm**.
+
+In short, MCMC methods work by taking samples from a distribution that's hard to study analytically, and then study on their samples instead.
 
 ## Example
 
@@ -86,13 +88,13 @@ geom_line( data = data, aes( x, y ) )
 
 ```
 
-Of course, this is a toy example. It turns out that you may end up throwing away exponentially more attempts per successful sample as the number of dimensions in your data goes up. So hardly anyone uses rejection sampling without a good reason -- that's where the Markov chains come in.
+Of course, this is a toy example. It turns out that you may end up throwing away exponentially more attempts per successful sample as the number of dimensions in your data goes up. So hardly anyone uses rejection sampling without a good reason.
 
 ## Markov Chain Monte Carlo (MCMC)
 
 Most of our discarded samples came from the tails of the distribution, where the acceptance probability is basically zero. We could increase the number of samples we keep by spending more time in the middle of the distribution, where the acceptance probabilities are much higher. But if all we did was concentrate our dart-throwing efforts there, then we'd end up with heavily biased samples. Meaning we won't find any probability mass in areas where we don't look. Also, even if we could correct for that issue, we won't always know where to concentrate our efforts. So we'll usually need something more automatic.
 
-That's where the Markov chains come in. MCMC has exactly the same goal as our rejection sampler, but it has more sophisticated ways of deciding where to sample, which can be expressed at a high level as follows: 
+That's where MCMC methods comes in. MCMC has exactly the same goal as our rejection sampler, but it has more sophisticated ways of deciding where to sample, which can be expressed at a high level as follows: 
 
 1. Start at current position.
 2. Propose moving to a new position (investigate a point near the current position).
@@ -107,7 +109,7 @@ This way we move in the general direction towards the regions where the posterio
 Using this algorithm, we can get a decent number of samples in a reasonable amount of time. Two things to note: 
 
 - Inference using the first few thousand points is a bad idea, as they are unrelated to the final distribution we are interested in, or in other words, the first few moves of the algorithm are not reflective of the posterior. Thus is it a good idea to discard those samples before using the samples for inference. We call this period before converge the **burn-in** period.
-- The algorithm can be seen as a random "walk" around the space, thus the current position will exhibit some correlation with previous positions. This is both good and bad. We will always have correlation between current positions and the previous positions, but too much of it means we are not exploring the space well. The correlation can be solved, or at least reduced, by only returning to the user every nth sample. We call this **thinning**.
+- The algorithm can be seen as a random "walk" around the space, thus the current position will exhibit some correlation with previous positions. This is both good and bad. We will always have correlation between current positions and the previous positions, but too much of it means we are not exploring the space well. The correlation can be solved, or at least reduced, by only returning to the user every nth sample. We call this **thinning**. e.g. when **thinning** by 2, only sample points at step 1, 3, 5, 7 and so on, are retained. Note that although the thinned sample points tend to be less correlated than the original ones, they can also contain less information and it takes longer to run (reduces sampling efficiency).
 
 With all of that being said, let's see what happens if we try this out on a simpler distribution in 2D.
 
@@ -146,12 +148,13 @@ The next code chunck defines the `MCMC` function that draws sample points from t
 
 ```{r}
 
+# Metropolis-Hastings algorithm (will elaborate on this later)
 MCMC <- function( iter, burnin = 0, thin = 1 )
 {
 	# the list of the first argument for dimnames is to specify the row names,
 	# sampling starts at a random point, here 0, 0 
 	samples <- matrix( NA, nrow = iter, ncol = 2, 
-					  dimnames = list( NULL, c( "x", "y" ) ) )
+					   dimnames = list( NULL, c( "x", "y" ) ) )
 	samples[ 1, ] <- c( 0, 0 )
 
 	for(i in 2:iter){
@@ -159,7 +162,7 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 		sample <- samples[ i - 1, ]
 		for(j in 1:thin){
 			
-			# propose a new sample point			
+			# propose a new sample point (will elaborate on this later)			
 			proposal <- sample + rnorm( n = 2, mean = 0, sd = 1 )
 
 			# compare its likelihood with the current position
@@ -190,7 +193,6 @@ TracePlot <- function( plot, samples ){
 ```
 
 
-
 ```{r}
 
 # plot that shows the first few sampling points are not good ones
@@ -208,9 +210,19 @@ TracePlot( plot, samples )
 
 ```
 
-**End Note:**
-
 The MCMC method is very useful, the intuition for the algorithm is that we can approximate the **posterior distribution** by generating a large sample of representative values and the larger the sample, the more accurate is our approximation.
+
+
+## Gibbs Sampling
+
+The MCMC method we've introduced above is also known as the *Metropolis-Hastings algorithm*. It is very general and broadly applicable, but one drawback is that your proposed distribution has to be properly tuned to the posterior distribution. Recall that we proposed a new random sample point using the a normal distribtuion with the mean of 1 and standard deviation of 1 `rnorm( ..., mean = 0, sd = 1 )`. If this random sample point generator's distribution is too wide or too narrow, a large proportion of our proposed sample point will still be rejected. Or more intuitively, the effectiveness of our random walk will farely low.
+
+Given this situation, there's an alternative sampling algorithm called **Gibbs Samplinig**. Unlike the **Metropolis Sampling**, with **Gibbs Samplinig**  all proposed jumps are accepted.
+
+
+## Takeaways
+
+- If you can decompose your probability distribution into conditional probabilities, then **Gibbs Samplinig** is preferable over **Metropolis Sampling**.
 
 
 ## Reference
@@ -218,6 +230,7 @@ The MCMC method is very useful, the intuition for the algorithm is that we can a
 1. [The First Stop in Monte Carlo (Methods): Rejection Sampling](http://thexbar.me/2014/11/07/reject-sample/)
 2. [mcmc tutorial](https://github.com/davharris/mcmc-tutorial)
 3. [Probabilistic Programming and Bayesian Methods for Hackers Chapter 3](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter3_MCMC/Chapter3.ipynb)
+
 
 ## R Session Information 
 

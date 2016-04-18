@@ -17,6 +17,7 @@ output:
 
 # Analytics
 
+- Doing Data Science Right — Your Most Common Questions Answered. [[Review](http://firstround.com/review/doing-data-science-right-your-most-common-questions-answered/?imm_mid=0e29cf&cmp=em-data-na-na-newsltr_20160413)]
 - Principles of good data analytics. [[blog](http://www.gregreda.com/2014/03/23/principles-of-good-data-analysis/)] 
 - Why I Ditched My Fitbit and What This Means for Analytics. [[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/why-i-ditched-my-fitbit-and-what-this-means-for-analytics)]
 - Know the Difference between Customer Service and Customer Experience. [[Harvard Business Review](https://hbr.org/sponsored/2016/03/know-the-difference-between-customer-service-and-customer-experience?utm_source=twitter&utm_medium=social&utm_campaign=harvardbiz)]

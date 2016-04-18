@@ -10,26 +10,25 @@ This is one of the continuously updated repositories that documents personal dat
 | [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All the other data analytic related stuffs that are not solely about machine-learning. |
 | [programming](https://github.com/ethen8181/programming) | Walking through books / online courses. |
 
-## Documentation Listings
 
-Each folder is independent of one another. This implies that the number index in front of each folder does not indicate the ordering of the folder. Or intuitively, it means that you do not need to go through 1_ before reading 2_ and so on. The number index is just used for personal tracking of each folder’s relative timing.
+## Documentation Listings
 
 **cohort_analysis : 2016.4.1**
 
 - Visualize user retention cohort analysis with *seaborn's* heatmap.
 - View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
 
-**3_AB_test : 2016.1.15** ( TODO : add actual case study )
+**ab_test : 2016.1.15** ( TODO : merge into statistics )
 
 A / B testing using frequentist statistics. Process of determining the suitable sample size and interpretation of the result.
 
-- View [[R markdown](http://ethen8181.github.io/Business-Analytics/3_AB_test/AB_test.html)]
+- View [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_test/ab_test.html)]
 
-**2_marketing_analysis :**  ( on hold : add customer lifetime value )
+**marketing_analysis :**  ( on hold : add customer lifetime value )
 
 Conducting customer segmentations using RFM ( Recency, Frequency, Monetary Value ) method.
 
-- View [[R markdown](http://ethen8181.github.io/Business-Analytics/2_marketing_analysis/marketing_analysis.html)]
+- View [[R markdown](http://ethen8181.github.io/Business-Analytics/marketing_analysis/marketing_analysis.html)]
 
 **finding_groups : 2015.11.10** 
 
