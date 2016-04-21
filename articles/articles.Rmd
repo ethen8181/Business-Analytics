@@ -1,10 +1,10 @@
 ---
 title: "Articles"
+date: "`r Sys.Date()`"
 author: "Ming-Yu Liu"
-output: 
-  html_document: 
-    highlight: haddock
-    toc: yes
+output:
+  rmdformats::readthedown:
+    highlight: pygments
 ---
 
 # Interviews and Careers
@@ -17,6 +17,9 @@ output:
 
 # Analytics
 
+- Using Machine Learning to Predict Customer Behaviour [[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/using-machine-learning-to-predict-customer-behaviour)]
+    - Used with Complaints Management, Customer Upsell and Customer Retention. Questions include How to anticipate and manage the dissatisfaction of the customers?', 'How to sell more and better to existing customers?' and 'How to keep the most profitable customers at an appropriate cost?'
+    - Action: You identify a target behaviour, in our case, it is a specific customer action, like filing a complaint/not filing a complaint, accepting or rejecting an upsell offer, cancelling / not cancelling a service. Then perform supervised learning
 - Doing Data Science Right — Your Most Common Questions Answered. [[Review](http://firstround.com/review/doing-data-science-right-your-most-common-questions-answered/?imm_mid=0e29cf&cmp=em-data-na-na-newsltr_20160413)]
 - Principles of good data analytics. [[blog](http://www.gregreda.com/2014/03/23/principles-of-good-data-analysis/)] 
 - Why I Ditched My Fitbit and What This Means for Analytics. [[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/why-i-ditched-my-fitbit-and-what-this-means-for-analytics)]
@@ -26,11 +29,13 @@ output:
 - Cohort analysis. [[Youtube](https://www.youtube.com/watch?v=NyhVdGmnh0I)]
 - Ted Talk : How to use data to make a hit TV show. [[Ted](http://www.ted.com/talks/sebastian_wernicke_how_to_use_data_to_make_a_hit_tv_show?utm_campaign=social&utm_medium=referral&utm_source=facebook.com&utm_content=talk&utm_term=technology)]
 
+
 # Business
 
 - Facebook is the new Excel. [[blog](http://alexmuir.com/facebook-is-the-new-excel)]
 - We need companies to start innovating instead of imitating success stories. [[Hustle](http://thehustle.co/snapchat-vs-spacex-battle-of-the-imitators-and-innovators)]
 - My 4+ Years At Uber Taught Me These Key Lessons. 1. May the supply be with you ; 2. Don't listen, show them. [[Linkedin](https://www.linkedin.com/pulse/three-things-i-learned-during-4-years-uber-michael-pao)]
+
 
 # Learn Data Science
 

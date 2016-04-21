@@ -9,15 +9,17 @@ output:
 
 > To follow along, code to the documentation can be found [here](https://github.com/ethen8181/Business-Analytics/blob/master/bayesian_statistics/MCMC/MCMC.R).
 
+
 # Learn About a Probability Distribution
 
 Probability distributions are super-useful because they can define a range of possibilities we expect to observe if our models are true (if you're a frequentist) or the range of plausible values for our parameters (if you're a Bayesian).
 
 Some probability distributions, like the Normal distribution and the Poisson distribution, are relatively straightforward to work with mathematically and we have lots of handy tools for working with them by hand and on the computer. Other probability distributions over parameters in a complicated model are harder to work with. In this case we need more general tools.
 
-*Markov Chain Monte Carlo (MCMC)* is a class of methods in which we can simulate draws (taking samples) that are slightly dependent and are approximately from a (posterior) distribution. We then take those draws and calculate quantities of interest for the (posterior) distribution. In Bayesian statistics, there are generally two MCMC algorithms that we use: the **Gibbs Sampler** and the **Metropolis-Hastings algorithm**.
+*Markov Chain Monte Carlo (MCMC)* is a class of methods in which we can simulate draws (taking samples) that are slightly dependent and are approximately from a (posterior) distribution. We then take those draws and calculate quantities of interest for the (posterior) distribution. Here, we'll bw attempting to give you an intuition behind one branch of the MCMC sampling, namely the **Metropolis–Hastings Algorithm**.
 
 In short, MCMC methods work by taking samples from a distribution that's hard to study analytically, and then study on their samples instead.
+
 
 ## Example
 
@@ -46,6 +48,7 @@ geom_ribbon( aes( ymin = 0, ymax = y ), alpha = 0.2 )
 ```
 
 Even if you knew the equation that generated that thing, and you remembered everything you learned in calculus and statistics, you probably couldn't find its mean or its quantiles very easily. But if you had 10,000 samples from the distribution, you could estimate the distribution's mean instantly by taking the sample mean.
+
 
 ## Simple Monte Carlo: Rejection Sampling
 
@@ -90,7 +93,8 @@ geom_line( data = data, aes( x, y ) )
 
 Of course, this is a toy example. It turns out that you may end up throwing away exponentially more attempts per successful sample as the number of dimensions in your data goes up. So hardly anyone uses rejection sampling without a good reason.
 
-## Markov Chain Monte Carlo (MCMC)
+
+## MCMC - Metropolis–Hastings Algorithm
 
 Most of our discarded samples came from the tails of the distribution, where the acceptance probability is basically zero. We could increase the number of samples we keep by spending more time in the middle of the distribution, where the acceptance probabilities are much higher. But if all we did was concentrate our dart-throwing efforts there, then we'd end up with heavily biased samples. Meaning we won't find any probability mass in areas where we don't look. Also, even if we could correct for that issue, we won't always know where to concentrate our efforts. So we'll usually need something more automatic.
 
@@ -131,8 +135,6 @@ plot <- ggplot( data = grid, aes( x = x, y = y ) ) +
 plot
 
 ```
-
-When we setup a Bayesian inference problem with N unknowns, we are implicitly creating an N dimensional space for the **prior distributions** to exist in. Associated with the space is an additional dimension, which we can describe as the surface, or curve, that sits on top of the space, that reflects the **prior probability** of a particular point. The plots above visualize this. The more blue the color, the more **prior probability** is assigned to that location. Conversely, areas with whiter color represent that our priors assign very low probability to that location.
 
 Let's take a random walk along X and Y, collecting samples in proportion to their probability. This is just like the rejection sampler, but we'll tend to throw our darts in the neighborhood of our last accepted proposal, and the acceptance rule is a bit more complicated.
 
@@ -211,18 +213,6 @@ TracePlot( plot, samples )
 ```
 
 The MCMC method is very useful, the intuition for the algorithm is that we can approximate the **posterior distribution** by generating a large sample of representative values and the larger the sample, the more accurate is our approximation.
-
-
-## Gibbs Sampling
-
-The MCMC method we've introduced above is also known as the *Metropolis-Hastings algorithm*. It is very general and broadly applicable, but one drawback is that your proposed distribution has to be properly tuned to the posterior distribution. Recall that we proposed a new random sample point using the a normal distribtuion with the mean of 1 and standard deviation of 1 `rnorm( ..., mean = 0, sd = 1 )`. If this random sample point generator's distribution is too wide or too narrow, a large proportion of our proposed sample point will still be rejected. Or more intuitively, the effectiveness of our random walk will farely low.
-
-Given this situation, there's an alternative sampling algorithm called **Gibbs Samplinig**. Unlike the **Metropolis Sampling**, with **Gibbs Samplinig**  all proposed jumps are accepted.
-
-
-## Takeaways
-
-- If you can decompose your probability distribution into conditional probabilities, then **Gibbs Samplinig** is preferable over **Metropolis Sampling**.
 
 
 ## Reference

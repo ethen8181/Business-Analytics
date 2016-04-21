@@ -1,7 +1,5 @@
 # Business-Analytics
 
-## Overall Description
-
 This is one of the continuously updated repositories that documents personal data science journey. Currently, contents are organized into three different repositories based on the following table's description.
 
 | Repository | Documentation Focus |
@@ -40,14 +38,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
-**Bayesian Statistics : 2016.4.14**
+**Bayesian Statistics : 2016.4.21**
 
-For starters with bayesian statistics, articles should be read in listed order.
+Solely focused on getting famailiar with bayesian ab test. For starters with bayesian statistics, articles should be read in listed order.
 
-- Bayes theorem basic concept. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/bayes/bayes.ipynb)]
-- Illustrating beta distribution, empirical bayes estimation, credible interval and false discovery rate. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/bayes/bayes.html)]
-- Markov Chain Monte Carlo (MCMC). [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/MCMC/MCMC.html)]
-- Bayesian AB testing, beta heirarchical model with `pymc`. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/ab_test/bayesian_ab_test.ipynb)]
+- Bayes theorem basics. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/bayes_basics.ipynb)]
+- Beta distribution, empirical bayes estimation, credible interval and false discovery rate. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/bayes/bayes.html)]
+- Markov Chain Monte Carlo (MCMC) - Metropolis Hastings Algorithm. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/MCMC/MCMC.html)]
+- Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/ab_test/bayesian_ab_test.ipynb)]
 - AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bayesian_statistics/ab_test/ab_test_caveats.ipynb)]
 
 
