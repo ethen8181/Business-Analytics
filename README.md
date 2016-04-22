@@ -34,14 +34,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
-**ab_test : 2016.4.22**
+**ab_tests : 2016.4.22**
 
 More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not famaliar bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
 
-- Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_test/template.ipynb)]
-- Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_test/bayesian_ab_test.ipynb)]
-- AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_test/ab_test_caveats.ipynb)]
-- Frequentist AB testing. [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_test/frequentist_ab_test.html)]
+- Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/template.ipynb)]
+- Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/bayesian_ab_test.ipynb)]
+- AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_caveats.ipynb)]
+- Frequentist AB testing. [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_tests/frequentist_ab_test.html)]
 
 
 **bayesian_statistics : 2016.4.21**

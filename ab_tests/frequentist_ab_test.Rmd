@@ -7,7 +7,7 @@ output:
     highlight: pygments
 ---
 
-> [Source code](https://github.com/ethen8181/Business-Analytics/blob/master/ab_test/frequentist_ab_test.R) to follow along the documentation.
+> [Source code](https://github.com/ethen8181/Business-Analytics/blob/master/ab_tests/frequentist_ab_test.R) to follow along the documentation.
 
 A / B testing is a general methodology used online to when you want to test out a new feature. What you're doing is you're going show one set of features, the control set ( your existing feature ) to one user group and another set, your experiment set ( your new feature ) to another user group and test how did these users respond differently so that you can determine which set of your feature is better.
 
