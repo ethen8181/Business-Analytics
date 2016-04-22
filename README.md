@@ -41,7 +41,7 @@ More focused on getting famailiar with bayesian ab test. The frequentist ab test
 - Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_test/template.ipynb)]
 - Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_test/bayesian_ab_test.ipynb)]
 - AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_test/ab_test_caveats.ipynb)]
-- Frequentist AB testing. [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_test/ab_test.html)]
+- Frequentist AB testing. [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_test/frequentist_ab_test.html)]
 
 
 **bayesian_statistics : 2016.4.21**
