@@ -34,6 +34,13 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
+**bandits : 2016.5.7**
+
+Multi-armed bandits algorithms, an possible alternative to ab test.
+
+- View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
+
+
 **ab_tests : 2016.4.22**
 
 More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not famaliar bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.

@@ -164,7 +164,7 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 		sample <- samples[ i - 1, ]
 		for(j in 1:thin){
 			
-			# propose a new sample point (will elaborate on this later)			
+			# propose a new sample point		
 			proposal <- sample + rnorm( n = 2, mean = 0, sd = 1 )
 
 			# compare its likelihood with the current position
