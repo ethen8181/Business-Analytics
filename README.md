@@ -36,14 +36,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 **bandits : 2016.5.7**
 
-Multi-armed bandits algorithms, an possible alternative to ab test.
+Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not famaliar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
 
-- View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
+- Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
 
 
 **ab_tests : 2016.4.22**
 
-More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not famaliar bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
+More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not famaliar with bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
 
 - Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/template.ipynb)]
 - Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/bayesian_ab_test.ipynb)]

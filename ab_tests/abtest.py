@@ -1,3 +1,4 @@
+# %matplotlib inline
 import pymc as pm
 import numpy as np
 import matplotlib.pyplot as plt
