@@ -153,18 +153,19 @@ def experiment_plot( ctr, trials, success ):
 	return fig
 
 
-def plot_beta_dist( ctr, trials, success, alphas, betas, turn ):
+def plot_beta_dist( ctr, trials, success, alphas, betas, turns ):
 	"""
 	Pass in the ctr, trials and success, alphas, betas returned
 	by the `experiment` function and the number of turns 
 	and plot the beta distribution for all the arms in that turn
 	"""
+	subplot_num = len(turns) / 2
 	x = np.linspace( 0.001, .999, 200 )
 	fig = plt.figure( figsize = ( 14, 7 ) ) 
 
 	for idx, turn in enumerate(turns):
 
-		plt.subplot( len(turns) / 2, 2, idx + 1 )
+		plt.subplot( subplot_num, 2, idx + 1 )
 
 		for i in range( len(ctr) ):
 			y = beta( alphas[i] + success[ turn, i ], 
