@@ -36,14 +36,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 **bandits : 2016.5.7**
 
-Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not famaliar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
+Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
 
 - Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
 
 
 **ab_tests : 2016.4.22**
 
-More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not famaliar with bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
+More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not familiar with bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
 
 - Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/template.ipynb)]
 - Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/bayesian_ab_test.ipynb)]
@@ -60,8 +60,9 @@ For starters with bayesian statistics, read the documents in listed order.
 - Markov Chain Monte Carlo (MCMC) - Metropolis Hastings Algorithm. [[R markdown](http://ethen8181.github.io/Business-Analytics/bayesian_statistics/MCMC/MCMC.html)]
 
 
-## Articles
+## Articles & Visualizations
 
-- Visualization articles. [[R markdown](http://ethen8181.github.io/Business-Analytics/visualization/visualization.html)]
-- Useful articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
+- 2016.5.12 | nyt_scatter. Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
+- 2016.5.12 | avoiding_pie_chart. Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
+- Continuously updated articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
 

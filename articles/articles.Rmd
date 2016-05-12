@@ -19,6 +19,14 @@ output:
 
 # Analytics
 
+- 6 Best Practices for implementing In-store Personalization in 2015. [[beaconstac](http://blog.beaconstac.com/2015/07/6-best-practices-for-implementing-in-store-personalization-in-2015/)]
+    - Activating purchases: Say, Laura purchased a lemon yellow shirt at your retail store outlet located in New York. Now, a week later, you can send out an offer (via email and through a mobile app push notification) on a brown trouser that’ll go along with the shirt. The offer can be redeemed on your online store or a physical outlet.
+    - Pushing shoppers forward in the buying path: Say the same customer, Laura, actually went on to browse handbags online after she received the email offer. As soon she walks into your physical retail store, you can send a  notification through her mobile app, asking if she wishes to touch and feel the handbags that she browsed online.
+- How Big Data is changing e-commerce for good [[Future of Commerce](http://www.the-future-of-commerce.com/2014/12/15/how-big-data-is-changing-e-commerce-for-good/)]
+    - The top three things that retailers needs to know: how effective their pricing is, when shoppers are most active and what items they buy together (promoting products that shoppers often buy together can boost your average order value and help products move more quickly). 
+- Do data scientists need to be domain experts to deliver good analytics? [[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/do-data-scientists-need-to-be-domain-experts-to-deliver-good)]
+    - Often, good data scientists become subject experts just by playing with the data and asking questions to domain experts about the data anomalies. Through their questioning they will cross-pollinate the subject matter experts so the team as a whole is stronger.
+    - Machine learning brings a fresh perspective that leads to new insights and no prior domain knowledge can potentially be advantageous, especially in overcoming long standing domain bias.
 - Using Machine Learning to Predict Customer Behaviour [[Data Science Central](http://www.datasciencecentral.com/profiles/blogs/using-machine-learning-to-predict-customer-behaviour)]
     - Used with Complaints Management, Customer Upsell and Customer Retention. Questions include How to anticipate and manage the dissatisfaction of the customers?', 'How to sell more and better to existing customers?' and 'How to keep the most profitable customers at an appropriate cost?'
     - Action: You identify a target behaviour, in our case, it is a specific customer action, like filing a complaint/not filing a complaint, accepting or rejecting an upsell offer, cancelling / not cancelling a service. Then perform supervised learning
