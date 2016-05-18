@@ -45,7 +45,7 @@ Multi-armed bandits algorithms, a possible alternative to ab test in short tests
 
 More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not familiar with bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
 
-- Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/template.ipynb)]
+- Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_template.ipynb)]
 - Bayesian AB testing, beta heirarchical model with *pymc*. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/bayesian_ab_test.ipynb)]
 - AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_caveats.ipynb)]
 - Frequentist AB testing. [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_tests/frequentist_ab_test.html)]
@@ -62,7 +62,7 @@ For starters with bayesian statistics, read the documents in listed order.
 
 ## Articles & Visualizations
 
-- 2015.5.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/logic_workflow.ipynb)]
+- 2015.5.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
 - 2016.5.12 | nyt_scatter. Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
 - 2016.5.12 | avoiding_pie_chart. Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
 - Continuously updated articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
