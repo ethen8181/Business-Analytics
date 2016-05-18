@@ -62,6 +62,7 @@ For starters with bayesian statistics, read the documents in listed order.
 
 ## Articles & Visualizations
 
+- 2015.5.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/logic_workflow.ipynb)]
 - 2016.5.12 | nyt_scatter. Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
 - 2016.5.12 | avoiding_pie_chart. Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
 - Continuously updated articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
