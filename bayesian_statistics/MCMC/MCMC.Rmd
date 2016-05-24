@@ -16,7 +16,7 @@ Probability distributions are super-useful because they can define a range of po
 
 Some probability distributions, like the Normal distribution and the Poisson distribution, are relatively straightforward to work with mathematically and we have lots of handy tools for working with them by hand and on the computer. Other probability distributions over parameters in a complicated model are harder to work with. In this case we need more general tools.
 
-*Markov Chain Monte Carlo (MCMC)* is a class of methods in which we can simulate draws (taking samples) that are slightly dependent and are approximately from a (posterior) distribution. We then take those draws and calculate quantities of interest for the (posterior) distribution. Here, we'll bw attempting to give you an intuition behind one branch of the MCMC sampling, namely the **Metropolis–Hastings Algorithm**.
+*Markov Chain Monte Carlo (MCMC)* is a class of methods in which we can simulate draws (taking samples) that are slightly dependent and are approximately from a (posterior) distribution. We then take those draws and calculate quantities of interest for the (posterior) distribution. Here, we'll be attempting to give you an intuition behind one branch of the MCMC sampling, namely the **Metropolis–Hastings Algorithm**.
 
 In short, MCMC methods work by taking samples from a distribution that's hard to study analytically, and then study on their samples instead.
 

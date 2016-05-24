@@ -9,6 +9,10 @@ output:
 
 # Interviews and Careers
 
+- Reddit and Facebook Veteran On How to Troubleshoot Troublemakers. [[First Round Review](http://firstround.com/review/reddit-and-facebook-veteran-on-how-to-troubleshoot-troublemakers/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
+    - Hermits. Get them to collaborate with a team.
+    - Nostalgia. Ask qualities that they missed most, and see if there're existing projects that could allow them to recapture that feeling.
+    - Trend Chaser. Ask them why this is the route their going to take? The potential has to worth more than the expense of experimenting.
 - Labels are for cans not for people. [[Facebook Videos](https://www.facebook.com/morokcom/videos/237500609921393/)]
 - Practical Frameworks for Beating Burnout [[First Round Review](http://firstround.com/review/practical-frameworks-for-beating-burnout/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
 - Land any job you want. [[blog](http://landanyjobyouwant.com/)]
@@ -43,6 +47,9 @@ output:
 
 # Business
 
+- 'Amazon is not your friend'. [[Linkedin](https://www.linkedin.com/pulse/amazon-your-friend-caroline-fairchild)]
+    - The only way to survive is to build a brand that can grow without Amazon’s distribution.
+    - Amazon hasn’t proven that it can build inspirational brands. While they have mastered the ability to get customers commodity products, no one goes to Amazon to discover something they didn’t already know about.
 - Facebook is the new Excel. [[blog](http://alexmuir.com/facebook-is-the-new-excel)]
 - We need companies to start innovating instead of imitating success stories. [[Hustle](http://thehustle.co/snapchat-vs-spacex-battle-of-the-imitators-and-innovators)]
 - My 4+ Years At Uber Taught Me These Key Lessons. 1. May the supply be with you ; 2. Don't listen, show them. [[Linkedin](https://www.linkedin.com/pulse/three-things-i-learned-during-4-years-uber-michael-pao)]

@@ -33,8 +33,8 @@ class BetaBandit(object):
 		if prior_params:
 			priors = namedtuple( "priors", [ "alpha", "beta" ] )
 			prior  = [ priors(*p) for p in prior_params ]
-			self.alphas = np.asarray([ p.alpha for p in prior ])
-			self.betas  = np.asarray([ p.beta  for p in prior ])
+			self.alphas = np.array([ p.alpha for p in prior ])
+			self.betas  = np.array([ p.beta  for p in prior ])
 		else:
 			self.alphas = np.ones(K)
 			self.betas  = np.ones(K)

@@ -153,61 +153,9 @@ revenue_summary <- revenue_predicted[ , .( avg_revenue 	 = mean(revenue),
 				   arrange( desc(total_revenue), desc( avg_revenue) )
 revenue_summary
 
-# ----------------------------------------------------------------------------
-# 							Customer life time value   
-# ----------------------------------------------------------------------------
 
-
-rfm3 <- data[ recency > 365, 
-			  .( recency 	  	= min(recency) - 365,
-				 first_purchase = max(recency) - 365,
-				 frequency  	= .N,
-				 total_amount   = sum(purchase_amount), 
-				 avg_amount 	= mean(purchase_amount) ), by = customer_id ]
-
-revenue_predicted <- merge( rfm3, revenue_per_customer, by = "customer_id", all.x = TRUE )
-revenue_predicted[ is.na(revenue), revenue := 0 ]
-
-# active column : whether they've spent money on the current period 
-revenue_predicted[ , active := as.numeric( revenue > 0 ) ]
-
-
-# likelihood whether they'll be active 
-formula <- paste( "active", 
-	   	   paste( "recency", "first_purchase", "frequency", 
-	   		      "avg_amount", sep = " + " ), sep = " ~ " ) %>% as.formula()
-model1 <- glm( formula, data = revenue_predicted )
-model1 <- update( model1, . ~ .-first_purchase )
-summary(model1)
-
-1- ( model1$deviance / model1$null.deviance )
-
-
-# active distribution 
-table( revenue_predicted$active )
-
-# predict the price for those that are active 
-active <- revenue_predicted[ active == 1, ]
-
-model2 <- lm( revenue ~ first_purchase + avg_amount + total_amount, data = active )
-summary(model2)
-
-# ----------------------------------------------------------------------------
-# 										Scoring Model  
-# ----------------------------------------------------------------------------
-
-# calculating the p-value by hand: coefficient / standard deviation of coefficient 
-# http://stats.stackexchange.com/questions/9715/how-to-set-up-and-estimate-a-multinomial-logit-model-in-r
-# https://www.researchgate.net/post/Significance_of_Regression_Coefficient
-# predict probability and amount 
-
-# predictors: information of the customers a year ago 
-# target variable: probability that the customer will buy something
-# and if they do, how much they will spend on it 
-
-
-# to predict the probability, we use the entire dataset as our calibration model
-# as for the amount, we use the customers that have had a purchase record 
-
+# -------------------------------------------------
+# rfm python
+# https://github.com/bowen0701/rfmtk/blob/master/rfmtk.py
 
 
