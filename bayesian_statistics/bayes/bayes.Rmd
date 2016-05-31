@@ -401,7 +401,7 @@ The vertical dashed red line is $\frac{\alpha_0}{\alpha_0 + \beta_0}$: the mean 
 
 ## Credible Intervals versus Confidence Intervals
 
-Extract with the [wikipedia's](https://en.wikipedia.org/wiki/Credible_interval) definition on credible intervals. Credible intervals are analogous to confidence intervals in frequentist statistics, although they differ on a philosophical basis; Bayesian intervals treat their bounds as fixed and the estimated parameter as a random variable, whereas frequentist confidence intervals treat their bounds as random variables and the parameter as a fixed value. For a more detailed explanation, refer to this great [StackExchange post](http://stats.stackexchange.com/questions/2272/whats-the-difference-between-a-confidence-interval-and-a-credible-interval).
+Extract with the [wikipedia's](https://en.wikipedia.org/wiki/Credible_interval) definition on credible intervals. Credible intervals are analogous to confidence intervals in frequentist statistics, although they differ on a philosophical basis; Bayesian intervals treat their bounds as fixed and the estimated parameter as a random variable, whereas frequentist confidence intervals treat their bounds as random variables and the parameter as a fixed value. For a quick review on confidence interval, refer to the beginning of this [Stitchfix blog post](http://multithreaded.stitchfix.com/blog/2015/02/12/may-bayes-theorem-be-with-you/).
 
 But there’s also a very practical difference, in that credible intervals take prior information into account. If I take 20 random players and construct both confidence intervals (specifically a binomial proportion confidence interval) and posterior credible intervals for each, it could look something like this:
 

@@ -36,21 +36,20 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
-**bandits : 2016.5.7**
+**bandits : 2016.6.2**
 
 Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
 
 - Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
 
 
-**ab_tests : 2016.4.22**
+**ab_tests : 2016.6.1**
 
-More focused on getting famailiar with bayesian ab test. The frequentist ab test is currently extremely sloppy. For those that are not familiar with bayesian statistics, it's recommended to go through the documents in the **bayesian_statistics** folder.
+Includes Bayesian and Frequentist A/B testing. For those that are not familiar with bayesian statistics, it's recommended to go through all the documents in the **bayesian_statistics** folder.
 
-- Template for the iterative AB testing process (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_template.ipynb)]
 - Bayesian AB testing, beta heirarchical model with pymc. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/bayesian_ab_test.ipynb)]
-- AB testing caveats (not restricted to the bayesian AB testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_caveats.ipynb)]
 - Frequentist AB testing. [[R markdown](http://ethen8181.github.io/Business-Analytics/ab_tests/frequentist_ab_test.html)]
+- Template and caveats for the A/B testing process (applicable for both types of testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_template.ipynb)]
 
 
 **bayesian_statistics : 2016.4.21**
@@ -65,7 +64,7 @@ For starters with bayesian statistics, read the documents in listed order.
 ## Articles & Visualizations
 
 - 2015.5.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
-- 2016.5.12 | nyt_scatter. Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
-- 2016.5.12 | avoiding_pie_chart. Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
+- 2016.5.12 | Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
+- 2016.5.12 | Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
 - Continuously updated articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
 

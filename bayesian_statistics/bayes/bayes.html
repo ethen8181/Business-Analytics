@@ -10,7 +10,7 @@
 
 <meta name="author" content="Ming-Yu Liu" />
 
-<meta name="date" content="2016-04-14" />
+<meta name="date" content="2016-05-31" />
 
 <title>Bayesian Statistics</title>
 
@@ -525,7 +525,7 @@ knitr::<span class="kw">kable</span>( career_yankee_1998[ , show, <span class="d
 </div>
 <div id="credible-intervals-versus-confidence-intervals" class="section level2">
 <h2>Credible Intervals versus Confidence Intervals</h2>
-<p>Extract with the <a href="https://en.wikipedia.org/wiki/Credible_interval">wikipedia’s</a> definition on credible intervals. Credible intervals are analogous to confidence intervals in frequentist statistics, although they differ on a philosophical basis; Bayesian intervals treat their bounds as fixed and the estimated parameter as a random variable, whereas frequentist confidence intervals treat their bounds as random variables and the parameter as a fixed value. For a more detailed explanation, refer to this great <a href="http://stats.stackexchange.com/questions/2272/whats-the-difference-between-a-confidence-interval-and-a-credible-interval">StackExchange post</a>.</p>
+<p>Extract with the <a href="https://en.wikipedia.org/wiki/Credible_interval">wikipedia’s</a> definition on credible intervals. Credible intervals are analogous to confidence intervals in frequentist statistics, although they differ on a philosophical basis; Bayesian intervals treat their bounds as fixed and the estimated parameter as a random variable, whereas frequentist confidence intervals treat their bounds as random variables and the parameter as a fixed value. For a quick review on confidence interval, refer to the beginning of this <a href="http://multithreaded.stitchfix.com/blog/2015/02/12/may-bayes-theorem-be-with-you/">Stitchfix blog post</a>.</p>
 <p>But there’s also a very practical difference, in that credible intervals take prior information into account. If I take 20 random players and construct both confidence intervals (specifically a binomial proportion confidence interval) and posterior credible intervals for each, it could look something like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(broom) <span class="co"># for tidying binom.test's output</span>
 <span class="kw">library</span>(ggthemes)
@@ -728,7 +728,7 @@ hall_of_fame &lt;-<span class="st"> </span>career[ qvalue &lt;<span class="st"> 
 
 <div id="postamble" data-toggle="wy-nav-shift" class="status">
 <p class="author"><span class="glyphicon glyphicon-user"></span> Ming-Yu Liu</p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2016-04-14</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2016-05-31</p>
 </div>
 
 

@@ -1,5 +1,5 @@
 ---
-title: "Online A / B test"
+title: "Frequentist A/B test"
 author: "Ming-Yu Liu"
 date: "`r Sys.Date()`"
 output:
@@ -9,39 +9,217 @@ output:
 
 > [Source code](https://github.com/ethen8181/Business-Analytics/blob/master/ab_tests/frequentist_ab_test.R) to follow along the documentation.
 
-A / B testing is a general methodology used online to when you want to test out a new feature. What you're doing is you're going show one set of features, the control set ( your existing feature ) to one user group and another set, your experiment set ( your new feature ) to another user group and test how did these users respond differently so that you can determine which set of your feature is better.
+# Getting Started
 
-Despite its useful functionality, there are still places where A / B testing isn't as useful. For example : 
+## Hypothesis Testing
 
-1. Testing out completely new experiences. An obvious way for thinking about this is if you're dramatically changing the user's experience. The user might prefer the old way of doing things or they've curious about the new features and they simply test out everything ( sometimes called the novelty effect ).
-2. A / B testing can't tell you if you're missing something. Meaning it can tell you if A performs better B or vice versa, but it can't tell you that if you use C, then it will actually perform better than the former two.
-3. Tesing out products that people rarely buy. e.g. cars, apartments. It might be too long before the user actually decides to take actions after seeing the information and you might be unaware of the actual motivation.
+In order to understand classic frequentist A/B testing, you have to understand the basics of frequentist hypothesis testing. We’ll use a classic "intervention" example found in most industries as a motivation. Let’s say we want to conduct an experiment to test if a certain action helps prevent the occurrence of an adverse event. Depending on the business, this event could be fraud, attrition, downgrades, account closure, etc. The goal is to contact just enough people to decide if the action should be launched at full scale.
+
+**Step 1 - Create a null hypothesis and an alternative hypothesis**
+
+- Null hypothesis $(H_0)$: the event rates are the same for the test/experiment and control groups.
+- Alternative hypothesis $(H_1)$: the event rates are different
+
+Note that the event rate refers to the proportion of clients for whom the event is observed (e.g., fraud, attrition, downgrades, etc.).
+
+The null hypothesis is the hypothesis of no impact, while the alternative hypothesis is that the action will have an impact. To be explicit, this is a two-sided hypothesis, since we are testing if the event rate improved or worsened.
+
+**Step 2 - Draw a sample**
+
+Let’s say we draw a sample of N clients where 50% are exposed to the action and 50% are not. Note that the split is random, but does not have to be exactly 50/50. We’ll learn how to choose N later.
+
+**Step 3 - Calculate the test statistic**
+
+Select the appropriate test statistic and calculate its value from the data (we will call it ZZ). A test statistic is a single metric that can be used to evaluate the null hypothesis. For our test the underlying metric is a binary yes/no variable (event), which means that the appropriate test statistic is a test for differences in proportions. Math formula:
+
+
+$$Z = \frac{ p_{experiment} - p_{control} }
+{ \sqrt{ p_{pooled}( 1-p_{pooled} )( \frac{1}{n_{experiment}} + \frac{1}{n_{control}}) } }$$
+
+
+Where:
+
+- $p_{control}$ and $p_{experiment}$ are the event rates for the control and experiment groups, respectively.
+- $n_{control}$ and $n_{experiment}$ are the sample sizes for the control and experiment groups, respectively.
+- $p_{pooled}$ is the blended rate: $( x_{control} + x_{experiment} ) \big/ ( n_{control} + n_{experiment} )$ where $x_{control}$ and $x_{experiment}$ are event counts for the control and experiment groups, respectively.
+
+For testing of continuous variables, such as revenue, see the appendix of this post.
+
+**Step 4 - Reject or accept the null hypothesis**
+
+Based on the test statistic we can calculate the **p-value** which is probability of obtaining a result at least as "extreme" as the observed result by random chance, given that the null hypothesis is true. It is tempting to interpret the **p-value** as the probability of rejecting the null hypothesis when it is true, but technically speaking that is an incorrect interpretation, in fact this is what's called the Type I error (detail later).
+
+Here's an concrete example, suppose that a vaccine study produced a **p-value** of 0.04. This **p-value** indicates that if the vaccine had no effect, you’d obtain the observed difference or more in 4% of studies due to random sampling error. **p-value** address only one question: how likely are your data, assuming a true null hypothesis? It does not measure support for the alternative hypothesis!!!! Thus, while a low **p-value** indicates that your data are unlikely assuming a true null hypothesis, it can’t evaluate which of two competing cases is more likely:
+
+- The null is true but your sample was unusual.
+- The null is false.
+
+Determining which case is more likely requires subject area knowledge and replicate studies.
+
+If we seek to reject the null hypothesis, we want the **p-value** to be small and the typical threshold used is 5%. In other words, if the **p-value** is less than 5%, and the test group experienced a lower event rate than the control group, we conclude that the action worked. In other words, we are reasonably sure that there is something besides chance alone that gave us the observed data. The pre-chosen cutoff (5%) is also referred to as the **significance level** and plays an important role in determining the required sample size (detail later).
+
+Note that we do not have to directly calculate the p-value in order to reject or accept the null hypothesis. Alternatively, we can apply a cutoff directly to the test statistic (Z) based on its distribution and the chosen significance level. For example, for a two-sided test and a significance level of 5%, the cutoff corresponds to the upper and lower 2.5% on the standard normal distribution (normal distribution with a mean of 0 and a standard deviation of 1), which is 1.96. Hence we reject the null hypothesis if $\lvert Z \rvert > 1.96$.
+
+**Introducing the Power and the Significance Level**
+
+In the world of hypothesis testing, rejecting the null hypothesis when it is actually true is called a type 1 error. Committing a type 1 error is a false positive because we end up recommending something that does not work.
+
+Conversely, a type 2 error occurs when you accept the null hypothesis when it is actually false. This is a false negative because we end up sitting on our hands when we should have taken action. We need to consider both of these types of errors when choosing the sample size.
+
+Two important probabilities related to type 1 and type 2 error are:
+
+- **Significance level** governs the chance of a false positive. A significance level of 0.05 means that there is a 5% chance of a false positive. Choosing level of significance is an arbitrary task, but for many applications, a level of 5% is chosen, for no better reason than that it is conventional.
+- **Statistical power** represents the probability that you’ll get a false negative. A power of 0.80 means that there is an 80% chance that if there was an effect, we would detect it (or a 20% chance that we’d miss the effect). There are no formal standards for power, most researchers assess the power of their tests using 0.80 for adequacy.
+
+| Scenario       | $H_0$ is true | $H_0$ is false |
+|:--------------:|:-------------:|:-----------:|
+|  Accept $H_0$  |  Correct Decision  |   Type 2 Error (1 - power)   |
+|  Reject $H_0$  |  Type 1 Error (significance level) |   	Correct decision   |
+
+The concepts of power and significance level can seem somewhat convoluted at first glance. A good way to get a feel for the underlying mechanics is to plot the probability distribution of Z assuming that the null hypothesis is true. Then do the same assuming that the alternative hypothesis is true, and overlay the two plots.
+
+Consider the following example:
+
+- $H_0: p1 = p2$, $H_1: p 1> p2$. A one-sided test was chosen here for charting-simplicity.
+Our chosen significance level is 5%. The corresponding decision rule is $\lvert Z \rvert > 1.65$. The number (1.65) is the cutoff that corresponds to the upper 5% on the standard normal distribution.
+- Total sample size, N=5,000 (assume equal sample sizes for the control and experiment groups, meaning exactly 2,500 in each group).
+- Say we decide that we need to observe a difference of 0.02 (detailed later) in order to be satisfied that the intervention worked (i.e., $p_1 = 0.10$ and $p_2 = 0.08$). We will discuss how to make this decision later in the post. The desired difference of 0.02 under the alternative hypothesis corresponds to $Z = 2.47$ (using the formula for Z above). If you wish to convert the Z-score that is found to **p-value**, you can do it by one minus the associated probability. Also, for a two sided test we need to multiply the result by two. `2 * ( 1- pnorm( abs(Z) ) )`.
+
+```{r, message=FALSE, warning=FALSE}
+library(scales)
+library(ggplot2)
+library(data.table)
+
+PlotPower <- function( size, min_diff ){
+	
+	size_a <- size_b <- size * 0.5 # size are assumed to be equal
+	p_a <- 0.08 # baseline
+	p_b <- p_a + min_diff
+	count_a  <- size_a * p_a
+	count_b  <- size_b * p_b
+	p_pooled <- ( count_a  + count_b ) / ( size_a + size_b )
+	Z <- ( p_b - p_a ) / sqrt( p_pooled * ( 1 - p_pooled ) * ( 1 / size_a + 1 / size_b ) )
+
+	# Z corresponds to the mean of the normal distribution
+	mean1 <- 0
+	mean2 <- Z
+
+	x <- seq( -4, 6, 0.1 ) # use for generating the x axis of the normal distribution
+	data <- data.frame( x = x, y1 = dnorm( x, mean1, 1 ), y2 = dnorm( x, mean2, 1 ) )
+
+	plot <- ggplot( data, aes( x = x ) ) +
+			geom_line( aes( y = y1, colour = 'H0 is true' ), size = 1.2 ) +
+			geom_line( aes( y = y2, colour = 'H1 is true' ), size = 1.2 ) +
+			geom_area( aes( y = y1, x = ifelse( x > 1.65, x, NA ) ), fill = 'black' ) +
+			geom_area( aes( y = y2, x = ifelse( x > 1.65, x, NA ) ), fill = 'blue', alpha = 0.3 ) +
+			labs( x = '', y = '', title = sprintf( 'p1 = %s, p2 = %s, size = %d', p_a, p_b, size ) ) + 
+			theme( legend.title = element_blank() ) +
+			scale_colour_manual( breaks = c( "H0 is true", "H1 is true" ), 
+								 values = c( "blue", "red" ) )
+	return(plot)
+}
+```
+
+```{r, message=FALSE, warning=FALSE}
+
+PlotPower( size = 5000, min_diff = 0.02 )
+
+```
+
+The shaded dark blue area denotes the significance region, while the the shaded blue area denotes the power. Note that if we pick a smaller N, or a smaller probability difference between the control and experiment group, the power drops (the shaded blue area decreases), meaning that if there’s is in fact a change, there’s lesser percent chance that we’ll detect it:
+
+```{r, message=FALSE, warning=FALSE}
+
+# smaller N
+PlotPower( size = 2500, min_diff = 0.02 )
+
+# smaller probability difference
+PlotPower( size = 5000, min_diff = 0.01 )
+
+```
+
+## Power Analysis
+
+Let’s say we've followed the rule of thumb and require the significance level to be 5% and the power to be 80%. This means we have now specified two key components of a power analysis. Our next task now is to find the sample size that meets these two criteria. To solve this, we also need to specify the detectable difference. The detectable difference is the level of impact we want to be able to detect with our test.
+
+Let’s go back to the definition of power: the power is the probability of rejecting the null hypothesis when it is false. Hence for us to calculate the power, we need to define what "false" means to us in the context of the study. In other words, how much impact, i.e., difference between test and control, do we need to observe in order to reject the null hypothesis and conclude that the action worked?
+
+Let’s consider two illustrative examples: if we think that an event rate reduction of, say, $10^{-10}$ is enough to reject the null hypothesis, then we need a very large sample size to get a power of 80%. This is pretty easy to deduce from the charts above: if the difference in event rates between test and control is a small number like $10^{-10}$, the null and alternative probability distributions will be nearly indistinguishable. Hence we will need to increase the sample size in order to move the alternative distribution to the right and gain power. Conversely, if we only require a reduction of 0.02 in order to claim success, we can make do with a much smaller sample size. 
+
+> In sum, the smaller the detectable difference, the larger the required sample size.
+
+Here's how you would contact a power test. Note that the printed result is the sample size needed for each group!!
+
+```{r}
+
+baseline  <- 0.1  # baseline conversion rate 
+delta 	  <- 0.02 # minimum detectable boundary (practical significance boundary)
+power 	  <- 0.8  # sensitivity 
+sig_level <- 0.05 # specificity 
+
+result <- power.prop.test( p1 = baseline, p2 = baseline - delta, 
+				 		   power = power, sig.level = sig_level,
+				 		   alternative = "two.sided" )
+round(result$n)
+
+```
+
+
+Unlike the significance level and the power, there are no plug-and-play values we can use for the detectable difference. The key is to define what "pay off" means for the study at hand, which depends on what the adverse event is a well as the cost of the action. Two guiding principles:
+
+- **Avoid wasteful sampling** Let’s say it takes an absolute difference of 0.02 between test and control in order for the treatment to pay off. In this case, aiming for a 0.01 detectable difference would just lead to more precision than we really need. Why have the ability to detect 0.01 if we don’t really care about a 0.01 difference? In many cases, sampling for unnecessary precision can be costly and a waste of time.
+- **Avoid missed opportunities** Conversely, if we are analyzing a sensitive metric where small changes can have a large impact e.g. email campaigns, we have to aim for a small detectable difference. If we choose an insufficient sample size, we may end up sitting on our hands and missing an opportunity (type 2 error).
+
+Hence, choosing the minimum detectable difference should be a cross-functional analysis/discussion between the data scientist and the business stakeholder. Once there is a viable range for the detectable difference, we can evaluate the sample size required for each option. For example, let’s say that $p1=0.10$ and we want the detectable difference to be between 0.01 and 0.03. Clearly, we’d rather be able to detect a difference of 0.01, but it may be too costly and hence we want to evaluate more conservative options as well.
+
+```{r}
+
+baseline  <- 0.1
+power 	  <- 0.8
+sig_level <- 0.05
+
+# calculate the the required sample size for reaching the 
+# range detectable difference (dd)
+dd <- seq( from = 0.01, to = 0.03, by = 0.0001 )
+result <- matrix( nrow = length(dd), ncol = 2 )
+result[ , 1 ] <- dd
+for( i in 1:length(dd) ){
+	result[ i, 2 ] <- power.prop.test( p1 = baseline, p2 = baseline - dd[i], 
+									   power = power, sig.level = sig_level,
+									   alternative = "two.sided" )$n
+}
+
+result <- data.table(result)
+setnames( result, c( 'dd', 'n' ) )
+
+ggplot(data = result, aes( x = dd, y = n ) ) +
+geom_line() + ylab("required sample size") + xlab("Detectable difference") + 
+scale_x_continuous( labels = comma )
+
+```
+
+From the graph, we can see that we need roughly 10x more observations to get a detectable difference of 0.01 compared to 0.03.
 
 # Quick Example
 
-When launching a A / B test you need to ask yourself : 
+When launching a A/B test you need to ask yourself: 
 
 1. What is your hypothesis and what's the baseline for comparison. 
-2. What's the confidence level that you wish to have in your result ( This will also affect the number of samples ). 
+2. What's the confidence level that you wish to have in your result (This will also affect the number of samples ). 
 2. How many samples and time do you need in order to actually have your user adapt to the new experience.
 
 So now, suppose you're running an educational platform and your hypothesis is : Will changing the "Start Now" button from orange to pink increase how many students explore the platform's courses. So in this case the metric that's use to evaluate the change's performance is the click through probability ( Unique visitors who click the button / Unique visitors to page ). Note that it is often times impractical to use metrices such as total number of students that completed the course as it often takes weeks or months before a student can do that.
 
 Next we will jot down the hypothesis that we wish to test out, in our case the our null and alternative hypothesis would be :
 
-**The null hypothesis, H0: ** The experimental and control groups have the same probability of completing a checkout ( clicking the button ). Or equivalent to saying that the differences of the two groups' probability is 0.   
-**The alternative hypothesis, H1: ** The two groups have different probability of completing a checkout.
+- $H_0$: The experimental and control groups have the same probability of completing a checkout ( clicking the button ). Or equivalent to saying that the differences of the two groups' probability is 0.   
+- $H_1$: The two groups have different probability of completing a checkout.
 
-Now that we've defined our hypothesis, the first question that comes into mind is how many tests do we need to run, or in a sense how long should the test last in order for us to make our decisions. To do that we can use a power analysis for two independent samples, which can be calculated using the `power.prop.test` function. Before doing that there are some basic parameters that we should be aware of : 
+Now that we've defined our hypothesis, the first question that comes into mind is how many tests do we need to run, or in a sense how long should the test last in order for us to make our decisions. To do that we can use a power analysis for two independent samples, which can be calculated using the `power.prop.test` function.
 
-1. **Significance Level:** Denoted by $\alpha$, this threshold governs the chance of false positive. A significance level of 0.05 means that there's a 5 percent chance of false positive.
-2. **Statistical power:** This stands for $1 - \beta$ ( or so called sensitivity ), where $\beta$ represents the probability that you'll get a false negative. So a statistical power of 0.8 means that if there's is in fact a change, there's 80 percent chance that we'll detect it, which is equivalent to saying that there will be a 20 percent false negative.
+Now suppose that our current baseline is 0.1 ( there's a 10 percent chance that people who saw the button will click it ). And we wish to detect a change of two percent in the click through rate (This is already consider quite high for online experiment).
 
-The effect of picking a significance level of 0.05 and power of 0.8 means that we are 4 times more likely to obtain a false negative than a false positive. For A / B testing, we’re generally more concerned about getting a false positive : Making a change that doesn’t actually improve things than we are about not making a change at all, which is why we accept a greater likelihood of a false negative. The rule of thumb for $\alpha$ and $1 - \beta$ is 0.5 and 0.8 respectively.
-
-Now suppose that our current baseline is 0.1 ( there's a 10 percent chance that people who saw the button will click it ). And we wish to detect a change of two percent in the click through rate ( This is already consider quite high for online experiment ).
-
-Parameters :
+Parameters:
 
 - `baseline` Your current baseline solution. 
 - `delta` Minimum detectable change, smallest effect that will be detected (1-β)% of the time. This parameter can also be referred to as the practical significance boundary.
@@ -65,23 +243,24 @@ result
 
 The result shows that we need at least `r round(result$n)` sample size for each scenario to detect if there will actually be a 2 percent more-than-baseline click through probability.
 
-How these parameters affect the sample size you need :
+Quick note on how these parameters affect the sample size you need:
 
 - `baseline` The higher the baseline click through probability ( but still less than 0.5 ), the larger the sample size you'll need. Since the probability is related to the standard deviation, where it reaches the maximum at 0.5.
 - `delta` The smaller the change you wish to detect, the larger the sample size you'll need.
 - `power` The higher the value means that that you wish to increase the confidence that you have in the result. Thus it means that you need a larger sample size.
 - `sig_level` The smaller the value means that you wish to increase the confidence that you have in the result. Thus it means that you need a larger sample size.
 
-# Analyze Quick Example's Result
+## Analyze Quick Example's Result
 
-Suppose you have run the test and you've obtain the total number of sample sizes and the total number of successes for both groups. Given these variables we can use it to calculate whether the proportional change was due to variation or not. To do so, we'll calculate the confidence interval for the difference, which can be done by calculating the difference plus and minus the z score times the standard deviation. Math Formula :
+Suppose you have run the test and you've obtain the total number of sample sizes and the total number of successes for both groups. Given these variables we can use it to calculate whether the proportional change was due to variation or not. To do so, we'll calculate the confidence interval for the difference, which can be done by calculating the difference plus and minus the z score times the standard deviation. Math Formula:
+
 $$p_{experiment} - p_{control} \pm Z \sqrt{ p_{pooled}( 1-p_{pooled} )( \frac{1}{n_{experiment}} + \frac{1}{n_{control}} ) }$$ 
 
-Where you can calculate the $p_{pooled}$, the pooled probability by the sum of the number of successes for both groups divided by the sum of the total number of sample size for both groups.
+Note that this is the same formula from the first section, except now we're looking at the confidence interval.
 
-[`ABTest`][ABTest] Function that calculates the confidence interval. Input parameters :
+[`ABTest`][ABTest] Function that calculates the confidence interval. Input parameters:
 
-- `count_control` The number of successes. This is equivalent to the number of people that clicked the button for the control group ( your original feature ).
+- `count_control` The number of successes. This is equivalent to the number of people that clicked the button for the control group (your original feature).
 - `sizes_control` The total number of sample size for the control group.
 - The same notion can be applied to the experiment's variable `count_experiment` and `sizes_experiment`.
 - Returns : A data.frame consisted of the mean and the confidence interval of the result.
@@ -103,15 +282,14 @@ ABTest <- function( count_control = count_control,
 	p_control <- count_control / sizes_control
 	p_experiment <- count_experiment / sizes_experiment
 
-	# @p : pooled probability
-	# @std_error pooled standard deviation (error ) 
+	# p: pooled probability
+	# std_error: pooled standard deviation (error) 
 	p <- ( count_control + count_experiment ) / ( sizes_experiment + sizes_control )
 	std_error <- sqrt( p * ( 1 - p ) * ( 1 / sizes_control + 1 / sizes_experiment ) )
 
-	# 95 percent confidence interval's z score = 1.96, equivalent to 
-	# qnorm( 0.975 )
+	# 95 percent confidence interval's z score = 1.96, equivalent to qnorm(0.975)
 	difference <- p_experiment - p_control
-	confidence <- difference + c( -1, 1 ) * 1.96 * std_error
+	confidence <- difference + c( -1, 1 ) * qnorm(0.975) * std_error
 
 	return( data.frame( lower = confidence[1], 
 						mean  = difference,
@@ -167,15 +345,11 @@ labs( title = "Different Scenarios of Confidence Interval",
 For the last three scenario, scenario 4 - 6: If your confidence interval includes your practical significance boundary, would you be sure that the change should not be launched? After all, it's reasonably likely that there was an effect you care about. In these cases, you should run an additional test with greater power if you have the time. But sometimes, you'll have to make a decision even though there's an uncertainty about how real your result is.
 
     
-# Sanity Checks 
+## Sanity Checks 
 
-Before jumping into analyze the result, we should check that the population size metric and any other metric that you don't expect to change shouldn't change while you're running the experiment, or in a sense that they're invariant and shouldn't differ between the experiment and control group.
+For instance, after running your experiment for a week, you've discovered that the total number of users assigned to the control group is 64454 and the total number of users assigned to the experiment group 61818. How would you figure out whether the difference is within expectation given that each user is randomly assigned to the control or experiment group with a probability of 0.5? It's usually good idea to check this.
 
-Checking invariants example :
-
-For instance, after running your experiment for a week, you've discovered that the total number of users assigned to the control group is 64454 and the total number of users assigned to the experiment group 61818. How would you figure out whether the difference is within expectation given that each user is randomly assigned to the control or experiment group with a probability of 0.5 ? 
-
-This is equivalent to saying out of a total 126272 ( 64454 + 61818 ) users, is it surprising to see if 64454 users are assigned to the control group, which is essentially a binomial distribution. Knowing this information, we can construct a confidence interval to test if the number lies within the confidence interval. The confidence interval can be calculated by the mean plus and minus the z-score times the standard error. 
+This is equivalent to saying out of a total 126272 (64454 + 61818) users, is it surprising to see if 64454 users are assigned to the control group? This is essentially a binomial distribution, thus, knowing this information, we can construct a confidence interval to test if the number lies within the confidence interval. The confidence interval can be calculated by the mean plus and minus the z-score times the standard error. 
 
 $$ mean \pm Z \sqrt{ np(1-p) } $$
 
@@ -187,35 +361,25 @@ group1 <- 64454
 group2 <- 61818
 SanityCheck <- function( group1, group2 )
 {
+	# 95 percent confidence interval = qnorm(0.95 + (1-0.95) / 2 )
 	n <- group1 + group2
-	confidence <- n * 0.5 + c( -1, 1 ) * 1.96 * sqrt( n * 0.5 * 0.5 ) 
+	confidence <- n * 0.5 + c( -1, 1 ) * qnorm(0.975) * sqrt( n * 0.5 * 0.5 ) 
 	return(confidence)
 }
-( sanity <- SanityCheck( group1, group2 ) ) 
+( sanity <- SanityCheck( group1, group2 ) )
 
 ```
 
 The result shows that 64454 does not lie within the range of the computed 95 percent confidence interval and therefore it indicates that cookies may not be split equally. 
 
-When this kind of situation happens it's usually best to go back to the day by day data to get a better idea of what could be going wrong. One good thing is to check whether any particular day stands out, or it is just an overall pattern. If it is an overall pattern, then it is suggested that we should check if something went wrong with the experiment setup before proceeding on to analyzing the result.  
-
-
-**Some other takeaways:**
-
-A / B testing is an iterative process, some common mistakes that you want to avoid is :
-
-1. Falling into the trap of “We already tried that”. A hypothesis can be implemented in so many different ways. If you just do one headline test and say "we tried that," you’re really selling yourself short.
-2. Not testing continually or not retesting after months or years. Just because you tested a variation in the past doesn’t necessarily mean that those results are going to be valid a year or two from now.
-3. Optimizing for the top of the funnel, rather than the product. Understanding what the customers want so that you can make the product better. Ultimately, you can’t simply test your headlines and get people to like your product more.
+When this kind of situation happens it's usually best to go back to the day by day data to get a better idea of what could be going wrong. One good thing is to check whether any particular day stands out, or it is just an overall pattern. If it is an overall pattern, then it is suggested that we should check if something went wrong with the experiment setup before proceeding on to analyzing the result.
 
 
 # Reference 
 
-1. [Determining the sample size for A / B test](https://signalvnoise.com/posts/3004-ab-testing-tech-note-determining-sample-size)
-2. [Z-score distribution table](http://www.utdallas.edu/dept/abp/zscoretable.pdf)
-3. [Additional techniques to brainstorm metrices](https://storage.googleapis.com/supplemental_media/udacityu/3954679115/additional_techniques.pdf) 
-4. [Pitfalls of A / B test](http://www.forbes.com/sites/sujanpatel/2015/10/29/how-to-do-ab-testing-right-and-avoid-the-most-common-mistakes-marketers-make/#2715e4857a0b54f535a44349)
-5. [KissMetric Infographic on A / B testing](https://blog.kissmetrics.com/creating-effective-conversion-optimization-process/?utm_source=tofu-email&utm_medium=email) 
+- [Stitchfix's Blog: So, You Need a Statistically Significant Sample?](http://multithreaded.stitchfix.com/blog/2015/05/26/significant-sample/)
+- [Z-score distribution table](http://www.utdallas.edu/dept/abp/zscoretable.pdf)
+- [Minitab's Blog: How to Correctly Interpret P Values](http://blog.minitab.com/blog/adventures-in-statistics/how-to-correctly-interpret-p-values)
 
 
 # R Session Information 
@@ -226,5 +390,5 @@ sessionInfo()
 
 ```
 
-[ABTest]: https://github.com/ethen8181/Business-Analytics/blob/master/3_AB_test/AB_test.R 
+[ABTest]: https://github.com/ethen8181/Business-Analytics/blob/master/ab_tests/frequentist_ab_test.R 
 
