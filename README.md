@@ -13,20 +13,20 @@ Within each section, documentations are listed in reverse chronological order of
 ## General Analytics
 
 
-**cohort_analysis : 2016.4.1**
+#### cohort_analysis : 2016.4.1
 
-- Visualize user retention cohort analysis with *seaborn's* heatmap.
+- Visualize user retention cohort analysis with seaborn's heatmap.
 - View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
 
 
-**marketing_analysis :**  ( on hold : add customer lifetime value )
+#### marketing_analysis : (on hold : add customer lifetime value)
 
-Conducting customer segmentations using RFM ( Recency, Frequency, Monetary Value ) method.
+Conducting customer segmentations using RFM (Recency, Frequency, Monetary Value) method.
 
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/marketing_analysis/marketing_analysis.html)]
 
 
-**finding_groups : 2015.11.10** 
+#### finding_groups : 2015.11.10
 
 Examples of how finding similar patterns using hierarchical clustering algorithms can be applied to the supply chain’s and human resource’s business field.
 
@@ -36,14 +36,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
-**bandits : 2016.6.2**
+#### bandits : 2016.6.2
 
 Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
 
 - Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
 
 
-**ab_tests : 2016.6.1**
+#### ab_tests : 2016.6.1
 
 Includes Bayesian and Frequentist A/B testing. For those that are not familiar with bayesian statistics, it's recommended to go through all the documents in the **bayesian_statistics** folder.
 
@@ -52,7 +52,7 @@ Includes Bayesian and Frequentist A/B testing. For those that are not familiar w
 - Template and caveats for the A/B testing process (applicable for both types of testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_template.ipynb)]
 
 
-**bayesian_statistics : 2016.4.21**
+#### bayesian_statistics : 2016.4.21
 
 For starters with bayesian statistics, read the documents in listed order.
 

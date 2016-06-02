@@ -155,8 +155,6 @@ labs( title = "Different Scenarios of Confidence Interval",
 	  x = "confidence interval" ) 
 
 
-
-
 # sanity checks
 group1 <- 64454
 group2 <- 61818
@@ -174,6 +172,6 @@ power.t.test(sig.level = a, d = es[i], sd = 1,
                                   alternative = 'two.sided', power = b)$n
 
 # ----------------------------------------------------------------------------
-# rule of thumb
+# rule of thumb for online testing, future reference
 # http://www.exp-platform.com/Documents/2014%20experimentersRulesOfThumb.pdf
 
