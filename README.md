@@ -1,29 +1,22 @@
 # Business-Analytics
 
-This is one of the continuously updated repositories that documents personal data science journey. Currently, contents are organized into two separate repositories based on the following table's description.
+This is one of the continuously updated repositories that documents my personal journey on learning data science related topics. Currently, contents are organized into two separate repositories based on the following table's description.
 
 | Repository | Documentation Focus |
 | ---------- | ----------- |
-| [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning and programming in R / python. |
+| [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning, algorithm and programming in R / python. |
 | [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All other data analytic related stuffs, e.g. concepts, statistics, articles, visualizations. |
 
 Within each section, documentations are listed in reverse chronological order of the latest complete date and each of them are independent of one another unless specified.
 
 
-## General Analytics
+## Documentation Listings
 
 
 #### cohort_analysis : 2016.4.1
 
 - Visualize user retention cohort analysis with seaborn's heatmap.
 - View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
-
-
-#### marketing_analysis : (on hold : add customer lifetime value)
-
-Conducting customer segmentations using RFM (Recency, Frequency, Monetary Value) method.
-
-- View [[R markdown](http://ethen8181.github.io/Business-Analytics/marketing_analysis/marketing_analysis.html)]
 
 
 #### finding_groups : 2015.11.10
@@ -63,8 +56,9 @@ For starters with bayesian statistics, read the documents in listed order.
 
 ## Articles & Visualizations
 
-- 2015.5.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
-- 2016.5.12 | Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
-- 2016.5.12 | Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
-- Continuously updated articles link stored for future reference. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
+- 2015.07.02 | Some ways of addressing data hygiene. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/data_hygiene/data_hygiene.html)]
+- 2015.05.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
+- 2016.05.12 | Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
+- 2016.05.12 | Production ready faceted bar plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
+- Continuously updated non-technical articles. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
 

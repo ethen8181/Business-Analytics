@@ -1,0 +1,109 @@
+---
+title: "Data Hygiene Gotchas"
+author: "Ming-Yu Liu"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: pygments
+---
+
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
+
+Feature Engineering and data cleaning are important. The biggest gains usually come from being smart about representing the data, rather than using some sort of complex algorithm.
+
+# Data Sources
+
+We should double check the data that we have in our hands.
+
+**Including data from a period which is no longer valid:** Business strategy, process and system change happen frequently. Some of these changes might make historical data non-usable.
+
+**Including incorrect information:** e.g. If we create a segmentation based on the customer's self stated income, they might under-stating or over-stating income.
+
+**Include/Exclude outliers:** Outliers can skew inferences very significantly. While some modeling techniques are better at handling skew from outliers (e.g. tree-based algorithms), most of the techniques can not. We should find out why they're happening and treat them indepedently from the rest of the group, this makes our model more suited for general cases. 
+
+
+# Representing Timestamps
+
+Time-stamp or datetime attributes are usually denoted by the EPOCH time. But in many applications, we need to transform that into multiple dimensions (Year, Month, Date, Hours, Minutes, Seconds), and some of that information might be unnecessary. Consider for example a supervised system that tries to predict traffic levels in a city as a function of Location+Time. In this case, trying to learn trends that vary by seconds would mostly be misleading. The year wouldn’t add much value to the model as well. Hours, day and month are probably the only dimensions we need. So when representing the time, try to ensure that our model does require all the numbers we're are providing it.
+
+And don't forget Time Zones. If our data sources come from different geographical sources, do remember to normalize by time-zones if needed.
+
+
+# Missing Values
+
+Despite the fact that some modeling methods like tree-base algorithms can address missing values, others such as linear or logistic regression can not and they tend to drop records that contain one or more missing values from the selected set of predictor variable. Thus, if we want to evaluate the performance of different models, it makes sense to impute the missing values.
+
+In case of missing numeric variables, it is common to impute it using a fixed value. Such as the mean, median is commonly used. In addition a categorical variable can be created for each predictor to indicate whether the value has been imputed or not. As for missing categorical variables, we can simply replaced it with the mode of the variable or create a new category indicating that the value is missing. 
+
+Sometimes, missing category values can convery important messages. A classific example is someone who is applying for loans and they non-reported their income category. Or maybe it shoudln't be missing and it's just something wrong with our data sources (e.g. database, or the way we're querying it).
+
+
+# Categorical Variables
+
+**Little variability** e.g. 99% of all the data points have the same category for one of the feauters. If we have a large amount of data, and there is reasonable number of data points (the notion of reasonable really depends on our judgement, at least 30 ...?), then including it in the model is a viable choice. Otherwise it makes sense to drop it (even better, understand why it occured). 
+
+The other way to address the issue is to combine the categorical variables that have few records. Though the combination of categories should have a sound logical basis, as opposed to being combined due to having a similar target variable.
+
+- New data can't be predicted due to "unseen" category.
+
+**Disguised as integers** A simple example would be a "color" feature that takes the value of {Red, Green, Blue}. When this occurs, One hot encode them, where we create transform the original color column into three column (since in this case it takes three distinct possible values) and have a binary value {0,1} indicating whether that data point contains that feature. Don't simply label them with numeric value. For example, the color feature might take one value from {1, 2, 3}, representing {Red, Green, Blue} respectively. First, for a mathematical model, this would mean that Red is somehow ‘more similar’ to Green than Blue (since |1-3| > |1-2|). Secondly, it would make statistical metrics (such as mean) meaningless. Both of which might be misleading to our model.
+
+
+# Feature Interaction
+
+This is where we "combine" two or more categorical attributes into a single one. This is extremely useful a technique, when certain features provides more information together than by themselves. A concrete/relatable example of a (possibly) good feature cross is something like (Latitude, Longitude). A common Latitude corresponds to so many places around the globe. Same goes for the Longitude. But once we combine Lat & Long buckets into discrete "blocks", they denote "regions" in a geography, with possibly similar properties for each one. Some other examples, includes computing the ratios beteen two features.
+
+# Binning/Bucketing
+
+Sometimes, it makes more sense to represent a numerical attribute as a categorical one. The idea is to reduce the noise endured by the learning algorithm, by assigning certain ranges of a numerical attribute to distinct ‘buckets’. Consider the problem of predicting whether a person owns a certain item of clothing or not. Age might definitely be a factor here. What is actually more pertinent, is the Age Group. So what we could do, is have ranges such as 1-10, 11-18, 19-25, 26-40, etc. Moreover, instead of decomposing these categories as in point 2, we could just use scalar values, since age groups that lie "closer by" do represent similar properties.
+
+Bucketing makes sense when the feature can be divided into neat ranges, where all numbers falling in a range imply a common characteristic. It reduces overfitting in certain applications, where we don’t want our model to try and distinguish between values that are too close by – for example, we could club together all latitude values that fall in a city, if our property of interest is a function of the city as a whole. Binning also reduces the effect of possible data errors, by "rounding off" a given value to the nearest representative.
+
+
+# Feature Scaling / Extraction / Selecting
+
+**Scaling** A lot of times, certain features will have a higher "magnitude" than others. An example might be a person’s income – as compared to his age. In such cases, for models apart from tree-base models, it is in fact necessary that we scale all our attributes to comparable/equivalent ranges. This prevents our model from giving greater weightage to certain attributes as compared to others.
+
+**Feature Extraction** Where we use algorithms that automatically generate a new set of features from our raw attributes. Dimensionality reduction methods such as SVD falls under this category.
+
+**Feature Selecting** Some algorithms (lasso, tree-based algorithms) gives you information about which features are important than the others, meaning that they automatically select a subset of your original features so you can discard them when building other models. Here, you are not creating/modifying your current features, but rather pruning them to reduce noise or redundancy.
+
+
+# Reference
+
+- [Common data preparation mistakes and how to avoid them](http://www.analyticsvidhya.com/blog/2013/08/common-data-preparation-mistakes-avoid-them/)
+- [Webinar: Enhance Predictive Modeling with Better Data Preparation](http://www.datasciencecentral.com/video/enhance-predictive-modeling-with-better-data-preparation)
+- [Non-Mathematical Feature Engineering techniques for Data Science](https://codesachin.wordpress.com/2016/06/25/non-mathematical-feature-engineering-techniques-for-data-science/)
+- [Simple Methods to deal with Categorical Variables in Predictive Modeling](http://www.analyticsvidhya.com/blog/2015/11/easy-methods-deal-categorical-variables-predictive-modeling/)
+
+
+
+
+
+

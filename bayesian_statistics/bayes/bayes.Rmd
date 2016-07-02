@@ -7,6 +7,33 @@ output:
     highlight: pygments
 ---
 
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
 > Documentation reimplemented from [this series of posts](http://varianceexplained.org/r/bayesian_fdr_baseball/), with one major difference. The original posts uses the `dplyr` package when manipulating with data, whereas this one uses `data.table`. Code accompanying the documentation can be found [here](https://github.com/ethen8181/Business-Analytics/blob/master/bayesian_statistics/bayes/bayes.R).
 
 Which of these two proportions is higher: 4 out of 10, or 300 out of 1000? This sounds like a silly question. Obviously $4/10=.4$, which is greater than $300/1000=.3$!

@@ -1,19 +1,44 @@
 ---
-title: "Business Analytics - Finding Groups Within the Data"
+title: "Finding Groups Within the Data"
 author: "Ming-Yu Liu"
-date: "`r Sys.Date()`"
+date: "2016-04-05"
 output:
   rmdformats::readthedown:
     highlight: pygments
 ---
 
-> This documentation assumes you're familiar with hierarchical clustering.
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
 
-## Background Information 
+> You can find all the code and datasets (in the data folder) used in this documentation [here](https://github.com/ethen8181/Business-Analytics/tree/master/finding_groups).This documentation assumes you're familiar with hierarchical clustering.
 
-This documentation will go over two examples of how identifying groups within data allows business to improve efficiency. Finding groups within our data allows us to strike the right balance between similarities and differences. The reason behind this is we want to treat similar cases with similar appoaches to benefit from the economics of scale. On the other hand, treating different scenarios with different ways that are more suitable to the current situations will improve your actions' effectiveness. The following documentation will cover two examples of where this notion can be use in the business world. 
+We will go over two examples of how identifying groups within data allows business to improve efficiency. Finding groups within our data allows us to strike the right balance between similarities and differences. The reason behind this is we want to treat similar cases with similar appoaches to benefit from the economics of scale. On the other hand, treating different scenarios with different ways that are more suitable to the current situations will improve your actions' effectiveness. The following documentation will cover two examples of where this notion can be use in the business world. 
 
-## Example 1 : Supply Chain Management 
+# Example 1: Supply Chain Management 
 
 Our concern as a supply chain manager is that we want to organize products' stock more efficiently. To be explicit, we don't really need to store lots of stocks for every single product as this increases inventory costs. On the other hand, we also wish to maintain the stock amount of each product at a suitable level, so that we will be able to deliver the product on time when demanded. Thus, the goal for this task is to identify groups of products' stocks that "behaves" the same and can be treated in a similar fashion.
 
@@ -78,7 +103,7 @@ head(data_sku)
 
 Now that we have obtain the grouping of the data, let's visualize the grouping to see confirm that the algorithm's result matches our intuition.
 
-```{r}
+```{r, message=TRUE, warning=TRUE}
 
 ggplot( data_sku, aes( CV, ADS, color = groups ) ) + geom_point() + 
 labs( x = "Coefficient of Variation", y = "Average Daily Sales", 
@@ -98,7 +123,7 @@ After we've identify the grouping the next step is to transform these insights i
 
 This draws an end to the first example.
 
-## Example 2 : Humance Resources
+# Example2 : Humance Resources
 
 For the next example, suppose you're an HR manager of a big consulting company, and that you're concerned by the high number of employees leaving the firm. In practice, you cannot follow-up with each one of them too often as that would be very time consuming, hence, this is also a case where you have to rely on an HR analytic solution to understand what are the most frequent situations explaining why an employee decides to leave and discover the actions we can take in order to retain them.
 
@@ -183,7 +208,7 @@ When presenting the upper result table, one visualization you can use is the rad
 - To use the `ggradar` function you will need some extra fonts for it to work, see instructions [here](https://github.com/ricardo-bion/ggradar) to get it. Currently, it does not support facetting and the first column has to be the group (future work).
 - Each variable of the data is recorded with different scales. And normalizing them via the `scale` function produces negative numbers and that does not sound very intuitive for radar charts, thus a different kind of normalization is used here, namely the max-min normalization. With this method, you minus each column by its min value and divide it by the difference between the maximum and minimum value `( x - min(x) ) / ( max(x) - min(x) )`. Though the recorded score may look a bit odd as with this normalization, there will be values of 0.
 
-```{r, fig.height=8, fig.width=12 }
+```{r, fig.height=8, fig.width=12, message=FALSE, warning=FALSE}
 
 hr_agg2 <- hr_agg[ , -c( "groups", "proportion" ), with = FALSE ]
 hr_agg2 <- hr_agg2[ , lapply( .SD, rescale ) ]
@@ -198,7 +223,7 @@ ggradar(hr_agg2)
 
 End of the second example. 
 
-## Takeaways
+**Takeaways**
 
 1. There are different perspective (intuition, business sense, technical approaches) as to which variable should have or should not have been included in the dataset prior to running the clustering method. As clustering algorithms are categorized under unsupervised algorithms, meaning that there is no way of measuring whether the ouput is "correct". Thus you should choose your input variables (features) wisely! Speaking of this, suppose that for some reason you think that it's nonsense to exclude the `S` variable : the satisfaction level, like we did in this documentation. You should add it back and run the clustering, though you'll obtain similar grouping results for this dataset, and when you realize that whether you included a variable or not does not affect the result, you should exclude it as this lessen the calculation loading for the algorithm and your computer.  
 
@@ -208,13 +233,8 @@ End of the second example.
 
 4. For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria. If you're interested in a more technical way of choosing the suitable number and evaluate the stability of your clustering result, you can refer to another documentation [here](http://ethen8181.github.io/machine-learning/clustering/clustering.html).
 
-**Sources:**
 
-This wraps up our example of where clustering algorithms can be used to improve your businesses efficiency. You can find all the code (finding_groups.R) and datasets (in the data folder) used in this documentation [here](https://github.com/ethen8181/Business-Analytics/tree/master/finding_groups).
-
-Any comments or suggestions is appreciated. That includes bugs or typos report. You can file these new issues [here](https://github.com/ethen8181/Business-Analytics/issues). 
-
-## R Session Information
+# R Session Information
 
 ```{r}
 
