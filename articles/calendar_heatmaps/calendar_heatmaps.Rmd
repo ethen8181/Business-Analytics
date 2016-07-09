@@ -1,0 +1,196 @@
+---
+title: "Calendar Heatmaps"
+author: "Ming-Yu Liu"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: pygments
+---
+
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE
+)
+
+```
+
+> Source code can be obtained [here](https://github.com/ethen8181/Business-Analytics/blob/master/articles/calendar_heatmaps/calendar_heatmaps.R)
+
+We'll use an attacker data with 200,000 "events". It has the `timestamp`, and the `source_country` ISO 3166-1 alpha-2 country code (which is the source of the attack) plus the `tz` time zone of the source IP address. Let's have a look:
+
+```{r}
+
+library(DT)
+library(dplyr)
+library(scales)
+library(viridis)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(lubridate)
+library(data.table)
+setwd('/Users/ethen/Business-Analytics/articles/calendar_heatmaps')
+
+attacks <- fread("data/eventlog.csv")
+DT::datatable(attacks)
+
+```
+
+A quick exploratory data analysis on this attacker data is what were the "working hours" by country, and we can visualize this with a calendar heatmap. To create the heatmap, we’ll need the weekday and hour of each event, or as granular as you want to get.
+
+```{r}
+
+make_hr_wkday <- function( ts, sc, tz ){
+	# convert each time with the appropriate timezone,
+	# the timezone parameter, tz, only takes a single value,
+	# then extract its weekdays and hour
+	real_times <- ymd_hms( ts, tz = tz[1], quiet = TRUE )
+	dt <- data.table( source_country = sc,
+					  wkday = weekdays(real_times),
+					  hour = hour(real_times) )
+	return(dt)
+}
+
+# simply stores the name of the weekday
+# convert weekday and hour into factor so they'll be ordered
+# when plotting
+weekday_levels <- levels( weekdays( 0, abbreviate = FALSE ) )
+attacks <- attacks %>% 
+		   group_by(tz) %>%
+		   do( make_hr_wkday( .$timestamp, .$source_country, .$tz ) ) %>% 
+		   ungroup() %>% 
+		   mutate( wkday = factor( wkday, levels = weekday_levels ),
+		   		   hour  = factor( hour, levels = 0:23 ) )
+head(attacks)
+
+```
+
+Then we can simply group the count by hour and wkday and plot it, since we know that we have values for every combination there's no need to further preprocess the data.
+
+```{r}
+
+grouped <- attacks %>% count( wkday, hour ) %>% ungroup()
+
+ggplot( grouped, aes( hour, wkday, fill = n ) ) + 
+geom_tile( color = "white", size = 0.1 ) + 
+theme_tufte( base_family = "Helvetica" ) + 
+coord_equal() + 
+scale_fill_viridis( name = "# of Events", label = comma ) + 
+labs( x = NULL, y = NULL, title = "Events per weekday & time of day" ) +
+theme( axis.ticks = element_blank(),
+	   plot.title = element_text( hjust = 0.5 ),
+	   legend.title = element_text( size = 8 ),
+	   legend.text = element_text( size = 6 ) )
+
+```
+
+Some `ggplot2` explanation:
+
+- `geom_tile()` will make tiles at each x and y location we've specified. We're also telling it to use a thin (0.1 units) white border to separate the tiles.
+- `theme_tufte()` from the `ggthemes` package removes a lot of chart junk without having to do it manually.
+- `coord_equal` ensures the plot will have a 1:1 aspect ratio (i.e. `geom_tile()`--which draws rectangles, will now draw squares).
+- `scale_fill_viridis` from the `viridis` package gives us an awesome color scale.
+
+That’s great, but what if we wanted the heatmap breakdown by country? We’ll can do this in two ways, first with each country’s heatmap using the same scale (using `facet`), then with each one using it’s own scale (using `grid.arrange`).
+
+```{r}
+events_by_country <- count( attacks, source_country ) %>% 
+					 mutate( percent = percent( n / sum(n) ) ) %>%
+					 arrange( desc(n) )
+head(events_by_country)
+
+
+top_country <- events_by_country$source_country[1:4]
+top_country_attacks <- attacks %>%
+					   filter( source_country %in% top_country ) %>% 
+					   count( source_country, wkday, hour ) %>% 
+					   ungroup() %>% 
+					   mutate( source_country = factor( source_country, levels = top_country ) )
+
+
+gg <- ggplot( top_country_attacks, aes( x = hour, y = wkday, fill = n ) ) + 
+	  geom_tile( color = "white", size = 0.1 ) +
+	  scale_fill_viridis( name = "# Events" ) + 
+	  coord_equal() + 
+	  facet_wrap( ~source_country, ncol = 2 ) +
+	  labs( x = NULL, y = NULL, title = "Events per weekday & time of day by country\n" ) + 
+	  theme_tufte( base_family = "Helvetica" ) + 
+	  theme( axis.ticks = element_blank(),
+			 axis.text = element_text( size = 8 ),
+			 panel.border = element_blank(),
+			 plot.title = element_text( hjust = 0.5 ),
+			 strip.text = element_text( hjust = 0.5 ),
+			 panel.margin = unit( 0.1, "cm" ),
+	  		 legend.position = "bottom",
+	  		 legend.title = element_text( size = 8 ),
+	  		 legend.text = element_text( size = 6 ),
+	  		 legend.key.size = unit( 0.4, "cm" ),
+	  		 legend.key.width = unit( 1, "cm" ) )
+gg
+
+```
+
+```{r}
+
+plots <- lapply( top_country, function(x){
+
+	subset_data <- top_country_attacks %>% filter( source_country == x )
+	gg <- ggplot( subset_data, aes( x = hour, y = wkday, fill = n ) ) + 
+		  geom_tile( color = "white", size = 0.1 ) +
+		  scale_fill_viridis( name = "# Events" ) + 
+		  scale_y_discrete( expand = c( 0, 0 ) ) +
+		  coord_equal() + 
+		  labs( x = NULL, y = NULL, title = x ) + 
+		  theme_tufte( base_family = "Helvetica" ) + 
+		  theme( axis.ticks = element_blank(),
+				 axis.text = element_text( size = 7 ),
+				 panel.border = element_blank(),
+				 plot.title = element_text( hjust = 0.5 ),
+				 strip.text = element_text( hjust = 0.5 ),
+				 panel.margin = unit( 0.1, "cm" ),
+		  		 legend.position = "bottom",
+		  		 legend.title = element_text( size = 6 ),
+		  		 legend.text = element_text( size = 6 ),
+		  		 legend.key.size = unit( 0.4, "cm" ) )
+	return(gg)
+})
+
+# specify the additional arguments to grid.arrange
+# by adding it to the list that's going to be do.called
+plots[['ncol']] = 2
+do.call( grid.arrange, plots )
+
+```
+
+
+# Reference
+
+- [Making faceted heatmaps with ggplot2](https://rud.is/b/2016/02/14/making-faceted-heatmaps-with-ggplot2/)

@@ -56,7 +56,7 @@ For starters with bayesian statistics, read the documents in listed order.
 
 ## Articles & Visualizations
 
-- 2015.07.02 | Production ready calendar heatmap. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/calendar_heatmap/calendar_heatmap.html)]
+- 2015.07.02 | Production ready calendar heatmap. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/calendar_heatmaps/calendar_heatmaps.html)]
 - 2015.07.02 | Some ways of addressing data hygiene. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/data_hygiene/data_hygiene.html)]
 - 2015.05.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
 - 2016.05.12 | Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
