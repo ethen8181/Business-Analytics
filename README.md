@@ -1,13 +1,13 @@
 # Business-Analytics
 
-This is one of the continuously updated repositories that documents my personal journey on learning data science related topics. Currently, contents are organized into two separate repositories based on the following table's description.
+This is one of the continuously updated repositories that documents my own personal journey on learning data science related topics. Currently, contents are organized into two separate repositories based on the following table's description.
 
 | Repository | Documentation Focus |
 | ---------- | ----------- |
 | [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning, algorithm and programming in R / python. |
 | [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All other data analytic related stuffs, e.g. concepts, statistics, articles, visualizations. |
 
-Within each section, documentations are listed in reverse chronological order of the latest complete date and each of them are independent of one another unless specified.
+Within each section, documentations are listed in reverse chronological order of the latest complete date and each of them are independent of one another unless specified. If you find it helpful, give it a star ^^.
 
 
 ## Documentation Listings
@@ -56,6 +56,7 @@ For starters with bayesian statistics, read the documents in listed order.
 
 ## Articles & Visualizations
 
+- 2015.07.02 | Production ready calendar heatmap. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/calendar_heatmap/calendar_heatmap.html)]
 - 2015.07.02 | Some ways of addressing data hygiene. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/data_hygiene/data_hygiene.html)]
 - 2015.05.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
 - 2016.05.12 | Production ready scatter plot. [[R markdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]

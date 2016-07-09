@@ -10,7 +10,7 @@
 
 <meta name="author" content="Ming-Yu Liu" />
 
-<meta name="date" content="2016-07-01" />
+<meta name="date" content="2016-07-03" />
 
 <title>Frequentist A/B test</title>
 
@@ -141,7 +141,7 @@ pre { /* Code block */
 <p><strong>Step 2 - Draw a sample</strong></p>
 <p>Let’s say we draw a sample of N clients where 50% are exposed to the action and 50% are not. Note that the split is random, but does not have to be exactly 50/50. We’ll learn how to choose N later.</p>
 <p><strong>Step 3 - Calculate the test statistic</strong></p>
-<p>Select the appropriate test statistic and calculate its value from the data (we will call it ZZ). A test statistic is a single metric that can be used to evaluate the null hypothesis. For our test the underlying metric is a binary yes/no variable (event), which means that the appropriate test statistic is a test for differences in proportions. Math formula:</p>
+<p>Select the appropriate test statistic and calculate its value from the data (we will call it Z). A test statistic is a single metric that can be used to evaluate the null hypothesis. For our test the underlying metric is a binary yes/no variable (event), which means that the appropriate test statistic is a test for differences in proportions. Math formula:</p>
 <p><span class="math display">\[Z = \frac{ p_{experiment} - p_{control} }
 { \sqrt{ p_{pooled}( 1-p_{pooled} )( \frac{1}{n_{experiment}} + \frac{1}{n_{control}}) } }\]</span></p>
 <p>Where:</p>
@@ -488,7 +488,7 @@ SanityCheck &lt;-<span class="st"> </span>function( group1, group2 )
 
 <div id="postamble" data-toggle="wy-nav-shift" class="status">
 <p class="author"><span class="glyphicon glyphicon-user"></span> Ming-Yu Liu</p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2016-07-01</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2016-07-03</p>
 </div>
 
 

@@ -7,24 +7,59 @@ output:
     highlight: pygments
 ---
 
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
+# Management
+
+- The Single Most Important Skill for a Data Scientist. [[Mango Solution](http://www.mango-solutions.com/wp/2015/06/the-single-most-important-skill-for-a-data-scientist/)]
+- How A/B Testing at LinkedIn, Wealthfront and eBay Made Me a Better Manager. [[First Round Review](http://firstround.com/review/how-a-b-testing-at-linkedin-wealthfront-and-ebay-made-me-a-better-manager/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
+- How Constraints Create Space for Innovation. [[linkedin pulse](https://www.linkedin.com/pulse/how-constraints-create-space-innovation-ash-maurya)]
+- From Developer to Manager - PyCon 2016. [[Youtube](https://www.youtube.com/watch?v=lzBm0r8CxhY)]
+- Reddit and Facebook Veteran On How to Troubleshoot Troublemakers. [[First Round Review](http://firstround.com/review/reddit-and-facebook-veteran-on-how-to-troubleshoot-troublemakers/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
+    - Hermits. Get them to collaborate with a team.
+    - Nostalgia. Ask qualities that they missed most, and see if there're existing projects that could allow them to recapture that feeling.
+    - Trend Chaser. Ask them why this is the route their going to take? The potential has to worth more than the expense of experimenting.
+- Practical Frameworks for Beating Burnout [[First Round Review](http://firstround.com/review/practical-frameworks-for-beating-burnout/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
+- How to set goals: OKRs. [[Youtube](https://www.youtube.com/watch?v=mJB83EZtAjc)]
+- Meetings that don’t suck. [[Youtube](https://www.youtube.com/watch?v=rU8nv38E0Qk)]
+
+
 # Interviews and Careers
 
 - 5 Qualities You Need to Show in the Job Search. [[glassdoor](https://www.glassdoor.com/blog/qualities-show-off/?utm_source=newsletter&utm_medium=email&utm_content=Top5Jobs_US16&utm_campaign=May2016_US)]
     - Leadership ability. e.g. As a result of an incentive program I spearheaded, our sales team surpassed its quarterly sales goal by 15 percent.
     - Flexibility: keep track of times when you’ve had to assume multiple roles or responsibilities outside of your own.
     - Coachability: Be open and honest about where you fall short and how you’re actively improving on those shortcomings.
-- From Developer to Manager - PyCon 2016. [[Youtube](https://www.youtube.com/watch?v=lzBm0r8CxhY)]
-- Reddit and Facebook Veteran On How to Troubleshoot Troublemakers. [[First Round Review](http://firstround.com/review/reddit-and-facebook-veteran-on-how-to-troubleshoot-troublemakers/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
-    - Hermits. Get them to collaborate with a team.
-    - Nostalgia. Ask qualities that they missed most, and see if there're existing projects that could allow them to recapture that feeling.
-    - Trend Chaser. Ask them why this is the route their going to take? The potential has to worth more than the expense of experimenting.
 - Labels are for cans not for people. [[Facebook Videos](https://www.facebook.com/morokcom/videos/237500609921393/)]
-- Practical Frameworks for Beating Burnout [[First Round Review](http://firstround.com/review/practical-frameworks-for-beating-burnout/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
 - Land any job you want. [[blog](http://landanyjobyouwant.com/)]
 - The career advice no one tells you. [[Quartz](http://qz.com/640112/the-career-advice-no-one-tells-you/)]
 - Wanted in College Graduates: Tolerance for Ambiguity. [[Linkedin Pulse](https://www.linkedin.com/pulse/wanted-college-graduates-tolerance-ambiguity-jeff-selingo)]
-- How to set goals: OKRs. [[Youtube](https://www.youtube.com/watch?v=mJB83EZtAjc)]
-- Meetings that don’t suck. [[Youtube](https://www.youtube.com/watch?v=rU8nv38E0Qk)]
+
 
 
 # Analytics

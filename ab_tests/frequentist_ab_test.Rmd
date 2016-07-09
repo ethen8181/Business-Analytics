@@ -57,7 +57,7 @@ Let’s say we draw a sample of N clients where 50% are exposed to the action an
 
 **Step 3 - Calculate the test statistic**
 
-Select the appropriate test statistic and calculate its value from the data (we will call it ZZ). A test statistic is a single metric that can be used to evaluate the null hypothesis. For our test the underlying metric is a binary yes/no variable (event), which means that the appropriate test statistic is a test for differences in proportions. Math formula:
+Select the appropriate test statistic and calculate its value from the data (we will call it Z). A test statistic is a single metric that can be used to evaluate the null hypothesis. For our test the underlying metric is a binary yes/no variable (event), which means that the appropriate test statistic is a test for differences in proportions. Math formula:
 
 
 $$Z = \frac{ p_{experiment} - p_{control} }
