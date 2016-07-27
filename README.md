@@ -33,7 +33,7 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 Some notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power).
 
-- View [[R markdown](http://ethen8181.github.io/Business-Analytics/requentist_statistics/requentist_statistics.html)]
+- View [[R markdown](http://ethen8181.github.io/Business-Analytics/frequentist_statistics/frequentist_statistics.html)]
 
 
 #### bandits : 2016.6.2
