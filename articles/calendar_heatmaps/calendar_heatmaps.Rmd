@@ -48,7 +48,6 @@ We'll use an attacker data with 200,000 "events". It has the `timestamp`, and th
 
 ```{r}
 
-library(DT)
 library(dplyr)
 library(scales)
 library(viridis)
@@ -60,7 +59,7 @@ library(data.table)
 setwd('/Users/ethen/Business-Analytics/articles/calendar_heatmaps')
 
 attacks <- fread("data/eventlog.csv")
-DT::datatable(attacks)
+head(attacks)
 
 ```
 
@@ -190,7 +189,9 @@ do.call( grid.arrange, plots )
 
 ```
 
+This type of calendar heatmap can also be used to detect patterns in IT support logs, the chart will then show the number of tickets raised (day-wise). We can then detect patterns to see commonly raised issues and figure out ways to address it.
 
 # Reference
 
 - [Making faceted heatmaps with ggplot2](https://rud.is/b/2016/02/14/making-faceted-heatmaps-with-ggplot2/)
+- [Big Data Insights - IT Support Log Analysis](http://costaleconomist.blogspot.tw/2015/12/big-data-insights-it-support-log.html)

@@ -44,9 +44,8 @@ PlotPower( size = 5000, min_diff = 0.01 )
 # Power test
 baseline  <- 0.1  # baseline conversion rate 
 delta 	  <- 0.02 # minimum detectable boundary (practical significance boundary)
-power 	  <- 0.8  # sensitivity 
-sig_level <- 0.05 # specificity 
-
+power 	  <- 0.8  # specificity, or true negative rate
+sig_level <- 0.05 # false positive rate
 result <- power.prop.test( p1 = baseline, p2 = baseline - delta, 
 				 		   power = power, sig.level = sig_level,
 				 		   alternative = "two.sided" )
@@ -54,8 +53,8 @@ round(result$n)
 
 
 # -----------------------------------------------------------------------------
-baseline  <- 0.1 # baseline rate
-power 	  <- 0.8  # sensitivity 
+baseline  <- 0.1
+power 	  <- 0.8 
 sig_level <- 0.05
 
 # calculate the the required sample size for reaching the 
@@ -82,68 +81,52 @@ scale_x_continuous( labels = comma )
 # ------------------------------------------------------------------
 
 baseline  <- 0.1  # baseline conversion rate 
-delta 	  <- 0.02 # minimum detectable boundary ( practical significance boundary )
-power 	  <- 0.8  # sensitivity 
-sig_level <- 0.05 # specificity 
-
-result <- power.prop.test( p1 = baseline, p2 = baseline + delta, 
-				 		   power = power, sig.level = sig_level,
-				 		   alternative = "two.sided" )
+delta 	  <- 0.02 # minimum detectable boundary (practical significance boundary)
+power 	  <- 0.8  # specificity, or true negative rate
+sig_level <- 0.05 # false positive rate
+result <- power.prop.test( p1 = baseline, p2 = baseline - delta, 
+                           power = power, sig.level = sig_level,
+                           alternative = "two.sided" )
 round(result$n)
 
 
 # ------------------------------------------------------------------
 # Analyze the result 
 
-# parameters 
-count_control 	 <- 974
-sizes_control 	 <- 10072
+# parameters
+count_control <- 974
+sizes_control <- 10072
 count_experiment <- 1242
 sizes_experiment <- 9886
 
-ABTest <- function( count_control = count_control, 
-					sizes_control = sizes_control,
-					count_experiment = count_experiment, 
-					sizes_experiment = sizes_experiment )
-{
-	# probability of each group 
-	p_control <- count_control / sizes_control
-	p_experiment <- count_experiment / sizes_experiment
+result <- prop.test( c( count_control, count_experiment ), 
+					 c( sizes_control, sizes_experiment ) )
+result
 
-	# p: pooled probability
-	# std_error: pooled standard deviation (error) 
-	p <- ( count_control + count_experiment ) / ( sizes_experiment + sizes_control )
-	std_error <- sqrt( p * ( 1 - p ) * ( 1 / sizes_control + 1 / sizes_experiment ) )
+# do the computation ourselves to see that the confidence interval matches
+# compute the probability of each group and the standard error
+p1 <- count_control / sizes_control
+p2 <- count_experiment / sizes_experiment
+se <- sqrt( p1 * ( 1 - p1 ) / sizes_control + p2 * ( 1 - p2 ) / sizes_experiment )
 
-	# 95 percent confidence interval's z score = 1.96, equivalent to qnorm(0.975)
-	difference <- p_experiment - p_control
-	confidence <- difference + c( -1, 1 ) * qnorm(0.975) * std_error
-
-	return( data.frame( lower = confidence[1], 
-						mean  = difference,
-						upper = confidence[2] ) )
-}
-
-confidence <- ABTest( count_control = count_control, 
-					  sizes_control = sizes_control,
-					  count_experiment = count_experiment, 
-					  sizes_experiment = sizes_experiment )
+# 95 percent confidence interval's z score
+conf_level <- 0.95
+zscore <- qnorm( conf_level + ( 1 - conf_level ) / 2 )
+conf_int <- abs(p2 - p1) + c( -1, 1 ) * zscore * se
+conf_int
 
 # ------------------------------------------------------------------
 # different scenarios
 
 # fixed artifical plot
 # using delta = 0.02 as the minimum detectable boundary 
-
-scenario <- as.character(2:6)
-lower <- c( -0.008, 0.011, -0.025, -0.005, 0.015 )
-mean  <- c( 0.005, 0.014, 0.005, 0.025, 0.025 )
-upper <- c( 0.018, 0.017, 0.035, 0.055, 0.035 )
-
+scenario <- as.character(1:6)
+lower <- c( conf_int[1], -0.008, 0.011, -0.025, -0.005, 0.015 )
+mean  <- c( abs(p2 - p1), 0.005, 0.014, 0.005, 0.025, 0.025 )
+upper <- c( conf_int[2], 0.018, 0.017, 0.035, 0.055, 0.035 )
 examples <- data.frame( scenario, lower, mean, upper )
-examples <- rbind( cbind( scenario = "1", confidence ), examples )
 examples$scenario <- factor( examples$scenario, levels = as.character(6:1) )
-
+ 
 ggplot( examples, aes( mean, scenario, color = scenario ) ) + 
 geom_point() + 
 geom_errorbarh( aes( xmin = lower, xmax = upper ), height = 0.1 ) + 
@@ -167,9 +150,6 @@ SanityCheck <- function( group1, group2 )
 }
 ( sanity <- SanityCheck( group1, group2 ) )
 
-
-power.t.test(sig.level = a, d = es[i], sd = 1,
-                                  alternative = 'two.sided', power = b)$n
 
 # ----------------------------------------------------------------------------
 # rule of thumb for online testing, future reference

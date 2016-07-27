@@ -1,4 +1,3 @@
-library(DT)
 library(dplyr)
 library(scales)
 library(viridis)
@@ -7,12 +6,9 @@ library(ggthemes)
 library(gridExtra)
 library(lubridate)
 library(data.table)
-
-setwd('/Users/ethen/facetedcountryheatmaps')
-
-
+setwd('/Users/ethen/Business-Analytics/articles/calendar_heatmaps')
 attacks <- fread("data/eventlog.csv")
-DT::datatable(attacks)
+
 
 # preprocessing --------------------------------------------------------------
 make_hr_wkday <- function( ts, sc, tz ){

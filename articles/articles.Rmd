@@ -14,28 +14,31 @@ p{ /* Normal  */
 body{ /* Normal  */
    font-size: 18px;
 }
-td {  /* Table  */
+td{  /* Table  */
    font-size: 14px;
 }
-h1 { /* Header 1 */
+h1{ /* Header 1 */
  font-size: 32px;
 }
-h2 { /* Header 2 */
+h2{ /* Header 2 */
  font-size: 26px;
 }
-h3 { /* Header 3 */
+h3{ /* Header 3 */
  font-size: 22px;
 }
 code.r{ /* Code block */
   font-size: 14px;
 }
-pre { /* Code block */
+pre{ /* Code block */
   font-size: 14px
 }
 </style>
 
 # Management
 
+- The Pivotal Stories Every Startup Leader Should Be Able to Tell. [[First Round Review](http://firstround.com/review/the-pivotal-stories-every-startup-leader-should-be-able-to-tell/)]
+- The Eisenhower Matrix Productivity Tool – As A Trello Board. [[Trello](http://blog.trello.com/eisenhower-matrix-productivity-tool-trello-board/?utm_source=newsletter&utm_medium=email&utm_campaign=july-2016-newsletter-2)]
+- All About OKRs: How to Set Them, Achieve Them, and Track Them in Trello. [[Trello](http://blog.trello.com/okrs-set-achieve-track-trello/?utm_source=newsletter&utm_medium=email&utm_campaign=july-2016-newsletter-2)]
 - The Single Most Important Skill for a Data Scientist. [[Mango Solution](http://www.mango-solutions.com/wp/2015/06/the-single-most-important-skill-for-a-data-scientist/)]
 - How A/B Testing at LinkedIn, Wealthfront and eBay Made Me a Better Manager. [[First Round Review](http://firstround.com/review/how-a-b-testing-at-linkedin-wealthfront-and-ebay-made-me-a-better-manager/?ct=t(How_Does_Your_Leadership_Team_Rate_12_3_2015))]
 - How Constraints Create Space for Innovation. [[linkedin pulse](https://www.linkedin.com/pulse/how-constraints-create-space-innovation-ash-maurya)]
@@ -61,9 +64,13 @@ pre { /* Code block */
 - Wanted in College Graduates: Tolerance for Ambiguity. [[Linkedin Pulse](https://www.linkedin.com/pulse/wanted-college-graduates-tolerance-ambiguity-jeff-selingo)]
 
 
-
 # Analytics
 
+- Data science tips from reddit
+The Top Five Data Science Tips From r/DataScience. [[Blog](http://www.datadependence.com/2016/07/best-data-science-tips-reddit/?utm_content=buffer076f2&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer)]
+- Data scientists mostly just do arithmetic and that’s a good thing. [[Blog](https://m.signalvnoise.com/data-scientists-mostly-just-do-arithmetic-and-that-s-a-good-thing-c6371885f7f6#.dly3ud86c)]
+- The one machine learning concept you need to know. [[Blog](http://www.sharpsightlabs.com/one-concept-machine-learning/)]
+    - When you’re doing machine learning (specifically, supervised learning), you’re essentially using computational techniques to find the underlying relationships between the input and the output.
 - Check Yourself: 5 Things You Should Know About Data Science (Author Note). [[Blog](http://analyticsmadeskeezy.com/2012/11/05/check-yo-self-5-things-you-should-know-about-data-science-author-note/)]
 - Statistics for Hackers - PyCon 2016 [[Youtube]](https://www.youtube.com/watch?v=-7I7MWTX0gA)
 - The questions to ask before implementing any big data strategy. [[the guardian](http://www.theguardian.com/sap-partner-zone/2016/apr/28/questions-before-implementing-big-data-strategy)]
@@ -92,6 +99,7 @@ pre { /* Code block */
 
 # Business
 
+- The New 'Must Haves' for Mobile Apps to Succeed Today. [[First Round Review](http://firstround.com/review/the-new-must-haves-for-mobile-apps-to-succeed-today/)]
 - 'Amazon is not your friend'. [[Linkedin](https://www.linkedin.com/pulse/amazon-your-friend-caroline-fairchild)]
     - The only way to survive is to build a brand that can grow without Amazon’s distribution.
     - Amazon hasn’t proven that it can build inspirational brands. While they have mastered the ability to get customers commodity products, no one goes to Amazon to discover something they didn’t already know about.
@@ -102,4 +110,5 @@ pre { /* Code block */
 
 # Learn Data Science
 
+- The Mathematics of Machine Learning. [[Blog]](http://datascience-africa.org/2016/07/mathematics-machine-learning/)
 - The MBA Data Science Toolkit: 8 resources to go from the spreadsheet to the command line. [[Medium](https://medium.com/@dmca/the-mba-data-science-toolkit-8-resources-to-go-from-the-spreadsheet-to-the-command-line-cbb59ea82144#.pjph91n3m)]

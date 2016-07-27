@@ -113,6 +113,7 @@ Our chosen significance level is 5%. The corresponding decision rule is $\lvert 
 - Say we decide that we need to observe a difference of 0.02 (detailed later) in order to be satisfied that the intervention worked (i.e., $p_1 = 0.10$ and $p_2 = 0.08$). We will discuss how to make this decision later in the post. The desired difference of 0.02 under the alternative hypothesis corresponds to $Z = 2.47$ (using the formula for Z above). If you wish to convert the Z-score that is found to **p-value**, you can do it by one minus the associated probability. Also, for a two sided test we need to multiply the result by two. `2 * ( 1- pnorm( abs(Z) ) )`.
 
 ```{r, message=FALSE, warning=FALSE}
+
 library(scales)
 library(ggplot2)
 library(data.table)
@@ -153,7 +154,7 @@ PlotPower( size = 5000, min_diff = 0.02 )
 
 ```
 
-The shaded dark blue area denotes the significance region, while the the shaded blue area denotes the power. Note that if we pick a smaller N, or a smaller probability difference between the control and experiment group, the power drops (the shaded blue area decreases), meaning that if there’s is in fact a change, there’s lesser percent chance that we’ll detect it:
+The shaded dark blue area denotes the significance region, while the the shaded blue area denotes the power (note that it includes the shaded dark blue area). Note that if we pick a smaller N, or a smaller probability difference between the control and experiment group, the power drops (the shaded blue area decreases), meaning that if there’s is in fact a change, there’s lesser percent chance that we’ll detect it:
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -181,8 +182,8 @@ Here's how you would contact a power test. Note that the printed result is the s
 
 baseline  <- 0.1  # baseline conversion rate 
 delta 	  <- 0.02 # minimum detectable boundary (practical significance boundary)
-power 	  <- 0.8  # sensitivity 
-sig_level <- 0.05 # specificity 
+power 	  <- 0.8  # specificity, or true negative rate
+sig_level <- 0.05 # false positive rate
 
 result <- power.prop.test( p1 = baseline, p2 = baseline - delta, 
 				 		   power = power, sig.level = sig_level,
@@ -260,7 +261,6 @@ baseline  <- 0.1
 delta 	  <- 0.02
 power 	  <- 0.8
 sig_level <- 0.05
-
 result <- power.prop.test( p1 = baseline, p2 = baseline + delta, 
 				 		   power = power, sig.level = sig_level,
 				 		   alternative = "two.sided" )
@@ -279,55 +279,35 @@ Quick note on how these parameters affect the sample size you need:
 
 ## Analyze Quick Example's Result
 
-Suppose you have run the test and you've obtain the total number of sample sizes and the total number of successes for both groups. Given these variables we can use it to calculate whether the proportional change was due to variation or not. To do so, we'll calculate the confidence interval for the difference, which can be done by calculating the difference plus and minus the z score times the standard deviation. Math Formula:
-
-$$p_{experiment} - p_{control} \pm Z \sqrt{ p_{pooled}( 1-p_{pooled} )( \frac{1}{n_{experiment}} + \frac{1}{n_{control}} ) }$$ 
-
-Note that this is the same formula from the first section, except now we're looking at the confidence interval.
-
-[`ABTest`][ABTest] Function that calculates the confidence interval. Input parameters:
+Suppose you have run the test and you've obtain the total number of sample sizes and the total number of successes for both groups. Given these variables we can use it to calculate whether the proportional change was due to variation or not.
 
 - `count_control` The number of successes. This is equivalent to the number of people that clicked the button for the control group (your original feature).
 - `sizes_control` The total number of sample size for the control group.
 - The same notion can be applied to the experiment's variable `count_experiment` and `sizes_experiment`.
-- Returns : A data.frame consisted of the mean and the confidence interval of the result.
 
 ```{r}
 
-# parameters 
-count_control 	 <- 974
-sizes_control 	 <- 10072
+# parameters
+count_control <- 974
+sizes_control <- 10072
 count_experiment <- 1242
 sizes_experiment <- 9886
 
-ABTest <- function( count_control = count_control, 
-					sizes_control = sizes_control,
-					count_experiment = count_experiment, 
-					sizes_experiment = sizes_experiment )
-{
-	# probability of each group 
-	p_control <- count_control / sizes_control
-	p_experiment <- count_experiment / sizes_experiment
+result <- prop.test( c( count_control, count_experiment ), 
+					 c( sizes_control, sizes_experiment ) )
+result
 
-	# p: pooled probability
-	# std_error: pooled standard deviation (error) 
-	p <- ( count_control + count_experiment ) / ( sizes_experiment + sizes_control )
-	std_error <- sqrt( p * ( 1 - p ) * ( 1 / sizes_control + 1 / sizes_experiment ) )
+# do the computation ourselves to see that the confidence interval matches
+# compute the probability of each group and the standard error
+p1 <- count_control / sizes_control
+p2 <- count_experiment / sizes_experiment
+se <- sqrt( p1 * ( 1 - p1 ) / sizes_control + p2 * ( 1 - p2 ) / sizes_experiment )
 
-	# 95 percent confidence interval's z score = 1.96, equivalent to qnorm(0.975)
-	difference <- p_experiment - p_control
-	confidence <- difference + c( -1, 1 ) * qnorm(0.975) * std_error
-
-	return( data.frame( lower = confidence[1], 
-						mean  = difference,
-						upper = confidence[2] ) )
-}
-
-confidence <- ABTest( count_control = count_control, 
-					  sizes_control = sizes_control,
-					  count_experiment = count_experiment, 
-					  sizes_experiment = sizes_experiment )
-confidence
+# 95 percent confidence interval's z score
+conf_level <- 0.95
+zscore <- qnorm( conf_level + ( 1 - conf_level ) / 2 )
+conf_int <- abs(p2 - p1) + c( -1, 1 ) * zscore * se
+conf_int
 
 ```
 
@@ -335,21 +315,15 @@ In order to launch a change, the change should be larger than the minimum detect
 
 Different scenarios of the output :
 
-```{r, warning=FALSE,message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 
-# fixed artifical plot
-# using delta = 0.02 as the minimum detectable boundary 
-library(ggplot2)
-
-scenario <- as.character(2:6)
-lower <- c( -0.008, 0.011, -0.025, -0.005, 0.015 )
-mean  <- c( 0.005, 0.014, 0.005, 0.025, 0.025 )
-upper <- c( 0.018, 0.017, 0.035, 0.055, 0.035 )
-
+scenario <- as.character(1:6)
+lower <- c( conf_int[1], -0.008, 0.011, -0.025, -0.005, 0.015 )
+mean  <- c( abs(p2 - p1), 0.005, 0.014, 0.005, 0.025, 0.025 )
+upper <- c( conf_int[2], 0.018, 0.017, 0.035, 0.055, 0.035 )
 examples <- data.frame( scenario, lower, mean, upper )
-examples <- rbind( cbind( scenario = "1", confidence ), examples )
 examples$scenario <- factor( examples$scenario, levels = as.character(6:1) )
-
+ 
 ggplot( examples, aes( mean, scenario, color = scenario ) ) + 
 geom_point() + 
 geom_errorbarh( aes( xmin = lower, xmax = upper ), height = 0.1 ) + 
@@ -358,7 +332,7 @@ geom_vline( xintercept = delta, color = "blue", linetype = "dotted" ) +
 geom_vline( xintercept = -delta, color = "blue", linetype = "dotted" ) +
 scale_color_discrete( breaks = as.character(1:6) ) +  
 labs( title = "Different Scenarios of Confidence Interval",
-	  x = "confidence interval" ) 
+	  x = "confidence interval" )  
 
 ```
 
@@ -416,6 +390,4 @@ When this kind of situation happens it's usually best to go back to the day by d
 sessionInfo()
 
 ```
-
-[ABTest]: https://github.com/ethen8181/Business-Analytics/blob/master/ab_tests/frequentist_ab_test.R 
 
