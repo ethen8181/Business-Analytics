@@ -62,7 +62,7 @@ A plausible range of values for the population parameter is called a confidence 
 
 > The General Social Survey, the GSS, is a sociological survey used to collect data on demographic characteristics and attitudes of residents of the United States. In 2010, the survey collected responses from 1,154 U.S. residents. Based on the survey results, a 95% confidence interval for the average number of hours Americans have to relax or pursue activities that they enjoy after an average workday, was found to be 3.53 to 3.83 hours.
 
-The general definition of a 95% confidence interval means that 95% of confidence intervals, **created based on random samples of the same size from the same population will contain the true population parameter**.
+The general definition of a 95% confidence interval means that **95% of confidence intervals, created based on random samples of the same size from the same population will contain the true population parameter**.
 
 Thus in the context of the problem above, the correct interpretation of the **confidence interval** will be: If we collected many random samples of the same size (1,154 Americans) and calculated a confidence interval for average number of hours Americans spend relaxing after a work day, then we would expect 95% of the intervals to contain the true population average number. Or We are 95% confident that the average number of hours Americans (note that this is refering to the population) spend relaxing after a work day is between 3.53 to 3.83.
 

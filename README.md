@@ -13,7 +13,7 @@ Within each section, documentations are listed in reverse chronological order of
 ## Documentation Listings
 
 
-#### cohort_analysis : 2016.4.1
+#### cohort_analysis : 2016.04.1
 
 - Visualize user retention cohort analysis with seaborn's heatmap.
 - View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
@@ -29,21 +29,21 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 ## Statistics
 
-#### frequentist_statistics : 2016.7.27
+#### frequentist_statistics : 2016.07.27
 
 Some notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power).
 
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/frequentist_statistics/frequentist_statistics.html)]
 
 
-#### bandits : 2016.6.2
+#### bandits : 2016.06.02
 
 Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
 
 - Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
 
 
-#### ab_tests : 2016.6.1
+#### ab_tests : 2016.06.01
 
 Includes Bayesian and Frequentist A/B testing. For those that are not familiar with bayesian statistics, it's recommended to go through all the documents in the **bayesian_statistics** folder.
 
@@ -52,7 +52,7 @@ Includes Bayesian and Frequentist A/B testing. For those that are not familiar w
 - Template and caveats for the A/B testing process (applicable for both types of testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_template.ipynb)]
 
 
-#### bayesian_statistics : 2016.4.21
+#### bayesian_statistics : 2016.04.21
 
 For starters with bayesian statistics, read the documents in listed order.
 

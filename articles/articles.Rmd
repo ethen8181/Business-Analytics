@@ -54,6 +54,7 @@ pre{ /* Code block */
 
 # Interviews and Careers
 
+- What factors can increase your data science salary?. [[Springboard](https://www.springboard.com/blog/highest-data-scientist-salary-possible/?utm_campaign=Data%2BElixir&utm_medium=email&utm_source=Data_Elixir_90)]
 - 5 Qualities You Need to Show in the Job Search. [[glassdoor](https://www.glassdoor.com/blog/qualities-show-off/?utm_source=newsletter&utm_medium=email&utm_content=Top5Jobs_US16&utm_campaign=May2016_US)]
     - Leadership ability. e.g. As a result of an incentive program I spearheaded, our sales team surpassed its quarterly sales goal by 15 percent.
     - Flexibility: keep track of times when you’ve had to assume multiple roles or responsibilities outside of your own.
@@ -66,6 +67,7 @@ pre{ /* Code block */
 
 # Analytics
 
+- The Inconvenient Truth About Data Science. [[Linkedin Pulse](https://www.linkedin.com/pulse/inconvenient-truth-data-science-kamil-bartocha)]
 - Data science tips from reddit
 The Top Five Data Science Tips From r/DataScience. [[Blog](http://www.datadependence.com/2016/07/best-data-science-tips-reddit/?utm_content=buffer076f2&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer)]
 - Data scientists mostly just do arithmetic and that’s a good thing. [[Blog](https://m.signalvnoise.com/data-scientists-mostly-just-do-arithmetic-and-that-s-a-good-thing-c6371885f7f6#.dly3ud86c)]
