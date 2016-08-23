@@ -67,6 +67,12 @@ pre{ /* Code block */
 
 # Analytics
 
+- Cameron Davidson Pilon: Mistakes I've Made. [[Youtube](https://www.youtube.com/watch?v=VWtsTIbFXxA)]
+    - Always be aware of the sample sizes when computing aggregated data.
+    - Correlated data can lead to misinterpretation of the results.
+- Data Science: Beyond the Kaggle. [[Blog](http://datawrangl.com/2016/05/15/data-science-beyond-the-kaggle/)]
+- Mentality for hackathons. [[Medium](https://medium.com/data-engineering/modeling-madly-8b2c72eb52be#.q9ly8hxq2)]
+- The top 5 habits of a professional data scientist. [[OREILLY](https://www.oreilly.com/learning/theres-nothing-magical-about-learning-data-science?imm_mid=0e6c5a&cmp=em-data-na-na-newsltr_20160817)]
 - The Inconvenient Truth About Data Science. [[Linkedin Pulse](https://www.linkedin.com/pulse/inconvenient-truth-data-science-kamil-bartocha)]
 - Data science tips from reddit
 The Top Five Data Science Tips From r/DataScience. [[Blog](http://www.datadependence.com/2016/07/best-data-science-tips-reddit/?utm_content=buffer076f2&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer)]

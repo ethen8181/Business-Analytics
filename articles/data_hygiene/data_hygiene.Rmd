@@ -66,7 +66,7 @@ Sometimes, missing category values can convery important messages. A classific e
 
 # Categorical Variables
 
-**Little variability** e.g. 99% of all the data points have the same category for one of the feauters. If we have a large amount of data, and there is reasonable number of data points (the notion of reasonable really depends on our judgement, at least 30 ...?), then including it in the model is a viable choice. Otherwise it makes sense to drop it (even better, understand why it occured). 
+**Little variability** e.g. 99% of all the data points have the same category for one of the features. If we have a large amount of data, and there is reasonable number of data points (the notion of reasonable really depends on our judgement, at least 30 ...?), then including it in the model is a viable choice. Otherwise it makes sense to drop it (even better, understand why it occured). 
 
 The other way to address the issue is to combine the categorical variables that have few records. Though the combination of categories should have a sound logical basis, as opposed to being combined due to having a similar target variable.
 
@@ -81,7 +81,7 @@ This is where we "combine" two or more categorical attributes into a single one.
 
 # Binning/Bucketing
 
-Sometimes, it makes more sense to represent a numerical attribute as a categorical one. The idea is to reduce the noise endured by the learning algorithm, by assigning certain ranges of a numerical attribute to distinct ‘buckets’. Consider the problem of predicting whether a person owns a certain item of clothing or not. Age might definitely be a factor here. What is actually more pertinent, is the Age Group. So what we could do, is have ranges such as 1-10, 11-18, 19-25, 26-40, etc. Moreover, instead of decomposing these categories as in point 2, we could just use scalar values, since age groups that lie "closer by" do represent similar properties.
+Sometimes, it makes more sense to represent a numerical attribute as a categorical one. The idea is to reduce the noise endured by the learning algorithm, by assigning certain ranges of a numerical attribute to distinct ‘buckets’. Consider the problem of predicting whether a person owns a certain item of clothing or not. Age might definitely be a factor here. What is actually more pertinent, is the Age Group. So what we could do, is have ranges such as 1-10, 11-18, 19-25, 26-40, etc. Moreover, instead of doing one hot encoding this these binned categories, we could just use scalar values, since age groups that lie "closer by" do represent similar properties.
 
 Bucketing makes sense when the feature can be divided into neat ranges, where all numbers falling in a range imply a common characteristic. It reduces overfitting in certain applications, where we don’t want our model to try and distinguish between values that are too close by – for example, we could club together all latitude values that fall in a city, if our property of interest is a function of the city as a whole. Binning also reduces the effect of possible data errors, by "rounding off" a given value to the nearest representative.
 
@@ -101,9 +101,4 @@ Bucketing makes sense when the feature can be divided into neat ranges, where al
 - [Webinar: Enhance Predictive Modeling with Better Data Preparation](http://www.datasciencecentral.com/video/enhance-predictive-modeling-with-better-data-preparation)
 - [Non-Mathematical Feature Engineering techniques for Data Science](https://codesachin.wordpress.com/2016/06/25/non-mathematical-feature-engineering-techniques-for-data-science/)
 - [Simple Methods to deal with Categorical Variables in Predictive Modeling](http://www.analyticsvidhya.com/blog/2015/11/easy-methods-deal-categorical-variables-predictive-modeling/)
-
-
-
-
-
 
