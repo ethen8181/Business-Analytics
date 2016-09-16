@@ -10,7 +10,7 @@
 
 <meta name="author" content="Ming-Yu Liu" />
 
-<meta name="date" content="2016-08-23" />
+<meta name="date" content="2016-09-10" />
 
 <title>Data Hygiene Gotchas</title>
 
@@ -100,7 +100,7 @@ pre { /* Code block */
 <h1>Missing Values</h1>
 <p>Despite the fact that some modeling methods like tree-base algorithms can address missing values, others such as linear or logistic regression can not and they tend to drop records that contain one or more missing values from the selected set of predictor variable. Thus, if we want to evaluate the performance of different models, it makes sense to impute the missing values.</p>
 <p>In case of missing numeric variables, it is common to impute it using a fixed value. Such as the mean, median is commonly used. In addition a categorical variable can be created for each predictor to indicate whether the value has been imputed or not. As for missing categorical variables, we can simply replaced it with the mode of the variable or create a new category indicating that the value is missing.</p>
-<p>Sometimes, missing category values can convery important messages. A classific example is someone who is applying for loans and they non-reported their income category. Or maybe it shoudln’t be missing and it’s just something wrong with our data sources (e.g. database, or the way we’re querying it).</p>
+<p>Sometimes, missing category values can convey important messages. A classific example is someone who is applying for loans and they non-reported their income category. Or maybe it shouldn’t be missing and it’s just something wrong with our data sources (e.g. database, or the way we’re querying it).</p>
 </div>
 <div id="categorical-variables" class="section level1">
 <h1>Categorical Variables</h1>
@@ -140,7 +140,7 @@ pre { /* Code block */
 
 <div id="postamble" data-toggle="wy-nav-shift" class="status">
 <p class="author"><span class="glyphicon glyphicon-user"></span> Ming-Yu Liu</p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2016-08-23</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2016-09-10</p>
 </div>
 
 
