@@ -4,8 +4,8 @@ This is one of the continuously updated repositories that documents my own perso
 
 | Repository | Documentation Focus |
 | ---------- | ----------- |
-| [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning, algorithm and programming in R / python. |
-| [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All other data analytic related stuffs, e.g. concepts, statistics, articles, visualizations. |
+| [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning, algorithm and programming in R / Python |
+| [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All other data analytic related stuffs, e.g. concepts, statistics, articles, visualizations |
 
 Within each section, documentations are listed in reverse chronological order of the start date and each of them are independent of one another unless specified.
 

@@ -1,6 +1,6 @@
 ---
 title: "Frequentist Statistic"
-author: "Ming-Yu Liu"
+author: "Ming-Yu (Ethen) Liu"
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
