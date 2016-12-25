@@ -67,6 +67,12 @@ pre{ /* Code block */
 
 # Analytics
 
+- 2016.12.24 | Scope the Solution before Solving the Machine Learning. [[Blog](https://making.dia.co/scope-the-solution-before-solving-the-machine-learning-7e5ddb622733#.iwbgi17n1)]
+    1. what is the actual end goal
+    2. what type of outputs do I need
+    3. what type of models produces this output
+    4. what type of inputs would help me
+    5. are these inputs valid
 - The Most Practical Big Data Use Cases Of 2016. [[Forbes](http://www.forbes.com/sites/bernardmarr/2016/08/25/the-most-practical-big-data-use-cases-of-2016/?inf_contact_key=851fbbc780fa7ed1332d888a227af9856e3f8925ffc7f91b9e0f03dfa5587a98#4c9dd6697533)]
     - Sales, Manufacture, Health Care
 - Cameron Davidson Pilon: Mistakes I've Made. [[Youtube](https://www.youtube.com/watch?v=VWtsTIbFXxA)]
