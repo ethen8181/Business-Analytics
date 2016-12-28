@@ -11,7 +11,7 @@ attacks <- fread("data/eventlog.csv")
 
 
 # preprocessing --------------------------------------------------------------
-make_hr_wkday <- function( ts, sc, tz ){
+make_hr_wkday <- function(ts, sc, tz) {
 	# convert each time with the appropriate timezone,
 	# the timezone parameter, tz, only takes a single value,
 	# then extract its weekdays and hour
@@ -22,16 +22,15 @@ make_hr_wkday <- function( ts, sc, tz ){
 	return(dt)
 }
 
-# simply stores the name of the weekday
-# convert weekday and hour into factor so they'll be ordered
-# when plotting
-weekday_levels <- levels( weekdays( 0, abbreviate = FALSE ) )
+# convert weekday and hour into factor so they'll be ordered when plotting
+wkday_levels <- c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 
+				  'Thursday', 'Friday', 'Saturday')
 attacks <- attacks %>% 
 		   group_by(tz) %>%
 		   do( make_hr_wkday( .$timestamp, .$source_country, .$tz ) ) %>% 
 		   ungroup() %>% 
-		   mutate( wkday = factor( wkday, levels = weekday_levels ),
-		   		   hour  = factor( hour, levels = 0:23 ) )
+		   mutate( wkday = factor(wkday, levels = wkday_levels),
+		   		   hour  = factor(hour, levels = 0:23) )
 head(attacks)
 
 # attacks --------------------------------------------------------------------
@@ -39,18 +38,18 @@ head(attacks)
 # then we can simply group the count by hour and wkday
 # since we know that we have values for every combination
 # there's no need to further preprocess the data
-grouped <- attacks %>% count( wkday, hour ) %>% ungroup()
+grouped <- attacks %>% count(wkday, hour) %>% ungroup()
 
-ggplot( grouped, aes( hour, wkday, fill = n ) ) + 
-geom_tile( color = "white", size = 0.1 ) + 
-theme_tufte( base_family = "Helvetica" ) + 
+ggplot( grouped, aes(hour, wkday, fill = n) ) + 
+geom_tile(color = "white", size = 0.1) + 
+theme_tufte(base_family = "Helvetica") + 
 coord_equal() + 
-scale_fill_viridis( name = "# of Events", label = comma ) + 
-labs( x = NULL, y = NULL, title = "Events per weekday & time of day" ) +
+scale_fill_viridis(name = "# of Events", label = comma) + 
+labs(x = NULL, y = NULL, title = "Events per weekday & time of day") +
 theme( axis.ticks = element_blank(),
-	   plot.title = element_text( hjust = 0.5 ),
-	   legend.title = element_text( size = 8 ),
-	   legend.text = element_text( size = 6 ) )
+	   plot.title = element_text(hjust = 0.5),
+	   legend.title = element_text(size = 8),
+	   legend.text = element_text(size = 6) )
 
 
 # attacks per country ---------------------------------------------------------------
@@ -71,47 +70,47 @@ top_country_attacks <- attacks %>%
 					   mutate( source_country = factor( source_country, levels = top_country ) )
 
 
-gg <- ggplot( top_country_attacks, aes( x = hour, y = wkday, fill = n ) ) + 
-	  geom_tile( color = "white", size = 0.1 ) +
-	  scale_fill_viridis( name = "# Events" ) + 
+gg <- ggplot( top_country_attacks, aes(x = hour, y = wkday, fill = n) ) + 
+	  geom_tile(color = "white", size = 0.1) +
+	  scale_fill_viridis(name = "# Events") + 
 	  coord_equal() + 
 	  facet_wrap( ~source_country, ncol = 2 ) +
-	  labs( x = NULL, y = NULL, title = "Events per weekday & time of day by country\n" ) + 
-	  theme_tufte( base_family = "Helvetica" ) + 
+	  labs(x = NULL, y = NULL, title = "Events per weekday & time of day by country\n") + 
+	  theme_tufte(base_family = "Helvetica") + 
 	  theme( axis.ticks = element_blank(),
-			 axis.text = element_text( size = 8 ),
+			 axis.text = element_text(size = 8),
 			 panel.border = element_blank(),
-			 plot.title = element_text( hjust = 0.5 ),
-			 strip.text = element_text( hjust = 0.5 ),
-			 panel.margin = unit( 0.1, "cm" ),
+			 plot.title = element_text(hjust = 0.5),
+			 strip.text = element_text(hjust = 0.5),
+			 panel.margin = unit(0.1, "cm"),
 	  		 legend.position = "bottom",
-	  		 legend.title = element_text( size = 8 ),
-	  		 legend.text = element_text( size = 6 ),
-	  		 legend.key.size = unit( 0.4, "cm" ),
-	  		 legend.key.width = unit( 1, "cm" ) )
+	  		 legend.title = element_text(size = 8),
+	  		 legend.text = element_text(size = 6),
+	  		 legend.key.size = unit(0.4, "cm"),
+	  		 legend.key.width = unit(1, "cm") )
 gg
 
 
-plots <- lapply( top_country, function(x){
+plots <- lapply(top_country, function(x) {
 
-	subset_data <- top_country_attacks %>% filter( source_country == x )
-	gg <- ggplot( subset_data, aes( x = hour, y = wkday, fill = n ) ) + 
-		  geom_tile( color = "white", size = 0.1 ) +
-		  scale_fill_viridis( name = "# Events" ) + 
-		  scale_y_discrete( expand = c( 0, 0 ) ) +
+	subset_data <- top_country_attacks %>% filter(source_country == x)
+	gg <- ggplot( subset_data, aes(x = hour, y = wkday, fill = n) ) + 
+		  geom_tile(color = "white", size = 0.1) +
+		  scale_fill_viridis(name = "# Events") + 
+		  scale_y_discrete( expand = c(0, 0) ) +
 		  coord_equal() + 
-		  labs( x = NULL, y = NULL, title = x ) + 
-		  theme_tufte( base_family = "Helvetica" ) + 
+		  labs(x = NULL, y = NULL, title = x) + 
+		  theme_tufte(base_family = "Helvetica") + 
 		  theme( axis.ticks = element_blank(),
-				 axis.text = element_text( size = 7 ),
+				 axis.text = element_text(size = 7),
 				 panel.border = element_blank(),
-				 plot.title = element_text( hjust = 0.5 ),
-				 strip.text = element_text( hjust = 0.5 ),
-				 panel.margin = unit( 0.1, "cm" ),
+				 plot.title = element_text(hjust = 0.5),
+				 strip.text = element_text(hjust = 0.5),
+				 panel.margin = unit(0.1, "cm"),
 		  		 legend.position = "bottom",
-		  		 legend.title = element_text( size = 6 ),
-		  		 legend.text = element_text( size = 6 ),
-		  		 legend.key.size = unit( 0.4, "cm" ) )
+		  		 legend.title = element_text(size = 6),
+		  		 legend.text = element_text(size = 6),
+		  		 legend.key.size = unit(0.4, "cm") )
 	return(gg)
 })
 

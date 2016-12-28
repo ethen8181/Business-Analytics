@@ -1,6 +1,6 @@
 ---
 title: "Data Hygiene Gotchas"
-author: "Ming-Yu Liu"
+author: "Ethen Liu"
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
@@ -97,8 +97,8 @@ Bucketing makes sense when the feature can be divided into neat ranges, where al
 
 # Reference
 
-- [Common data preparation mistakes and how to avoid them](http://www.analyticsvidhya.com/blog/2013/08/common-data-preparation-mistakes-avoid-them/)
 - [Webinar: Enhance Predictive Modeling with Better Data Preparation](http://www.datasciencecentral.com/video/enhance-predictive-modeling-with-better-data-preparation)
-- [Non-Mathematical Feature Engineering techniques for Data Science](https://codesachin.wordpress.com/2016/06/25/non-mathematical-feature-engineering-techniques-for-data-science/)
-- [Simple Methods to deal with Categorical Variables in Predictive Modeling](http://www.analyticsvidhya.com/blog/2015/11/easy-methods-deal-categorical-variables-predictive-modeling/)
+- [Blog: Common data preparation mistakes and how to avoid them](http://www.analyticsvidhya.com/blog/2013/08/common-data-preparation-mistakes-avoid-them/)
+- [Blog: Non-Mathematical Feature Engineering techniques for Data Science](https://codesachin.wordpress.com/2016/06/25/non-mathematical-feature-engineering-techniques-for-data-science/)
+- [Blog: Simple Methods to deal with Categorical Variables in Predictive Modeling](http://www.analyticsvidhya.com/blog/2015/11/easy-methods-deal-categorical-variables-predictive-modeling/)
 

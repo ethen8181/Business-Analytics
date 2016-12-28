@@ -1,10 +1,10 @@
 ---
 title: "Faceted Bar Charts"
 date: "`r Sys.Date()`"
-author: "Ming-Yu Liu"
+author: "Ethen Liu"
 output:
   rmdformats::readthedown:
-    highlight: haddock
+    highlight: pygments
 ---
 
 <style type="text/css">
@@ -36,6 +36,7 @@ pre { /* Code block */
 
 > Source code can be obtained [here](https://github.com/ethen8181/Business-Analytics/blob/master/articles/avoid_pie_charts/avoid_pie_charts.R)
 
+# Pie Chart
 
 The purpose of a pie chart is to show the relationship of parts out of a whole. With that being said they can still be really bad at the one thing they're ostensibly designed to do. Consider the following pie chart from the Wall Street Journal article on What Data Scientists Do All Day at Work.
 
@@ -110,7 +111,7 @@ Some notes on ggplot2's grammar.
 - `expand` is a numeric vector of length two giving multiplicative and additive expansion constants. These constants ensure that the data is placed some distance away from the axes.
 - `strip .background / .text` controls the title section for each facet.
 - `panel.grid .minor / .major`  controls the grid lines in the plot.
-- `panel.margin` contols the margin between facets.
+- `panel.spacing` contols the margin between facets.
 - `as_labeller` the function that changes the strip's label without doesn't changing the underlying data. All you have to do is create a named character vector with the new label mapping to the original label name and call the function and pass it in to `facet_grid`'s `labeller` argument.
 
 The amount of time spent on various tasks by surveyed non-managers in data-science positions. ( could be added to the plot as subtitles ). Although this isn’t actually going to tell us which tasks data scientists spend the most time on: we should do some kind of weighted measure to estimate the mean. 
@@ -140,16 +141,22 @@ theme( strip.text = element_text( size = 12, color = "white", hjust = 0.5 ),
 	   panel.grid.minor.x = element_blank(),
 	   panel.grid.minor.y = element_blank(),
 	   panel.grid.major.y = element_line( color = "#b2b2b2" ),
-	   panel.margin.x = unit( 1, "cm" ),
-	   panel.margin.y = unit( 0.5, "cm" ),
+	   panel.spacing.x = unit( 1, "cm" ),
+	   panel.spacing.y = unit( 0.5, "cm" ),
 	   legend.position = "none" ) 
 
+```
+
+# R Session Information
+
+```{r}
+devtools::session_info()
 ```
 
 
 # Reference
 
-- [Worst Chart In The World](http://www.businessinsider.com/pie-charts-are-the-worst-2013-6)
-- [How to replace a pie chart](http://varianceexplained.org/r/improving-pie-chart/)
-- [Take the Pies out of Pi Day](http://rud.is/b/2016/03/14/spinning-cycles-in-box-4-to-take-the-pies-out-of-pi-day/) 
+- [Blog: Worst Chart In The World](http://www.businessinsider.com/pie-charts-are-the-worst-2013-6)
+- [Blog: How to replace a pie chart](http://varianceexplained.org/r/improving-pie-chart/)
+- [Blog: Take the Pies out of Pi Day](http://rud.is/b/2016/03/14/spinning-cycles-in-box-4-to-take-the-pies-out-of-pi-day/) 
 

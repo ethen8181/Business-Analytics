@@ -1,6 +1,6 @@
 ---
 title: "Finding Groups Within the Data"
-author: "Ming-Yu Liu"
+author: "Ethen Liu"
 date: "2016-04-05"
 output:
   rmdformats::readthedown:
@@ -79,9 +79,9 @@ As there is only two variables (columns), we can easily visualize it and look at
 
 ```{r}
 
-ggplot( data_sku, aes( CV, ADS ) ) + geom_point() +  
-geom_hline( yintercept = 4, color = "blue" ) + 
-geom_vline( xintercept = .2, color = "blue" ) + 
+ggplot( data_sku, aes(CV, ADS) ) + geom_point() +  
+geom_hline(yintercept = 4, color = "blue") + 
+geom_vline(xintercept = .2, color = "blue") + 
 labs( x = "Coefficient of Variation", y = "Average Daily Sales", 
 	  title = "SKU Example" )
 
@@ -91,13 +91,12 @@ As you'll notice from the plot, there are three distinct groups, separated by th
 
 One precaution, from the data (or from the visualization) you’ll notice that two variables are recorded with different units. Therefore when input variables differ by orders of magnitudes, performing some kind of normalization is often times required to make them comparable. Here we’ll apply the widely used z-score normalization using the built in `scale` function, where given a input variable you subtract every row element with its mean and then divide it by its standard deviation.
 
-```{r}
+```{r, results='hide'}
 
 # hierarchical clustering, with k (clustering number) = 3 
 d <- dist( scale(data_sku), method = "euclidean" )
 cluster <- hclust( d, method = "ward.D" )
 data_sku[ ,  groups := as.factor( cutree( cluster, k = 3 ) ) ]
-head(data_sku)
 
 ```
 
@@ -105,7 +104,8 @@ Now that we have obtain the grouping of the data, let's visualize the grouping t
 
 ```{r, message=TRUE, warning=TRUE}
 
-ggplot( data_sku, aes( CV, ADS, color = groups ) ) + geom_point() + 
+head(data_sku)
+ggplot( data_sku, aes(CV, ADS, color = groups) ) + geom_point() + 
 labs( x = "Coefficient of Variation", y = "Average Daily Sales", 
 	  title = "SKU Example" )
 
@@ -231,13 +231,11 @@ End of the second example.
 
 3. Following up on the second point about interpreting the result. It may be the case that even if we've identify different groups, but they'll be treated similarly. Also there will be times when we can't transform every results into immediate actions, times where the events may be exogenous and can't be explained. If this group occurs with a high proportion, we may want to collect additional data to try to understand this specific case.
 
-4. For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria. If you're interested in a more technical way of choosing the suitable number and evaluate the stability of your clustering result, you can refer to another documentation [here](http://ethen8181.github.io/machine-learning/clustering/clustering.html).
+4. For clustering methods, the number of segmentation is a parameter that has to be user-specified before running the algorithm. In this module this number is chosen mostly by common sense and business criteria.
 
 
 # R Session Information
 
 ```{r}
-
-sessionInfo()
-
+devtools::session_info()
 ```
