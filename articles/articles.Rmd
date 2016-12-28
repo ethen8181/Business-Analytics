@@ -54,6 +54,8 @@ pre{ /* Code block */
 
 # Interviews and Careers
 
+- 2016.12.27 | Crushed it! Landing a data science job. [[Blog](http://www.erinshellman.com/crushed-it-landing-a-data-science-job/)]
+- 2016.12.27 | http://treycausey.com/data_science_interviews.html. [[Blog](http://treycausey.com/data_science_interviews.html)]
 - What factors can increase your data science salary?. [[Springboard](https://www.springboard.com/blog/highest-data-scientist-salary-possible/?utm_campaign=Data%2BElixir&utm_medium=email&utm_source=Data_Elixir_90)]
 - 5 Qualities You Need to Show in the Job Search. [[glassdoor](https://www.glassdoor.com/blog/qualities-show-off/?utm_source=newsletter&utm_medium=email&utm_content=Top5Jobs_US16&utm_campaign=May2016_US)]
     - Leadership ability. e.g. As a result of an incentive program I spearheaded, our sales team surpassed its quarterly sales goal by 15 percent.
@@ -67,6 +69,10 @@ pre{ /* Code block */
 
 # Analytics
 
+- 2016.12.27 | Sharing Your Side Projects Online and Making Your Github the Best Résumé. [[Youtube](https://www.youtube.com/watch?v=uRul8QdYvqQ)]
+    - Include a license to the project. there's even a [website](http://choosealicense.com/) that walks you through the copying and pasting process
+    - [Binder](http://mybinder.org/) is a project that allows you to open up the jupyter notebook in a virual environment (specifying all the requirements in a requirements.txt file) and run it online without needing to download it
+- 2016.12.24 | WHAT I LEARNED RECREATING ONE CHART USING 24 TOOLS. [[Blog](https://source.opennews.org/en-US/articles/what-i-learned-recreating-one-chart-using-24-tools/?utm_campaign=Data%2BElixir&utm_medium=web&utm_source=Data_Elixir_110)]
 - 2016.12.24 | Scope the Solution before Solving the Machine Learning. [[Blog](https://making.dia.co/scope-the-solution-before-solving-the-machine-learning-7e5ddb622733#.iwbgi17n1)]
     1. what is the actual end goal
     2. what type of outputs do I need

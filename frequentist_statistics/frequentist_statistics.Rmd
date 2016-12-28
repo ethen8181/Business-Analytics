@@ -1,6 +1,6 @@
 ---
 title: "Frequentist Statistic"
-author: "Ming-Yu (Ethen) Liu"
+author: "Ethen Liu"
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
@@ -38,7 +38,7 @@ pre { /* Code block */
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 library(knitr)
-opts_chunk$set( message = FALSE, warning = FALSE )
+opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```
 
@@ -68,7 +68,7 @@ Thus in the context of the problem above, the correct interpretation of the **co
 
 The interval is computed using the formula: 
 
-$$\text{point estimate} \pm z * SE $$
+$$\text{point estimate} \pm z * SE$$
 
 Where
 
@@ -85,7 +85,7 @@ The 1.96 is so called the **confidence level** and it is something we choose as 
 
 # e.g. the positive and negative critical value for 95%
 cl <- 0.95
-c( -1, 1 ) * qnorm( ( 1 - cl ) / 2 )
+c(-1, 1) * qnorm( (1 - cl) / 2 )
 
 ```
 
@@ -97,7 +97,7 @@ So we're given that 50 college students are in the sample, so N is equal to 50. 
 
 ```{r}
 
-3.2 + c( 1, -1 ) * qnorm( ( 1 - 0.95 ) / 2 ) * 1.74 / sqrt(50)
+3.2 + c(1, -1) * qnorm( (1 - cl) / 2 ) * 1.74 / sqrt(50)
 
 ```
 
@@ -116,9 +116,9 @@ Example2:
 # standard error
 se <- 15 / sqrt(100)
 
-# z-score is computed as ( value - mean ) / standard error
-upper <- ( 42 - 40 ) / se
-lower <- ( 38 - 40 ) / se
+# z-score is computed as (value - mean) / standard error
+upper <- (42 - 40) / se
+lower <- (38 - 40) / se
 pnorm(upper) - pnorm(lower)
 
 ```
@@ -152,7 +152,7 @@ $$
 ```{r}
 
 # 1.65 is the critical value, z, for 90%
-( 1.65 * 18 / 4 ) ^ 2
+(1.65 * 18 / 4) ^ 2
 
 ```
 
@@ -164,7 +164,7 @@ Another critical thing that we can observe from the formula is that: The previou
 ```{r}
 
 # 1.65 is the critical value, z, for 90%
-( 1.65 * 18 / 2 ) ^ 2
+(1.65 * 18 / 2) ^ 2
 
 ```
 
@@ -185,7 +185,7 @@ Recall from the confidence interval section, we were given the example:
 ```{r}
 
 # We're able to compute the confidence interval using the following formula
-3.2 + c( 1, -1 ) * qnorm( ( 1 - 0.95 ) / 2 ) * 1.74 / sqrt(50)
+3.2 + c(1, -1) * qnorm( (1 - 0.95) / 2 ) * 1.74 / sqrt(50)
 
 ```
 
@@ -206,23 +206,23 @@ The **p-value** is defined as **the probability of obtaining the observed or mor
 se <- 1.74 / sqrt(50)
 
 # z score
-z <- ( 3.2 - 3 ) / se
-pvalue <- pnorm( z, lower.tail = FALSE )
+z <- (3.2 - 3) / se
+pvalue <- pnorm(z, lower.tail = FALSE)
 pvalue
 
 ```
 
 The p-value for this test is around 0.209. 
 
-If the p-value is low, and by low we mean lower than the significance level $\alpha$, which we usually set at 0.05, but we can certainly change it as well, we say that it would be very unlikely to observe the data if the null hypothesis were true, and therefore we reject the null hypothesis. If on the other hand the p-value is higher than $\alpha$, we say that it is indeed likely to observe the data even if the null hypothesis were true. And hence, we would not reject the null hypothesis.
+If the p-value is low, and by low we mean lower than the significance level $\alpha$, which we usually set at 0.05, but we can certainly change it as well, we say that it would be very unlikely to observe the data if the null hypothesis were true, and therefore we reject the null hypothesis. If on the other hand the p-value is higher than $\alpha$, we say that it is indeed likely to observe the data if the null hypothesis were true. And hence, we would not reject the null hypothesis.
 
-So back to our original question. Our null hypothesis was that college students on average have three exclusive relationships, versus, the alternative was that that number was something greater than 3. 
-
-In our case there is a 20.9% chance that a random sample of 50 college students would still yield a sample mean of 3.2 or higher. Since this is a pretty high probability, we think that a sample mean of 3.2 or more exclusive relationships is likely to happen simply by chance.
+Back to our original question. Our null hypothesis was that college students on average have 3 exclusive relationships, and the alternative was that that number was something greater than 3. From the result we saw that there was a 20.9% chance that a random sample of 50 college students would still yield a sample mean of 3.2 or higher. Since this is a pretty high probability, we think that a sample mean of 3.2 or more exclusive relationships is likely to happen simply by chance.
 
 So in this case we fail to reject the null hypothesis and say that even though we observed a sample mean slightly above 3, there is not enough evidence to reject the null hypothesis.
 
 > A small p-value indicates the data provides strong evidence against the null hypothesis.
+
+p-value is an extremely important concept in frequentist statistics. For those interested, this blog post so covers it with an pizza store example. [Blog: What Are P-Values?](https://prateekvjoshi.com/2013/12/07/what-are-p-values/)
 
 If we're doing two-sided hypothesis test, we can say that the significance level and the confidence level are complements of each other. Think about the most commonly used significance level, 5%, and think about the most commonly used confidence level, 95%. It is not a coincidence that the sum of those two numbers adds up to one. Consider the following graph:
 
@@ -258,16 +258,16 @@ x2 <- 27.1
 s2 <- 26.4
 n2 <- 22
 
-df <- min( n1 - 1, n2 - 1 )
-critical <- qt( ( 1 - 0.95 ) / 2, df )
-se <- sqrt( s1 ^ 2 / n2 + s2 ^ 2 / n2 )
+df <- min(n1 - 1, n2 - 1)
+critical <- qt( (1 - 0.95) / 2, df )
+se <- sqrt(s1 ^ 2 / n2 + s2 ^ 2 / n2)
 
 # confidence interval
-print( ( x1 - x2 ) + c( 1, -1 ) * critical * se )
+print( (x1 - x2) + c(1, -1) * critical * se )
 
 # hypothesis test
-tscore <- ( x1 - x2 ) / se
-pt( tscore, df, lower.tail = FALSE ) * 2
+tscore <- (x1 - x2) / se
+pt(tscore, df, lower.tail = FALSE) * 2
 
 ```
 
@@ -295,16 +295,16 @@ List the conditions necessary for performing ANOVA
 
 > As an example we consider one of the data sets available with R relating to an experiment into plant growth. The purpose of the experiment was to compare the yields on the plants for a control group and two treatments of interest. The response variable was a measurement taken on the dried weight of the plants.
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 
 library(ggplot2)
 
 # built-in data PlantGrowth
 plant_df <- PlantGrowth
 plant_df$group <- factor( plant_df$group,
-						  labels = c( 'Control', 'Treatment 1', 'Treatment 2' ) )
+						  labels = c('Control', 'Treatment 1', 'Treatment 2') )
 
-ggplot( plant_df, aes( x = group, y = weight ) ) + 
+ggplot( plant_df, aes(x = group, y = weight) ) + 
 geom_boxplot()
 
 ```
@@ -313,7 +313,7 @@ Initial inspection of the data suggests that there are differences in the dried 
 
 ```{r}
 
-anova_test <- aov( weight ~ group, data = plant_df )
+anova_test <- aov(weight ~ group, data = plant_df)
 summary(anova_test)
 
 ```
@@ -356,10 +356,10 @@ This is a important notion in proportion testing, because unlike doing inference
 
 n  <- 200
 p  <- 0.9
-se <- sqrt( p * ( 1 - p ) / n )
+se <- sqrt( p * (1 - p) / n )
 
-zscore <- ( 0.95 - p ) / se
-pnorm( zscore, lower.tail = FALSE )
+zscore <- (0.95 - p) / se
+pnorm(zscore, lower.tail = FALSE)
 
 ```
 
@@ -376,7 +376,7 @@ p  <- 0.5
 ci <- 0.95
 
 # here, p and 1 - p is the same, thus we can use p squared
-( qnorm( 0.95 + ( 1 - ci ) / 2 ) * p / me ) ^ 2
+( qnorm( 0.95 + (1 - ci) / 2 ) * p / me ) ^ 2
 
 ```
 
@@ -390,9 +390,9 @@ Our alternative hypothesis should state $p$ is greater than 0.5. We are also giv
 
 n <- 1983
 p <- 0.5
-se <- sqrt(  p * ( 1 - p ) / n )
-zscore <- ( 0.6 - p ) / se
-pnorm( zscore, lower.tail = FALSE )
+se <- sqrt(  p * (1 - p) / n )
+zscore <- (0.6 - p) / se
+pnorm(zscore, lower.tail = FALSE)
 
 ```
 
@@ -431,11 +431,11 @@ We again start by setting up the hypothesis test:
 
 ```{r}
 
-obs <- c( 1920, 347, 19, 84, 130 )
+obs <- c(1920, 347, 19, 84, 130)
 
 # expected probability distribution
-prob <- c( 0.8029, 0.1206, 0.0079, 0.0292, 0.0394 )
-chisq.test( x = obs, p = prob )
+prob <- c(0.8029, 0.1206, 0.0079, 0.0292, 0.0394)
+chisq.test(x = obs, p = prob)
 
 ```
 
@@ -496,14 +496,14 @@ mu <- 49.5
 
 # consider different sample size
 # first a sample size of 100
-z1 <- ( x - mu ) / ( sd / sqrt(100) )
+z1 <- (x - mu) / ( sd / sqrt(100) )
 print(z1)
 
 # then inflate it to 10000 and 
 # see the difference between the z score,
 # recall that the higher the z score the lower
 # our p-value
-z2 <- ( x - mu ) / ( sd / sqrt(10000) )
+z2 <- (x - mu) / ( sd / sqrt(10000) )
 print(z2)
 
 ```
@@ -513,15 +513,22 @@ print(z2)
 
 ```{r}
 
-power.t.test( power = 0.8, sig.level = 0.05, delta = 3, sd = 12 )
+power.t.test(power = 0.8, sig.level = 0.05, delta = 3, sd = 12)
 
+```
+
+# R Session Information
+
+```{r}
+devtools::session_info()
 ```
 
 
 # Reference
 
-- [The Theorem Every Data Scientist Should Know](http://www.jeannicholashould.com/the-theorem-every-data-scientist-should-know-2.html)
-- [RBlogger: One-way Analysis of Variance](http://www.r-bloggers.com/one-way-analysis-of-variance-anova/)
-- [Power and sample size calculation for t test in R](http://users.stat.umn.edu/~corbett/classes/3022/Power_and%20_sample_size_for_t_in_R.txt)
 - [Coursera: Inference Statistics](https://www.coursera.org/learn/inferential-statistics-intro)
+- [Blog: What Are P-Values?](https://prateekvjoshi.com/2013/12/07/what-are-p-values/)
+- [Blog: One-way Analysis of Variance](http://www.r-bloggers.com/one-way-analysis-of-variance-anova/)
+- [Blog: The Theorem Every Data Scientist Should Know](http://www.jeannicholashould.com/the-theorem-every-data-scientist-should-know-2.html)
+- [Notes: Power and sample size calculation for t test in R](http://users.stat.umn.edu/~corbett/classes/3022/Power_and%20_sample_size_for_t_in_R.txt)
 

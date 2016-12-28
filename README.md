@@ -3,7 +3,7 @@
 This is one of the continuously updated repositories that documents my own personal journey on learning data science related topics. Currently, contents are organized into two separate repositories based on the following table's description.
 
 | Repository | Documentation Focus |
-| ---------- | ----------- |
+| ---------- | ------------------- |
 | [machine-learning](https://github.com/ethen8181/machine-learning) | Machine learning, algorithm and programming in R / Python |
 | [Business-Analytics](https://github.com/ethen8181/Business-Analytics) | All other data analytic related stuffs, e.g. concepts, statistics, articles, visualizations |
 
@@ -13,9 +13,9 @@ Within each section, documentations are listed in reverse chronological order of
 ## Documentation Listings
 
 
-#### cohort_analysis : 2016.04.1
+#### cohort_analysis : 2016.04.01
 
-- Visualize user retention cohort analysis with seaborn's heatmap.
+- Visualize user retention by cohort with seaborn's heatmap.
 - View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
 
 
@@ -31,14 +31,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 #### frequentist_statistics : 2016.07.27
 
-Some notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power).
+Notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power).
 
 - View [[R markdown](http://ethen8181.github.io/Business-Analytics/frequentist_statistics/frequentist_statistics.html)]
 
 
 #### bandits : 2016.06.02
 
-Multi-armed bandits algorithms, a possible alternative to ab test in short tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the **bayesian_statistics** folder.
+Multi-armed Bandits Algorithms, a possible alternative to A/B testing for short-term tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the [bayesian_statistics](#bayesian_statistics--20160421) folder.
 
 - Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
 
