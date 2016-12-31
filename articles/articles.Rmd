@@ -1,7 +1,7 @@
 ---
 title: "Articles"
 date: "`r Sys.Date()`"
-author: "Ming-Yu Liu"
+author: "Ethen Liu"
 output:
   rmdformats::readthedown:
     highlight: pygments
@@ -69,6 +69,7 @@ pre{ /* Code block */
 
 # Analytics
 
+- 2016.12.29 | Data Science Newsletter list. [[Medium](https://medium.com/blend-your-data/a-four-minute-read-big-data-and-data-science-newsletter-list-to-get-you-informed-on-anything-data-669d8e2c4b09#.2lukcelgg)]
 - 2016.12.27 | Sharing Your Side Projects Online and Making Your Github the Best Résumé. [[Youtube](https://www.youtube.com/watch?v=uRul8QdYvqQ)]
     - Include a license to the project. there's even a [website](http://choosealicense.com/) that walks you through the copying and pasting process
     - [Binder](http://mybinder.org/) is a project that allows you to open up the jupyter notebook in a virual environment (specifying all the requirements in a requirements.txt file) and run it online without needing to download it
