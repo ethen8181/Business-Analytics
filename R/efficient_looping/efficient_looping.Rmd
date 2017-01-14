@@ -1,0 +1,400 @@
+---
+title: "Efficient Looping with R"
+author: "Ethen Liu"
+date: "`r Sys.Date()`"
+output: 
+  rmdformats::readthedown:
+    highlight: pygments
+---
+
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Apply Family
+
+`lapply`: list apply. When you want to apply a function to each element of a list and get a list back.
+
+```{r}
+x <- list(a = 1, b = 1:3, c = 10:100) 
+lapply(x, length)
+lapply(x, sum)
+```
+
+`sapply`: simplified apply. When you want to apply a function to each element of a list and get avector back.
+
+```{r}
+x <- list(a = 1, b = 1:3, c = 10:100) 
+sapply(x, length)
+sapply(x, sum)
+```
+
+But never use this function as there's a faster alternative below.
+
+`vapply`: vector apply. It provides the same functionality as sapply, but we also explicitly state the type of data that it will return instead of letting R spend time figuring out. This slightly extra effort can speed up our code a bit.
+
+```{r}
+# everything returned should be
+# an numeric of length 1, other commonly
+# used type is character
+x <- list(a = 1, b = 1:3, c = 10:100) 
+vapply(x, length, numeric(1))
+
+# we can specify a anonymous function for the function
+vapply(x, function(i) {
+    # the index i represents each element in the sequence
+    summed <- sum(i, na.rm = TRUE)
+    return(summed)
+}, numeric(1))
+```
+
+`mapply`: When we have multiple data structures (e.g. vectors, lists) and we want to apply a function to each elements of all the input sequence.
+
+```{r}
+x1 <- c('Micheal', 'Kobe')
+x2 <- c('Jordan', 'Bryant')
+
+# we can also specify the function outside and
+# pass it as an argument, the ..., means to
+# accept any number of argument
+paste2 <- function(...) paste(..., sep = '-')
+mapply(paste2, x1, x2)
+
+# note that this is just for illustration, 
+# for the code above, we can simply do:
+paste(x1, x2, sep = '-')
+
+```
+
+
+# Parallel Programming
+
+When we say parllel programming, it's worth noting that there's a difference between the implementation of parallel code that runs locally on a single multi-processor (multi-cores) computer or on a cluster of computers, as well as implementation for Unix vs Windows system.
+
+Here we'll illustrate the implementation of parallel code that runs locally on a single multi-processor (multi-cores) computer using the `doParallel` library. This package provides a parallel backend for the `foreach` package and represents a merger of `doMC` (works on Unix-like system) and `doSNOW` (works on Windows) packages.
+
+Let’s say we have an N-core processor (on a local machine) and we want to use N-1 cores to run our program.
+
+```{r, message=FALSE, warning=FALSE}
+library(doParallel)
+
+# we specify the number of cores/workers we want to use
+n_cores <- detectCores() - 1
+n_cores
+
+# generate a toy function that
+# simply generate the summary of a bunch of random numbers
+summarize <- function(i) {
+    summary( rnorm(100000) )
+}
+
+# the time difference between using n_cores and not using it
+inputs <- 1:20
+system.time({
+    results <- mclapply(inputs, summarize, mc.cores = n_cores)
+})
+
+system.time({
+    results <- lapply(inputs, summarize)
+})
+```
+
+**Warning** From the documentation, `mclapply` relies on Unix system, thus it will most likely not work on Windows. Consider trying the following code on Windows:
+
+```r
+# explicitly create the cluster
+cl <- makeCluster(n_cores)
+
+# run the parallel code using parLapply and
+# pass the created cluster as the first argument
+system.time({
+    results <- parLapply(cl, inputs, summarize)
+})
+
+# remember to stop the cluster once we're finished
+stopCluster(cl)
+```
+
+### Caveat 1: Overhead
+
+Sending tasks out to another processesor and have work to be done there takes some time and there's some work involved, thus we don't want to parallelizing things that already runs really fast sequentially. Especially in R where some functions can be vectorized.
+
+```{r}
+# overhead when parallelizing trivial tasks
+inputs <- 1:10000
+system.time({
+    results <- mclapply(inputs, sqrt, mc.cores = n_cores)
+})
+
+system.time({
+    results <- lapply(inputs, sqrt)
+})
+```
+
+So when working on code parallelization it is important to keep in mind that for very short jobs, the parallelization overhead will diminish the parallelization benefits. If we're not sure if the parallelization of specific piece of code improves its speed, we can always check the execution time using `system.time()`.
+
+## For Loop For Life
+
+`lapply` family is cool, but it may be a bit constrained, we might have to constructed our code in a way that we're not used to. At the end of day, we just want to work with the for loops that exists in every popular programming languages. And it turns out there's a package called `foreach` that allows us to do just that:
+
+`foreach` simply gives us a construct/template for writing for loops and it will take care of spreading the work inside the body of the loop across multiple processors/cores on our machine. The way it works is the following:
+
+```{r}
+# take a subset of the iris dataset, and train a bunch of
+# logisitic regression on the same dataset
+iris_subset <- iris[iris$Species != 'setosa',]
+iris_subset$Species <- factor( iris_subset$Species, 
+                               levels = c('versicolor', 'virginica') )
+# number of models to train
+trials <- 1000
+
+# we first register a backend specifying the number
+# of cores that we wish to use
+registerDoParallel(cores = detectCores() - 1)
+
+# parllelized foreach
+system.time({
+    result <- foreach(1:trials) %dopar% {
+        # foreach loop behaves similar to a function, 
+        # the last line represents the value that will be returned
+        model <- glm(Species ~., data = iris_subset, family = 'binomial')
+    }
+})
+
+# foreach also allows us to run things in a serial manner,
+# to do so, we simply change the dopar to do
+system.time({
+    result <- foreach(1:trials) %do% {
+        model <- glm(Species ~., data = iris_subset, family = 'binomial')
+    }
+})
+
+```
+
+`foreach` not only runs the code in parallel, but also merges and returns the results obtained by execution of each loop. By default foreach returns a list.
+
+```{r}
+head(result, 2)
+
+# we can specify how we want it to
+# combine the result through the .combine 
+# argument, say we want it to return a vector
+result <- foreach(1:trials, .combine = c) %dopar% {
+    model <- glm(Species ~., data = iris_subset, family = 'binomial')
+    deviance <- model$deviance
+    return(deviance)
+}
+head(result, 2)
+```
+
+When writing `foreach`, remember to keep track of the expected variable/object that we wish to return and how variables/objects from each iteration should be combined.
+
+There are other options for combining results, such as rbind and cbind.
+
+### Caveat 2: Modifying Global State
+
+When we pass in our data to run a parallel task, each processors will get a copy of the data, thus it's not going to modify the global/intial data in any way.
+
+```{r, results='hide'}
+# create a vector of 0s
+# and modifying the element by
+# multiplying every index by 2
+x1 <- rep(0, times = 5)
+for(i in 1:5) {
+    x1[i] <- i * 2
+}
+
+# we try to do the same
+# thing in a foreach loop
+x2 <- rep(0, times = 5)
+foreach(i = 1:5) %dopar% {
+    x2[i] <- i * 2
+}
+```
+
+```{r}
+# the two different results
+list(serial = x1, parallel = x2)
+```
+
+As each processor will get a copy of the vector that we've passed in, if we modify the data inplace, it will simply be modifying the copy instead of the original vector.
+
+So the better way to do this is to simply have function that returns the information from the parallelized task.
+
+```{r}
+# the way to fix this, is simply return what
+# we actually want
+x3 <- foreach(i = 1:5, .combine = c) %dopar% {
+    i * 2
+}
+x3
+```
+
+As we can see from this example, apart from parallelizing the body of a loop, `foreach` has the advantages over regular for loops when the purpose of the loop is to create a data structure such as a vector, list, or matrix. Since it removes the need to write extra code to initialize it.
+
+### Nested Foreach
+
+The `foreach` package also provides an option for nested for loop implementation using the `%:%` operator. The operator turns multiple `foreach` loops into a single loop, creating a single stream of tasks that can all be executed in parallel.
+
+```{r}
+
+# simple simulation function
+sim <- function(a, b) {
+    return(10 * a + b)
+}
+
+# loop over all combinations of the values that
+# are stored in the two vectors, avec, bvec to 
+# create the simulated data
+avec <- 1:2
+bvec <- 1:4
+
+# for loop way
+x <- matrix(0, length(avec), length(bvec))
+for(j in 1:length(bvec)) {
+    for(i in 1:length(avec)) {
+        x[i, j] <- sim(avec[i], bvec[j])
+    }
+}
+x
+
+# foreach way, notice we don't
+# put braces around the inner foreach loop
+x <- foreach(b = bvec, .combine = 'cbind') %:%
+    foreach(a = avec, .combine = 'c') %dopar% {
+        sim(a, b)
+    }
+x
+```
+
+In the `foreach` example above, the inner loop returns the columns of the result matrix as vectors, which are then combined in the outer loop into a matrix.
+
+Once we're done using the registered cluster, remember to explicity stop it. This ensures the "health" of future cluster objects.
+
+```{r}
+stopImplicitCluster()
+```
+
+In sum, there are  lots of naturally parallel problem that could benefit from writing parallelized code. Think about independent tasks such as cross validation or grid search. These computational expensive, and easily parallelizable for loops are a great place to start looking for where we can apply parallel programming.
+
+Before we continue on to the next section, we'll do a simple programming exercise. The task is to write a loop that prints the number from 1 to 5. This is not a trick question. If the answer in your mind is something like the following:
+
+```r
+for(i in 1:5) {
+    print(i)
+}
+```
+
+Continue on to the next section to see a better alternative.
+
+## Iterators
+
+The issue with the code above is probably unnoticeable in the toy example above, since we're only looping through a small sequence. But be aware of what the `1:5` part is doing.
+
+```{r}
+1:5
+```
+
+It's generating a sequence of numbers from 1 to 5, and we're using the sequence to tell the for loop we want to loop 5 times. But what if we want to loop for 1000000 times? Do we really need to create 1000000 numbers to fill up our memory just to create the loop?
+
+To solve this issue, we'll introduce what's called the **iterators**. An iterator is an object for moving through a container one item at a time. Although iterators are not part of the native R language, they are implemented in the `iterators` and `itertools` packages
+
+```{r}
+# note that the iterators library is
+# also loaded when we load the doParallel library
+library(iterators)
+library(itertools)
+
+# create a iterator of length 2,
+# Here iteration is performed manually by calling nextElem()
+# on the iterator, each call yields the next element in sequence
+iter_count <- icount(2)
+nextElem(iter_count)
+nextElem(iter_count)
+
+# when the sequence has been exhausted, we'll get a StopIteration error
+# nextElem(iter_count)
+```
+
+We can also create iterators from an existing sequence.
+
+```{r}
+name <- c('Bob', 'Mary')
+iter_name <- iter(name)
+nextElem(iter_name)
+nextElem(iter_name)
+```
+
+So another way to write the loop that prints the number from 1 to 5 using a iterator is as follows:
+
+```{r}
+# wrap the iterator with the ihasNext function,
+# while the sequence has not been exhausted, print
+# the next element
+iter_count <- ihasNext( icount(5) )
+while( hasNext(iter_count) ) {
+    print( nextElem(iter_count) )
+}
+```
+
+Unfortunately, the syntax above might be a bit combersome to write, but good news is it looks better with the apply family and foreach. The following syntax assumes that we're not just going to print the sequence but we're also going to do some other stuff in the loop and return the result.
+
+```{r}
+# iterators with apply
+# using the multiplying each index by 2 as an example
+x1 <- vapply( icount(5), function(i) {
+    return(i * 2)
+}, numeric(1) )
+
+# iterators with foreach
+x2 <- foreach(i = icount(5), .combine = c) %dopar% {
+    return(i * 2)
+}
+list(apply_way = x1, foreach_way = x2)
+```
+
+There are a lot of useful functionalities in two packages, consider exploring the documentations at your free time. e.g. `ireadLines` creates an iterator to read lines from a file, which is useful when the dataset is extremely large and we wish to do some preprocessing with each line of the data instead of reading everything into memory at once. 
+
+## R Session Information
+
+```{r}
+devtools::session_info()
+```
+
+
+## Reference
+
+- [Vignettes: Nesting Foreach Loops](ftp://cran.r-project.org/pub/R/web/packages/foreach/vignettes/nested.pdf)
+- [Youtube: Parallel Programming in R and Python](https://www.youtube.com/watch?v=FIS_LsOzxYo)
+- [Blog: Iterators in R](http://www.exegetic.biz/blog/2013/11/iterators-in-r/)
+- [Blog: R apply functions](http://www.stepupanalytics.com/r-grouping-functions-sapply-vs-lapply-vs-apply-vs-tapply-vs-by-vs-aggregate)
+- [Blog: A few thoughts on the existing code parallelization](http://www.vesnam.com/Rblog/existing-code-parallelization-yes-or-no/)
+
+

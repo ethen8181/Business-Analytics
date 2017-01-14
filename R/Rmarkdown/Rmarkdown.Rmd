@@ -1,0 +1,192 @@
+---
+title: "Rmarkdown Quickstart"
+author: "Ethen Liu"
+date: "`r Sys.Date()`"
+output: 
+  rmdformats::readthedown:
+    highlight: pygments
+---
+
+<style type="text/css">
+p{ /* Normal  */
+   font-size: 18px;
+}
+body{ /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r{ /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+So with Markdown you can:
+
+- Create inline code-like highlighting by putting `back-ticks around` it
+- Create different headers by using the pound sign `# header name`
+- Create bold characters by putting double asterisks around it, e.g. `**characters**`, or one asterisk around it for italic characters. e.g. `*characters*`
+- Create blockquotes using the greater than symbol. e.g. `> quote here`
+- Create links. e.g. [I'm an inline-style link](https://www.google.com)
+- Create un-ordered bullet points by using `- bullet`, or use numbers to create ordered bullet points, `1. bullet`
+- Write latex equations by putting dollar signs around it, e.g. typing `$\mu$`, will give you $\mu$. Put two dollars sign for block equations. e.g. typing `$$\mu$$`
+
+$$\mu$$
+
+For a more comprehensive list, consider this link. [Github: Markdown Here Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet)
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+Next, you can embed an R code chunk. What you do is you initiate the code chunk with three backticks and a r within a curly bracket. After the code, there will be a line with just three backticks.
+
+```{r cars}
+# we can generate code outputs
+summary(cars)
+```
+
+
+```{r}
+# or figures
+plot(pressure)
+```
+
+Or more efficiently, there's a insert button on the Rstudio panel above where you can simply click and it will generate the template for you.
+
+You can give each code chunk a name, like cars above. The name is optional; if included, each code chunk needs a distinct name. One reason for doing this, say we have a `.Rmd` file and we only want the source code of that file. We can do this by using `knitr::purl(.Rmd file path here)`, the purl function from the knitr package on this file, this will extract solely the source code and it will also tag it with the code chunk name if there is one. This makes it a bit easier to track for errors or make changes.
+
+Notice that we're using `knitr::purl` to call the purl function from the knitr package instead of loading the library knitr and calling the function like `library(knitr) purl(.Rmd file here)`. The rationale is that: people might not be familiar with the `purl` function, by doing this, the others will know this is a function coming from the knitr package. And the other is, when loading a library, we're loading every functions available from that package. If we're just going to use 1 of them, consider using this method to avoid polluting the workspace.
+
+```{r}
+
+# call knitr::purl(.Rmd file path here)
+# on this .Rmd file and notice the difference
+test <- 1
+test
+
+```
+
+A reproducible report should never manually write down numbers that are derived from the data. Instead we use inline code. e.g. To refer to the value of the test variable, instead of manually writing the test value is 1, we can write the test value is `r test`, created by wrapping a backtick around the **r** character, a space and the variable name. As shown below:
+
+```{r, eval=FALSE}
+`r test`
+```
+
+## Code Chunk Options
+
+There are many parameters you can specify for the R code chunk. For example:
+
+- `eval = FALSE` Display the r code without evaluating it
+- `echo = FALSE` The code will not be shown in the final document, but the corresponding results/output would still be displayed
+- `results = "hide"` To hide the results/output, but the code would still be displayed
+- `include = FALSE` The code chunk will be evaluated, but neither the code nor its output displayed
+- For figures, you’ll want to use options like `fig.width` and `fig.height` to control the size, the best way is simply try and error (try different numbers and see which works best), or use `fig.show = "hide"` to hide figures. And there is `fig.align='center'` to center the plot (the default is left-aligned)
+- For figures, we can also specify `dev = 'svg'` to change the default graphics device from png to scalable vector graphics, which may look better on the web.
+- `message = FALSE` and `warning = FALSE` to suppress message and warning. Some packages will print these out when loading them, use these two options to remove them from the output file
+
+For these options, there will be autocompletion when you start typing them in the r code chunk, which makes life easier for you.
+
+```{r, fig.align='center', fig.height=5, fig.width=5}
+# a plot using center, and 5 for both height and width
+plot(pressure)
+```
+
+
+We can set the options globally, so it applies to all code chunk by:
+
+```{r setup}
+# for all chode chunks all code will be displayed
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We usually set this a the very top of the Rmarkdown file and set `echo = FALSE` so it doesn't get shown. There are a bunch of other options, listed here. [Blog: Chunk options and package options](http://yihui.name/knitr/options/#chunk_options)
+
+## Displaying Tables
+
+One other cool thing is we can display data.frame objects in a table like manner. Consider the differences between the outputs below
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+knitr::kable( head(mtcars) )
+```
+
+We can pass the `results='asis'` options to the code chunk to ensure that the raw table output isn’t processed furthur by knitr. The `kable` function includes several options to control the maximum number of digits for numeric columns, alignment, check the help page, `?knitr::kable`, for more details.
+
+We can even create dynamic table if necessary using the `datatable` function from the `DT` package.
+
+```{r}
+DT::datatable(mtcars)
+```
+
+# Reproducible Report
+
+### Session Information
+
+Include "session info" in your document, preferably at the bottom: this lists the version of R that you’re using, plus all of the packages you’ve loaded. So people that wishes to reproduce your work will know which version of R, packages you're using and when you're running the report.
+
+```{r}
+
+# or use sessionInfo() that's included with R
+# see which format do you prefer
+devtools::session_info()
+
+```
+
+### Avoid Absolute Path
+
+Try to avoid using path like `/Users/ethen/Desktop/` across your documents. If you must set the working directory, set it at the beginning of the report, and consider using `file.path` so they are independent of the system that you're working on (Windows, Mac, Linux). Or simply use `normalizePath`.
+
+```{r}
+file_path <- file.path('/Users', 'ethen', 'Desktop')
+
+# alternative
+file_path <- normalizePath('/Users/ethen/Desktop')
+setwd(file_path)
+```
+
+## Bonus: Rmarkdown Themes
+
+People have created different themes for Rmarkdown. e.g. [Github: prettydoc](http://yixuan.cos.name/prettydoc/). We can change the theme by adding extra information in the header. For example, we can change the header info into:
+
+```r
+---
+title: "Week 1"
+author: "Ethen Liu"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+```
+
+For the prettydoc package, the theme option can take the following values
+`cayman`, `tactile`, `architect`, `leonids`, `hpstr`. The code highlight option takes value of `github` and `vignette`. More may be added in the future.
+
+## Reference
+
+- [Blog: R Code Chunks](http://rmarkdown.rstudio.com/authoring_rcodechunks.html)
+- [Blog: Knitr with R Markdown](http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html)
+- [Blog: Figures and tables](http://kbroman.org/knitr_knutshell/pages/figs_tables.html)
+- [Blog: Chunk options and package options](http://yihui.name/knitr/options/#chunk_options)
+- [Github: Markdown Here Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet)
+
