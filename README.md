@@ -62,12 +62,12 @@ For starters with bayesian statistics, read the documents in listed order.
 #### Articles
 
 - Continuously updated non-technical articles. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/articles.html)]
-- 2015.07.02 | Some ways of addressing data hygiene. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/data_hygiene/data_hygiene.html)]
-- 2015.05.18 | Template for problem solving and presentations. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/articles/logic_workflow.ipynb)]
+- 2017.01.17 | Data Science advice (mentality, problem solving and presentation template). [[Rmarkdown]](http://ethen8181.github.io/Business-Analytics/articles/data_science_advice.html)
+- 2016.07.02 | Some ways of addressing data hygiene. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/data_hygiene.html)]
 
 #### Visualizations
 
-- 2015.07.09 | Production ready calendar heatmap. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/calendar_heatmaps/calendar_heatmaps.html)]
+- 2016.07.09 | Production ready calendar heatmap. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/calendar_heatmaps/calendar_heatmaps.html)]
 - 2016.05.12 | Production ready scatter plot. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/nyt_scatter/nyt_scatter.html)]
 - 2016.05.12 | Production ready faceted bar plot. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/articles/avoid_pie_charts/avoid_pie_charts.html)]
 

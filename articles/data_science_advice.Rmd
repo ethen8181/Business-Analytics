@@ -1,0 +1,159 @@
+---
+title: "Data Science Advice"
+author: "Ethen Liu"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: pygments
+---
+
+<style type="text/css">
+p { /* Normal  */
+   font-size: 18px;
+}
+body { /* Normal  */
+   font-size: 18px;
+}
+td {  /* Table  */
+   font-size: 14px;
+}
+h1 { /* Header 1 */
+ font-size: 32px;
+}
+h2 { /* Header 2 */
+ font-size: 26px;
+}
+h3 { /* Header 3 */
+ font-size: 22px;
+}
+code.r { /* Code block */
+  font-size: 14px;
+}
+pre { /* Code block */
+  font-size: 14px
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# General Advice
+
+## Mentality
+
+**Help the business first:** Stacking outputs as features to go for the best models is not exactly what we are paid for. Instead we should aim for generating a actionable solution or get get a minimum viable product first. This does not mean we shouldn’t work on improving the model, it's simply saying premature optimization is the root of all evil. When starting a project aim for the low hanging fruit first, there will come a time to improve our models or add complexity as needed.
+
+**Expect and accept ignorance and mistakes:** There are many limits to what we can learn from data and mistakes can still occur. Admitting our mistake is a strength but it is not usually immediately rewarded. But proactively owning up to our mistakes will translate into credibility and will ultimately earn us respect with colleagues and leaders who are data-wise.
+
+**Don’t fall for the hype:** Deep learning..., Distributed systems.... Most likely we will not need it and it will be a distraction. Use familiar tools and if it ain’t broken don’t fix it. Consider that using any project younger than a few year may result in inavoidable pains (breaking APIs, bugs). Allow ourselves only a couple of new pieces of technology per work project. This is not saying that we can't work or keep up with on these new and cool stuff as our side-project. After all we should constantly be open to learning new knowledge.
+
+**Be skeptical and check for reproducibility:** As we work with the data, we must be a skeptic of the insights that we are gaining. When we have an interesting phenomenon we should ask both "What other data could I gather to validate how awesome this is?"" and "What could I find that would invalidate this phenomenon?". If we are building models of the data, you want those models to be stable across small perturbations in the underlying data. Using different time ranges or random sub-samples of our data will tell us how reliable/reproducible this model is.
+
+**Be aware of Simpson's Paradox:** When performing analysis, we often slice the data and separate it into subgroups and look at the values of our metrics in those subgroups separately. For example, in web traffic analysis, we commonly slice along dimensions like mobile vs. desktop, browser, locale, etc. If the underlying phenomenon is likely to work differently across subgroups, we must slice the data to see if it is. Even if we do not expect a slice to matter, looking at a few slices for internal consistency gives us greater confidence that we are measuring the right thing. In some cases, a particular slice may have bad data. But the most important thing to be aware of when slicing the data to compare between groups is Simpson's Paradox. Simpson’s paradox says that when we combine all of the groups together, and look at the data in aggregate form, the correlation that we noticed before may reverse itself. This is most often due to lurking variables that have not been considered. Generally, if the relative amount of data in a slice is the same across our two groups, we can safely make a comparison. A concrete example of Simpson's Paradox can be found at the following link. [Blog: What Is Simpson's Paradox?](http://statistics.about.com/od/HelpandTutorials/a/What-Is-Simpsons-Paradox.htm)
+
+## EDA Process
+
+Exploratory data analysis can be broken down into 4 interrelated stages:
+
+- **Make hypotheses and look for evidence:** Good data analysis will have a story to tell. To make sure it’s the right story, we need to know what we should see in the data if that hypothesis is true, then look for evidence that it’s wrong. One way of doing this is to ask ourselves, “What experiments would we run that would validate/invalidate the story we're am telling?” Even if we don’t/can’t do these experiments right now, it may give us ideas for future analyses.
+- **Validation or Initial Data Analysis:** Was the data collected correctly and helps answer my question? This often goes under the name of “sanity checking”. For example, if manual testing of a feature was done, can I look at the logs of that manual testing? e.g. For a feature launched on mobile devices, do my logs claim the feature exists on desktops? If it’s a features of a product, try it out yourself.
+- **Description:** What’s the objective interpretation of this data? For example, “The time page load to click (given there was a click) is larger by 1%”
+- **Evaluation:** Given the description, does the data tell us that something good is happening for the user, for the company? For example, “Users find results faster” or “The quality of the clicks is higher.”
+
+By separating these phases, we can more easily reach agreement with others. Description should be things that everyone can agree on from the data. Evaluation is likely to have much more debate because we are imbuing meaning and value to the data.
+
+## Documentations
+
+Having a "paper trail" is very important.
+
+**Acknowledge and count filtering:** Almost every large data analysis starts by filtering the data in various stages. Maybe we want to consider only US users. Whatever the case may be, we must acknowledge and clearly specify what filtering you are doing.
+
+**Ratios should have clear numerator and denominators:** Many interesting metrics are ratios of underlying measures. Unfortunately, there is often ambiguity of what the ratio is. When presenting or communicating ratios, be clear about it to prevent misinterpretation.
+
+## Social & Communications
+
+Make sure we share what we’ve learned and learned from others so we can all be better data scientists.
+
+**Talk & Learn from colleagues:** Learn from software engineers. Chances are they know more about best practices, tooling and devops than we do as a data scientist. Learn from non-technical peers. They know how we can help them from a business perspective, may understand the data much better and will recognize data quality issues faster than we will. Our feature engineering work will benefit a lot from their insight. Talk to our peers. Learn about the history of projects started by our colleagues. Ask about issues they encountered along the way. Try to take different paths or revisit them if e.g. we now have much more data. When working on the project, it is also nice to look for peer reviews. Peer reviewer can provide feedbacks from a different standpoint, suggest better approaches and better sanity-checks than the consumers of our project can.
+
+**Educate our consumers:** We will often be presenting our analysis and results to people who are not data experts. Part of our job is to educate them on how to interpret and draw conclusions from our analysis data. This is especially important when the analysis has a high risk of being misinterpreted. We are responsible for providing the context and a full picture of the analysis and not just the number a consumer asked for.
+
+
+# Template For Problem Solving
+
+It's all about reviewing the completed work, the current work in progress, planned work, specific annual metrics, performance gap.
+
+
+### Review Current Status
+
+- List key metrics you're tracking, where they're at, and compare with last few weeks (to measure how are thing trending).
+- What did you learn last week or what was accomplished? And is everything on track? Are you going to make some adjustments (including solutions and evaluation metrics) based on your findings?
+
+
+### List Out Top Problems/Experiments
+
+- List and prioritize the top (new) problems / experiments.
+- What do we want to solve / learn and why? When asking the why, it can be thought of what steps will be taken given the result?
+- List out who's feeling the pain? (figure out who are your priorities, this may be tied to the why)
+
+
+### For All Problems, List Corresponding Hypothesized Solution
+
+- Written in the form "[Specfic action] will create [expected result]."
+- List out why do you believe each solution will help solve the problem?
+- List metrics (quantitative) or proof (qualitative) you'll use to measure whether or not the solutions are doing what you expected (solving the problem). Meaning how will we conclude that the experiment succeeded? If it's a metric, set goals for it!
+- How long will it take for you to run the experiment / get the problem solved.
+- (optional) Include what measures will indicate the experiment isn't safe to continue.
+
+From then on, it's about leveraging your current data and resources, creating features and running tests (testing out the hypothesized solution) and let the resulting data frame the conversation. 
+
+# Presenting
+
+### The Pyramid Approach For Presentations
+
+The core of the Pyramid Approach is:
+
+- Start with the answer first.
+- Group and summarize your supporting arguments. 
+- Then logically order your supporting ideas and create a storyboard.
+
+Meaning that when an executive asked a question — "What should we do?" — you were to start your response with, “You should do X,” very crisply and directly. Only then, after you have answered the question, should you present your supporting reasons. Why? What's the benefit of this approach:
+
+- First, you maximize your time with your audience. Executives are busy people, they are perpetually short on time and get impatient when they feel like someone isn’t getting to the point. They want to focus on the big picture — in this case the "answer" — and may not want to get bogged down by details. In some cases, the executive may already mentally be at the conclusion you want them to reach, in which case she will accept your recommendation and move on (without you having to go into the detailed supporting arguments).
+- Second, Making a statement to your audience that tells them something (the answer) they don’t know, will automatically raise a question in their minds. Why? How? Is this true? Etc. The listener will more likely want to hear the supporting reasons to the statement.
+
+The structure of the flow will be:
+
+- **Situation:** Starting with an illustration of the situation will establish a certain time and place for the listener. Preferably a time and place the listener can relate to. This should be a neutral description with facts that your listeners will agree upon. e.g. The company's market is mature and doesn't offer growth opportunity anymore.
+- **Complication:** The complication will illustrate a problem, thus creating a relevant issue. A certain sense of urgency or compelling reason to listen or even act. This is the desired change of the current solution e.g. The CEO would like to increase his profit by reducing his cost by 10%.
+- **Question:** The question that is results from the complication. The will also be the start of a question-answer dialogue. e.g. How can the company reduce its cost by 10%.
+- **Answer:** The question will be the main lead for your story and the answer your main topic.
+- **Supporting Arguments:** Underneath the single thought/answer, you are to group and summarize the next level of supporting ideas and arguments. You want to ensure that the ideas you bring together under each group actually belong together (at the same level of importance) and that all the possibilities has been covered.
+- **Create the StoryBoard:** Follow some logical structure. There are a few different ways of logically ordering the story: 1) Degree order: present supporting ideas in rank order of importance, most to least important. 2) Time order: if there is a sequence of events that form a cause-effect relationship, you should present the ideas in time order. e.g. Back to the how can the company reduce its cost by 10% question. The story is: We should outsource. Because competitor X is profitable, it has the same revenue as us but lower cost. Why? Because 50% of his core functions has been outsourced.
+
+### Data Stories
+
+By telling a data story you're essentially walking the audience through a series of facts (can be shown through data visualization) that leads them to some sort a conclusion.
+
+These are the 7 most common data stories:
+
+1. **Change over time.** How are things before, how is it now and will it be in the future (trend).
+2. **Drill down.** Aggregrated value doeesn't tell the whole story e.g. Split down the measure geographically. You can start with a big picture and drill down to the nitty gritty details that see how the two differ. 
+3. **Zoom out.** Simply the opposite of drilling down.
+4. **Contrast.** Comparying different or opposite things together. e.g. Comparing the maximum value of a measure and see where they appear geographically and then showing where the min value occured.
+5. **Intersection.** When does one value surpass the other, or vice versa. e.g. revenue of different product category.
+6. **Factors.** The data can tell you something that is true (a measure is decreasing over time), but often times that leads to another question, which is why. e.g. if we see some measures decreasing, we will surely want to figure out why. This is when breaking a metric that we're looking at down into different building blocks can help (factors that contributes to the metric). Note that, a lot of times the current data at hand won't be able to tell you the answer.
+7. **Outlier.** Boxplot can be useful here. Outliers can be very important message that tells you whether the data has quality issues.
+
+
+## Reference
+
+- [Webinar: Exploring 7 Kinds of Data Stories](http://www.datasciencecentral.com/video/exploring-7-kinds-of-data-stories)
+- [SlideShare: The Pyramid Principle](http://www.slideshare.net/BySlidebooks/pyramid-principle)
+- [Blog: The Pyramid Principle](https://medium.com/lessons-from-mckinsey/the-pyramid-principle-f0885dd3c5c7#.j4nz2qagr)
+- [Blog: What Is Simpson's Paradox?](http://statistics.about.com/od/HelpandTutorials/a/What-Is-Simpsons-Paradox.htm)
+- [Blog: 10 pieces of advice to beginner data scientists](https://shapescience.xyz/blog/10-pieces-of-advice-to-beginner-data-scientists/)
+- [Blog: Practical advice for analysis of large, complex data sets](http://www.unofficialgoogledatascience.com/2016/10/practical-advice-for-analysis-of-large.html)
+
+
