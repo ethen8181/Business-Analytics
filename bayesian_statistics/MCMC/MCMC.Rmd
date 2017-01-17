@@ -1,7 +1,7 @@
 ---
 title: "Markov Chain Monte Carlo (MCMC)"
 date: "`r Sys.Date()`"
-author: "Ming-Yu Liu"
+author: "Ethen Liu"
 output:
   rmdformats::readthedown:
     highlight: pygments
@@ -57,20 +57,23 @@ Here's an ugly function that we could treat as a probability distribution. Note 
 library(ggplot2)
 library(ggthemes)
 
-f <- function(x){
-	( sin(.2 * x^3) + sin(x^2) / 5 + 2.5 + sin(10 * x) / 2 ) * dnorm( x, mean = 1 )
+f <- function(x) {
+    ( sin(0.2 * x ^ 3) + sin(x ^ 2) / 5 + 2.5 + sin(10 * x) / 2 ) * dnorm(x, mean = 1)
 }
 
-# boundary for the x axis
+# # boundary for the x axis
 x_max <- 6
 x_min <- -6
 
-x <- seq( x_min, x_max, length.out = 500 )
-y <- f(x)
-data <- data.frame( x = x, y = y )
+# for simply plotting the function
+ggplot( data.frame( x = c(x_max, x_min) ), aes(x) ) + 
+stat_function(fun = f)
 
-ggplot( data, aes( x, y ) ) + geom_line() + 
-geom_ribbon( aes( ymin = 0, ymax = y ), alpha = 0.2 )
+x <- seq(x_min, x_max, length.out = 500)
+y <- f(x)
+data <- data.frame(x = x, y = y)
+ggplot( data, aes(x, y) ) + geom_line() + 
+geom_ribbon( aes(ymin = 0, ymax = y), alpha = 0.2 )
 
 ```
 
@@ -86,19 +89,19 @@ To start off, let's look at a basic method called **rejection sampling**, the wa
 # throw N darts (uniformly distributed x-y pairs) at the plot above
 N <- 10000
 ceiling <- 1.5
-xs <- runif( N, min = x_min, max = x_max )
-ys <- runif( N, min = 0, max = ceiling )
+xs <- runif(N, min = x_min, max = x_max)
+ys <- runif(N, min = 0, max = ceiling)
 
 # accept any samples that are below the function curve
 accepted_samples <- xs[ ys <= f(xs) ]
 
-ggplot( data.frame( x = accepted_samples ) ) + 
-geom_histogram( aes( x = x, y = ..density.. ) ) + 
-geom_line( data = data, aes( x, y ) )
+ggplot( data.frame(x = accepted_samples) ) + 
+geom_histogram( aes(x = x, y = ..density..) ) + 
+geom_line( data = data, aes(x, y) )
 
-# study the samples however you want
+# we can then study the samples however we want
 # mean(accepted_samples)
-# quantile(accepted_samples, probs = seq(0, 1, length = 4 ) )
+# quantile(accepted_samples, probs = seq(0, 1, length = 4) )
 
 ```
 
@@ -112,16 +115,16 @@ That worked pretty well, but it was kind of inefficient, we ended up throwing aw
 df <- data.frame( xs = xs, ys = ys, accept = ys <= f(xs) )
 
 # plot the accepted and unaccepted point
-ggplot( df, aes( xs, ys ) ) + 
-geom_point( aes( color = accept ), size = 0.5 ) + 
-geom_line( data = data, aes( x, y ) )
+ggplot( df, aes(xs, ys) ) + 
+geom_point( aes(color = accept), size = 0.5 ) + 
+geom_line( data = data, aes(x, y) )
 
 ```
 
 Of course, this is a toy example. It turns out that you may end up throwing away exponentially more attempts per successful sample as the number of dimensions in your data goes up. So hardly anyone uses rejection sampling without a good reason.
 
 
-## MCMC - Metropolis–Hastings Algorithm
+## MCMC - Markov chain Monte Carlo
 
 Most of our discarded samples came from the tails of the distribution, where the acceptance probability is basically zero. We could increase the number of samples we keep by spending more time in the middle of the distribution, where the acceptance probabilities are much higher. But if all we did was concentrate our dart-throwing efforts there, then we'd end up with heavily biased samples. Meaning we won't find any probability mass in areas where we don't look. Also, even if we could correct for that issue, we won't always know where to concentrate our efforts. So we'll usually need something more automatic.
 
@@ -146,17 +149,17 @@ With all of that being said, let's see what happens if we try this out on a simp
 
 ```{r}
 
-lik <- function( x, y ){
+lik <- function(x, y) {
 	dnorm(x - 3) * dnorm(y - x + 2)
 }
 
-grid_values <- seq( x_min, x_max, length = 500 )
-grid <- expand.grid( x = grid_values, y = grid_values )
-z <- lik( grid$x, grid$y )
+grid_values <- seq(x_min, x_max, length = 500)
+grid <- expand.grid(x = grid_values, y = grid_values)
+z <- lik(grid$x, grid$y)
 
 # prior probability plot
-plot <- ggplot( data = grid, aes( x = x, y = y ) ) + 
-		geom_raster( aes( fill = z ) ) + 
+plot <- ggplot( data = grid, aes(x = x, y = y) ) + 
+		geom_raster( aes(fill = z) ) + 
 		scale_fill_gradient2() + coord_equal() +
 		theme_tufte()
 plot
@@ -177,22 +180,20 @@ The next code chunck defines the `MCMC` function that draws sample points from t
 
 ```{r}
 
-# Metropolis-Hastings algorithm (will elaborate on this later)
-MCMC <- function( iter, burnin = 0, thin = 1 )
-{
+MCMC <- function(iter, burnin = 0, thin = 1) {
 	# the list of the first argument for dimnames is to specify the row names,
 	# sampling starts at a random point, here 0, 0 
 	samples <- matrix( NA, nrow = iter, ncol = 2, 
-					   dimnames = list( NULL, c( "x", "y" ) ) )
-	samples[ 1, ] <- c( 0, 0 )
+					   dimnames = list( NULL, c("x", "y") ) )
+	samples[1, ] <- c(0, 0)
 
-	for(i in 2:iter){
+	for(i in 2:iter) {
 
-		sample <- samples[ i - 1, ]
-		for(j in 1:thin){
+		sample <- samples[i - 1, ]	
+		for(j in 1:thin) {
 			
-			# propose a new sample point		
-			proposal <- sample + rnorm( n = 2, mean = 0, sd = 1 )
+			# propose a new sample point (will elaborate on this later)				
+			proposal <- sample + rnorm(n = 2, mean = 0, sd = 1)
 
 			# compare its likelihood with the current position
 			lik_old <- lik( sample["x"], sample["y"] )
@@ -205,18 +206,18 @@ MCMC <- function( iter, burnin = 0, thin = 1 )
 			# then just keep what you had in the last step,
 			# meaning nothing changed.
 			# note that 1 is evaluated as TRUE
-			if( rbinom( 1, size = 1, prob = min( ratios, 1 ) ) )
+			if( rbinom( 1, size = 1, prob = min(ratios, 1) ) )
 				sample <- proposal
 		}
-		samples[ i, ] <- sample
+		samples[i, ] <- sample
 	}
-	return( data.frame( samples[ (burnin + 1):iter, ] )	)
+	return( data.frame(samples[ (burnin + 1):iter, ]) )
 }
 
-TracePlot <- function( plot, samples ){
+plot_trace <- function(plot, samples) {
 	plot + 
-	geom_path( data = samples, aes( x, y ), color = "orange" ) + 
-	geom_point( data = samples, aes( x, y ), size = 1 )
+	geom_path( data = samples, aes(x, y), color = "orange" ) + 
+	geom_point( data = samples, aes(x, y), size = 1 )
 }
 
 ```
@@ -226,33 +227,29 @@ TracePlot <- function( plot, samples ){
 
 # plot that shows the first few sampling points are not good ones
 samples <- MCMC(iter = 50)
-TracePlot( plot, samples )
+plot_trace(plot, samples)
 
 # plot with burnin, discard the bad sampling points in the beginning
-samples <- MCMC( iter = 250, burnin = 125 )
-TracePlot( plot, samples )
+samples <- MCMC(iter = 250, burnin = 125)
+plot_trace(plot, samples)
 
-# use thin to avoid correlation and 
+# use thinning to avoid correlation and
 # explore more of the sample space
-samples <- MCMC( iter = 250, burnin = 125, thin = 2 )
-TracePlot( plot, samples )
-
+samples <- MCMC(iter = 250, burnin = 125, thin = 2)
+plot_trace(plot, samples)
 ```
 
 The MCMC method is very useful, the intuition for the algorithm is that we can approximate the **posterior distribution** by generating a large sample of representative values and the larger the sample, the more accurate is our approximation.
 
-
-## Reference
-
-1. [The First Stop in Monte Carlo (Methods): Rejection Sampling](http://thexbar.me/2014/11/07/reject-sample/)
-2. [mcmc tutorial](https://github.com/davharris/mcmc-tutorial)
-3. [Probabilistic Programming and Bayesian Methods for Hackers Chapter 3](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter3_MCMC/Chapter3.ipynb)
-
-
 ## R Session Information 
 
 ```{r}
-
 sessionInfo()
-
 ```
+
+## Reference
+
+- [Blog: The First Stop in Monte Carlo (Methods): Rejection Sampling](http://thexbar.me/2014/11/07/reject-sample/)
+- [Github: mcmc tutorial](https://github.com/davharris/mcmc-tutorial)
+- [Notebook: Probabilistic Programming and Bayesian Methods for Hackers Chapter 3](http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter3_MCMC/Chapter3.ipynb)
+

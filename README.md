@@ -19,7 +19,6 @@ Within each section, documentations are listed in reverse chronological order of
 - Visualize user retention by cohort with seaborn's heatmap.
 - View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
 
-
 #### finding_groups : 2015.11.10
 
 Examples of how finding similar patterns using hierarchical clustering algorithms can be applied to the supply chain’s and human resource’s business field.
@@ -32,17 +31,14 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 #### frequentist_statistics : 2016.07.27
 
-Notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power).
-
-- View [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/frequentist_statistics/frequentist_statistics.html)]
-
+- Notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power). [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/frequentist_statistics/frequentist_statistics.html)]
+- Bonferroni correction for multiple hypothesis testing. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/frequentist_statistics/multiple_testing.ipynb)]
 
 #### bandits : 2016.06.02
 
 Multi-armed Bandits Algorithms, a possible alternative to A/B testing for short-term tests or extremely long tests. For those that are not familiar with bayesian statistics, it's recommended to go through the first two documents in the [bayesian_statistics](#bayesian_statistics--20160421) folder.
 
 - Epsilon Greedy, Softmax, Upper Confidence Bound and Thompson Sampling from scratch. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/bandits/bandits.ipynb)]
-
 
 #### ab_tests : 2016.06.01
 
@@ -51,7 +47,6 @@ Includes Bayesian and Frequentist A/B testing. For those that are not familiar w
 - Bayesian A/B testing, beta heirarchical model with pymc. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/bayesian_ab_test.ipynb)]
 - Frequentist A/B testing. [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/ab_tests/frequentist_ab_test.html)]
 - Template and caveats for the A/B testing process (applicable for both types of testing). [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/ab_tests/ab_test_template.ipynb)]
-
 
 #### bayesian_statistics : 2016.04.21
 
