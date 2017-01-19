@@ -57,7 +57,11 @@ knitr::opts_chunk$set(echo = TRUE)
 Exploratory data analysis can be broken down into 4 interrelated stages:
 
 - **Make hypotheses and look for evidence:** Good data analysis will have a story to tell. To make sure it’s the right story, we need to know what we should see in the data if that hypothesis is true, then look for evidence that it’s wrong. One way of doing this is to ask ourselves, “What experiments would we run that would validate/invalidate the story we're am telling?” Even if we don’t/can’t do these experiments right now, it may give us ideas for future analyses.
+<<<<<<< HEAD
+- **Validation of initial data analysis:** Was the data collected correctly and helps answer my question? This often goes under the name of “sanity checking”. For example, if manual testing of a feature was done, can I look at the logs of that manual testing? e.g. For a feature launched on mobile devices, do my logs claim the feature exists on desktops? If it’s a features of a product, try it out yourself.
+=======
 - **Validation or Initial Data Analysis:** Was the data collected correctly and helps answer my question? This often goes under the name of “sanity checking”. For example, if manual testing of a feature was done, can I look at the logs of that manual testing? e.g. For a feature launched on mobile devices, do my logs claim the feature exists on desktops? If it’s a features of a product, try it out yourself.
+>>>>>>> b05718d202aebf3750d1acd7a997cb8d624014e8
 - **Description:** What’s the objective interpretation of this data? For example, “The time page load to click (given there was a click) is larger by 1%”
 - **Evaluation:** Given the description, does the data tell us that something good is happening for the user, for the company? For example, “Users find results faster” or “The quality of the clicks is higher.”
 
@@ -84,20 +88,29 @@ Make sure we share what we’ve learned and learned from others so we can all be
 
 It's all about reviewing the completed work, the current work in progress, planned work, specific annual metrics, performance gap.
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> b05718d202aebf3750d1acd7a997cb8d624014e8
 ### Review Current Status
 
 - List key metrics you're tracking, where they're at, and compare with last few weeks (to measure how are thing trending).
 - What did you learn last week or what was accomplished? And is everything on track? Are you going to make some adjustments (including solutions and evaluation metrics) based on your findings?
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> b05718d202aebf3750d1acd7a997cb8d624014e8
 ### List Out Top Problems/Experiments
 
 - List and prioritize the top (new) problems / experiments.
 - What do we want to solve / learn and why? When asking the why, it can be thought of what steps will be taken given the result?
 - List out who's feeling the pain? (figure out who are your priorities, this may be tied to the why)
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> b05718d202aebf3750d1acd7a997cb8d624014e8
 ### For All Problems, List Corresponding Hypothesized Solution
 
 - Written in the form "[Specfic action] will create [expected result]."
@@ -106,7 +119,23 @@ It's all about reviewing the completed work, the current work in progress, plann
 - How long will it take for you to run the experiment / get the problem solved.
 - (optional) Include what measures will indicate the experiment isn't safe to continue.
 
+<<<<<<< HEAD
+From then on, it's about leveraging your current data and resources, creating features and running tests (testing out the hypothesized solution) and let the resulting data frame the conversation.
+
+
+# Template For Data Science Project
+
+Please describe your general “rule of thumb” on how to engage a new data research problem. Is there any framework that you general follow? How do you breakdown the problem into actionable tasks?
+
+1. **Defining the end goal from a business perspective:** A good way of doing so is to ask what types of output will we need and what actions will we take after obtaining the result. For this step, it is also important to identify the current solution for the problem and why is it not good enough. Only by confirming the baseline can we evaluate the performance of latter solutions. If there’s a certain level of resource budget (e.g. time) then it should also be noted as well
+2. **Data Collecting and Preprocessing:** This step encompasses data extracting, cleaning and exploratory analysis. Feature engineering is an important aspect of the work and checking the data quality at hand is an important task to prevent bias for later study
+3. **Modeling and Evaluation:** There’s actually not a really clear gap between the modeling process and the former step of data preprocessing. As trying out different algorithms on the data will give you ideas of whether the data at hand is good enough to address the issue at hand and whether the models still require further tuning. The evaluation part should be quite simple, as the criteria should already be defined in the first stage
+4. **Presentation, Documentation and Deployment:** Once we have a model that meets our success criteria. Different types of audience will require different ways of presenting the information. But basically, the workflow and the interpretation should be documented in a way that’s clear to both a data scientist that’s also on the team but did not participate in the project and to whoever’s going to rely on it to make business decisions
+5. **Future Works:** No models are perfect. If it is a problem that’s worth the time, future works should be discussed to improve the result
+
+=======
 From then on, it's about leveraging your current data and resources, creating features and running tests (testing out the hypothesized solution) and let the resulting data frame the conversation. 
+>>>>>>> b05718d202aebf3750d1acd7a997cb8d624014e8
 
 # Presenting
 
@@ -155,5 +184,9 @@ These are the 7 most common data stories:
 - [Blog: What Is Simpson's Paradox?](http://statistics.about.com/od/HelpandTutorials/a/What-Is-Simpsons-Paradox.htm)
 - [Blog: 10 pieces of advice to beginner data scientists](https://shapescience.xyz/blog/10-pieces-of-advice-to-beginner-data-scientists/)
 - [Blog: Practical advice for analysis of large, complex data sets](http://www.unofficialgoogledatascience.com/2016/10/practical-advice-for-analysis-of-large.html)
+<<<<<<< HEAD
+- [Blog: Scope the Solution before Solving the Machine Learning](https://making.dia.com/scope-the-solution-before-solving-the-machine-learning-7e5ddb622733#.pcr044mri)
+=======
 
 
+>>>>>>> b05718d202aebf3750d1acd7a997cb8d624014e8
