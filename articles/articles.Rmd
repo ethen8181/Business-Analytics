@@ -69,6 +69,9 @@ pre{ /* Code block */
 
 # Analytics
 
+- 2017.02.14 | Why machine learning is critical to multi-touch attribution. [[MarTech](https://martechtoday.com/machine-learning-critical-multi-touch-attribution-194976?utm_source=Social&utm_medium=Share&utm_term=MTT+article+Feb&utm_content=Machine+learning+and+attribution&utm_campaign=Awareness)]
+- 2017.02.05 | Unlearning descriptive statistics. [[Blog](http://debrouwere.org/2017/02/01/unlearning-descriptive-statistics/?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=revue)]
+    - Caveat: multimodal distributions have more than one central or typical value, and they are trickier to describe. If you look at how tall the average adult human is, you will find a bump around 165 cm and another around 175 cm. These local maxima (modes) are useful statistics, but often it pays to prod a little deeper and see why there's more than one peak in the first place. In the case of human height, the answer is obvious: a typical adult woman is roughly 165 cm tall, a typical adult man roughly 175 cm. Once you split the data by gender, the bimodal distribution disappears.
 - 2016.12.29 | Data Science Newsletter list. [[Medium](https://medium.com/blend-your-data/a-four-minute-read-big-data-and-data-science-newsletter-list-to-get-you-informed-on-anything-data-669d8e2c4b09#.2lukcelgg)]
 - 2016.12.27 | Sharing Your Side Projects Online and Making Your Github the Best Résumé. [[Youtube](https://www.youtube.com/watch?v=uRul8QdYvqQ)]
     - Include a license to the project. there's even a [website](http://choosealicense.com/) that walks you through the copying and pasting process

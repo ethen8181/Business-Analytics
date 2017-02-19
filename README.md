@@ -33,6 +33,7 @@ Examples of how finding similar patterns using hierarchical clustering algorithm
 
 - Notes for frequentist statistics inference (t-test, anova, proportion test, chi-square, power). [[Rmarkdown](http://ethen8181.github.io/Business-Analytics/frequentist_statistics/frequentist_statistics.html)]
 - Bonferroni correction for multiple hypothesis testing. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/frequentist_statistics/multiple_testing.ipynb)]
+- Spearman rank correlation. [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/frequentist_statistics/correlation.ipynb)]
 
 #### bandits : 2016.06.02
 
