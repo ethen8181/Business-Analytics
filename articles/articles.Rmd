@@ -119,6 +119,7 @@ The Top Five Data Science Tips From r/DataScience. [[Blog](http://www.datadepend
 
 # Business
 
+- Why Companies like Lyft, Uber, Postmates, Instacart etc Will Never Be Profitable. [Linkedin](https://www.linkedin.com/pulse/why-companies-like-lyft-uber-postmates-instacart-etc-never-fabode)
 - The New 'Must Haves' for Mobile Apps to Succeed Today. [[First Round Review](http://firstround.com/review/the-new-must-haves-for-mobile-apps-to-succeed-today/)]
 - 'Amazon is not your friend'. [[Linkedin](https://www.linkedin.com/pulse/amazon-your-friend-caroline-fairchild)]
     - The only way to survive is to build a brand that can grow without Amazon’s distribution.
