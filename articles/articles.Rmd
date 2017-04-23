@@ -69,6 +69,7 @@ pre{ /* Code block */
 
 # Analytics
 
+- 2017.04.02 | The Startup Founder’s Guide to Analytics. [Medium](https://thinkgrowth.org/the-startup-founders-guide-to-analytics-1d2176f20ac1)
 - 2017.02.14 | Why machine learning is critical to multi-touch attribution. [[MarTech](https://martechtoday.com/machine-learning-critical-multi-touch-attribution-194976?utm_source=Social&utm_medium=Share&utm_term=MTT+article+Feb&utm_content=Machine+learning+and+attribution&utm_campaign=Awareness)]
 - 2017.02.05 | Unlearning descriptive statistics. [[Blog](http://debrouwere.org/2017/02/01/unlearning-descriptive-statistics/?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=revue)]
     - Caveat: multimodal distributions have more than one central or typical value, and they are trickier to describe. If you look at how tall the average adult human is, you will find a bump around 165 cm and another around 175 cm. These local maxima (modes) are useful statistics, but often it pays to prod a little deeper and see why there's more than one peak in the first place. In the case of human height, the answer is obvious: a typical adult woman is roughly 165 cm tall, a typical adult man roughly 175 cm. Once you split the data by gender, the bimodal distribution disappears.
@@ -119,6 +120,8 @@ The Top Five Data Science Tips From r/DataScience. [[Blog](http://www.datadepend
 
 # Business
 
+- How Data Science Is Transforming Health Care. [O'Reilly](https://www.oreilly.com/ideas/how-data-science-is-transforming-health-care)
+    - Just like targeted ads, we should have targeted health care
 - Why Companies like Lyft, Uber, Postmates, Instacart etc Will Never Be Profitable. [Linkedin](https://www.linkedin.com/pulse/why-companies-like-lyft-uber-postmates-instacart-etc-never-fabode)
 - The New 'Must Haves' for Mobile Apps to Succeed Today. [[First Round Review](http://firstround.com/review/the-new-must-haves-for-mobile-apps-to-succeed-today/)]
 - 'Amazon is not your friend'. [[Linkedin](https://www.linkedin.com/pulse/amazon-your-friend-caroline-fairchild)]
