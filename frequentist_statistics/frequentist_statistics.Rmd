@@ -275,7 +275,7 @@ The confidence interval for the average difference was 1.83 to 48.17 and the hyp
 
 The results of the confidence interval and the hypothesis test do in fact agree. We rejected the null hypothesis that set the difference between the two means equal to 0, and therefore this null value should not be included in our confidence interval and indeed it's not.
 
-Note that the formula listed in this section is used when the **two groups are independent of one another (not paired)**. e.g. If we wish to compare pre- (beginning of semester) and post-test (end of semester) scores of students, then this will require a paired t-test.
+Note that the formula listed in this section is used when the **two groups are independent of one another (not paired)**. e.g. If we wish to compare pre- (beginning of semester) and post-test (end of semester) scores of students, then this will require a **paired t-test**. The following video explains it nicely. [Youtube: The Paired-Difference t Procedure](https://www.youtube.com/watch?v=TMRBGFIj0RM)
 
 
 ## Comparing Multiple Means (ANOVA)
@@ -530,5 +530,6 @@ devtools::session_info()
 - [Blog: What Are P-Values?](https://prateekvjoshi.com/2013/12/07/what-are-p-values/)
 - [Blog: One-way Analysis of Variance](http://www.r-bloggers.com/one-way-analysis-of-variance-anova/)
 - [Blog: The Theorem Every Data Scientist Should Know](http://www.jeannicholashould.com/the-theorem-every-data-scientist-should-know-2.html)
+- [Youtube: The Paired-Difference t Procedure](https://www.youtube.com/watch?v=TMRBGFIj0RM)
 - [Notes: Power and sample size calculation for t test in R](http://users.stat.umn.edu/~corbett/classes/3022/Power_and%20_sample_size_for_t_in_R.txt)
 
