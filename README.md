@@ -14,11 +14,6 @@ Within each section, documentations are listed in reverse chronological order of
 
 ## Documentation Listings
 
-#### cohort_analysis : 2016.04.01
-
-- Visualize user retention by cohort with seaborn's heatmap.
-- View [[nbviewer](http://nbviewer.jupyter.org/github/ethen8181/Business-Analytics/blob/master/cohort_analysis/cohort_analysis.ipynb)]
-
 #### finding_groups : 2015.11.10
 
 Examples of how finding similar patterns using hierarchical clustering algorithms can be applied to the supply chain’s and human resource’s business field.
